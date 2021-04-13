@@ -4,19 +4,16 @@ using UnityEngine;
 
 public class SpiderMovement : MonoBehaviour
 {
-	private CharacterController controller;
+	[SerializeField] private CharacterController controller;
+	[SerializeField] private Transform cam;
+	[SerializeField] private float playerSpeed = 2.0f, turnSmoothTime = 0.1f;
+	
 	private Vector3 playerVelocity;
 	private bool groundedPlayer;
-	[SerializeField] private float playerSpeed = 2.0f;
-	private float jumpHeight = 1.0f;
-	private float gravityValue = -9.81f;
+	private float jumpHeight = 1.0f, gravityValue = -9.81f, turnSmoothVelocity;
 
-	private void Start()
-	{
-		controller = gameObject.GetComponent<CharacterController>();
-	}
 
-	void Update()
+	private void Update()
 	{
 		groundedPlayer = controller.isGrounded;
 		if (groundedPlayer && playerVelocity.y < 0)
@@ -24,12 +21,18 @@ public class SpiderMovement : MonoBehaviour
 			playerVelocity.y = 0f;
 		}
 
-		Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-		controller.Move(move * Time.deltaTime * playerSpeed);
+		float horizontal = Input.GetAxis("Horizontal");
+		float vertical = Input.GetAxis("Vertical");
+		Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-		if (move != Vector3.zero)
+		if (direction.magnitude >= 0.1f)
 		{
-			gameObject.transform.forward = move;
+			float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+			float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+			transform.rotation = Quaternion.Euler(0f, angle, 0f);
+			
+			Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+			controller.Move(moveDir.normalized * playerSpeed * Time.deltaTime);
 		}
 
 		// Changes the height position of the player..
