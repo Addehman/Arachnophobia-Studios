@@ -59,7 +59,6 @@ public class SpiderPlayerMovement : MonoBehaviour
         Cursor.visible = false;
     }
 
-
     private void FixedUpdate()
     {
         Movement();
@@ -71,9 +70,6 @@ public class SpiderPlayerMovement : MonoBehaviour
         Look();
     }
 
-    /// <summary>
-    /// Find user input. Should put this in its own class but im lazy
-    /// </summary>
     private void MyInput()
     {
         x = Input.GetAxisRaw("Horizontal");
@@ -83,9 +79,13 @@ public class SpiderPlayerMovement : MonoBehaviour
 
         //Crouching
         if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
             StartCrouch();
+        }
         if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
             StopCrouch();
+        }
     }
 
     private void StartCrouch()
@@ -231,11 +231,6 @@ public class SpiderPlayerMovement : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Find the velocity relative to where the player is looking
-    /// Useful for vectors calculations regarding movement and limiting movement
-    /// </summary>
-    /// <returns></returns>
     public Vector2 FindVelRelativeToLook()
     {
         float lookAngle = orientation.transform.eulerAngles.y;
@@ -259,9 +254,6 @@ public class SpiderPlayerMovement : MonoBehaviour
 
     private bool cancellingGrounded;
 
-    /// <summary>
-    /// Handle ground detection
-    /// </summary>
     private void OnCollisionStay(Collision other)
     {
         //Make sure we are only checking for walkable layers
@@ -295,5 +287,4 @@ public class SpiderPlayerMovement : MonoBehaviour
     {
         grounded = false;
     }
-
 }
