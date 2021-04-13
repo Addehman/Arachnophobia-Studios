@@ -19,7 +19,7 @@ public class CameraMovement : MonoBehaviour
 		targetPosition = new Vector3(target.transform.position.x, target.transform.position.y, target.transform.position.z);
 		transform.position = targetPosition;
 
-		targetRotation = target.transform.rotation;
-		transform.rotation = targetRotation;
-	}
+        /*targetRotation = target.transform.rotation;
+        transform.rotation = targetRotation;*/
+    }
 }

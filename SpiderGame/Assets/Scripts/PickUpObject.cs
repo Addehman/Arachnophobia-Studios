@@ -4,13 +4,31 @@ using UnityEngine;
 
 public class PickUpObject : MonoBehaviour
 {
-    private void OnTriggerStay(Collider collider)
+    bool canPickUp = false;
+
+    private void Update()
     {
-        if (collider.gameObject.tag == "Player" && Input.GetKeyDown(KeyCode.E))
+        if (canPickUp && Input.GetKeyDown(KeyCode.E))
         {
             print("Picked Up Object");
             Destroy(gameObject);
-        } 
+        }
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.CompareTag("Player"))
+        {
+            canPickUp = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider collider)
+    {
+        if (collider.gameObject.CompareTag("Player"))
+        {
+            canPickUp = false;
+        }
     }
 }
 
