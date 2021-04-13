@@ -7,5 +7,4 @@ public class WebTether
 {
     public Vector3 position;
     public Transform tetherTransform;
-
 }
