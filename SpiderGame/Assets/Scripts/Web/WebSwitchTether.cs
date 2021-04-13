@@ -7,12 +7,6 @@ public class WebSwitchTether : MonoBehaviour
     public Transform newTether;
     public WebSwing swing;
 
-    void Start()
-    {
-        
-    }
-
-
     void Update()
     {
         if(Input.GetKey(KeyCode.Space))
