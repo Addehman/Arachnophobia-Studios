@@ -5,7 +5,6 @@ using System;
 
 public class SpiderPlayerMovement : MonoBehaviour
 {
-
     //Assingables
     public Transform playerCam;
     public Transform orientation;

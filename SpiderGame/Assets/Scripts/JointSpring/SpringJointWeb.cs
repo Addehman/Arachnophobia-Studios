@@ -2,41 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrapplingWeb : MonoBehaviour
+public class SpringJointWeb : MonoBehaviour
 {
-    LineRenderer webRenderer;
-    Vector3 grapplePoint;
-    public LayerMask grappleable;
-    public Transform webGrip, camera, player;
     public GameObject targetPointPrefab;
     float maxDistance = 100f;
     SpringJoint joint;
 
-    private void Awake()
+    enum State
     {
-        webRenderer = GetComponent<LineRenderer>();
+        IsGrounded,
+        IsSwinging,
+        IsHanging,
+        IsLanding
     }
+
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             StartWebGrapple();
         }
-        else if(Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0))
         {
             StopWebGrapple();
         }
     }
 
-    private void LateUpdate()
-    {
-        DrawWeb();
-    }
-
     void StartWebGrapple()
     {
         RaycastHit hit;
-        if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, maxDistance))
         {
             /*
             grapplePoint = hit.point;
@@ -58,37 +53,18 @@ public class GrapplingWeb : MonoBehaviour
             */
 
             GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);
-            joint = player.gameObject.AddComponent<SpringJoint>();
+            joint = gameObject.AddComponent<SpringJoint>();
             joint.connectedBody = targetPoint.GetComponent<Rigidbody>();
-            joint.spring = 20.5f;
+            joint.spring = 40f;
+            joint.damper = 20f;
+            joint.autoConfigureConnectedAnchor = false;
+            joint.anchor = new Vector3(0f, 0f, 0f);
+            joint.connectedAnchor = new Vector3(0f, 0f, 0f);
         }
-    }
-
-    void DrawWeb()
-    {
-        //if not grappling, dont draw a web
-        if(!joint)
-        {
-            return;
-        }
-
-        webRenderer.SetPosition(0, webGrip.position);
-        webRenderer.SetPosition(1, grapplePoint);
     }
 
     void StopWebGrapple()
     {
-        webRenderer.positionCount = 0;
-        Destroy(joint);
-    }
-
-    public bool IsGrappling()
-    {
-        return joint != null;
-    }
-
-    public Vector3 GetGrapplePoint()
-    {
-        return grapplePoint;
+      //  Destroy(joint);
     }
 }
