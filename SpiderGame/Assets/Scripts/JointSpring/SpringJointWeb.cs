@@ -9,6 +9,10 @@ public class SpringJointWeb : MonoBehaviour
     SpringJoint joint;
     LineRenderer lineRenderer;
     State currentState = State.IsGrounded;
+    public ChangeCamera changeCamera;
+
+    public GameObject thirdPersonCamera;
+    public GameObject firstPersonCamera;
 
     enum State
     {
@@ -24,17 +28,25 @@ public class SpringJointWeb : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if(changeCamera.camMode == 1)
         {
-            StartWebGrapple();
+            if (Input.GetMouseButtonDown(0))
+            {
+                StartWebGrapple();
+            }
+            else if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
+            {
+                StopWeb();
+            }
+            else if (Input.GetMouseButtonDown(1))
+            {
+                StartSwingString();
+            }
         }
-        else if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
+
+        if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
         {
             StopWeb();
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            StartSwingString();
         }
     }
 
@@ -48,6 +60,9 @@ public class SpringJointWeb : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, maxDistance))
         {
+            thirdPersonCamera.SetActive(true);
+            firstPersonCamera.SetActive(false);
+            changeCamera.camMode = 0;
             currentState = State.IsSwinging;
             GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);
             joint = gameObject.AddComponent<SpringJoint>();
