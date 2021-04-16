@@ -5,21 +5,27 @@ using UnityEngine;
 public class ProceduralAnimationSpider : MonoBehaviour
 {
 	[SerializeField] private Transform[] legTargets;
-	[SerializeField] private float stepSize = 1f, stepHeight = 0.1f, stepSizePosMod = -1f;
+	[SerializeField] private float stepSize = 1f;
+	[SerializeField] private float stepHeight = 0.1f;
+	[SerializeField] private float stepSizePosMod = -1f;
 	[SerializeField] private int smoothness = 1;
 	[SerializeField] private bool bodyOrientation = true;
 	[SerializeField] private Vector3[] defaultLegPositions;
 
-	private float raycastRange = 1f, velocityMultiplier = 15f;
+	private float raycastRange = 1f;
+	private float velocityMultiplier = 15f;
 	private Vector3[] lastLegPositions;
-	private Vector3 lastBodyUp, lastBodyPos, lastVelocity, velocity;
+	private Vector3 lastBodyUp;
+	private Vector3 lastBodyPos;
+	private Vector3 lastVelocity;
+	private Vector3 velocity;
 	private bool[] legMoving;
 	private int numberOfLegs;
 
 
 	private static Vector3[] MatchToSurfaceFromAbove(Vector3 point, float halfRange, Vector3 up)
 	{
-		Vector3[] res = new Vector3[2];
+		Vector3[] res = new Vector3[3];
 		RaycastHit hit;
 		Ray ray = new Ray(point + halfRange * up, - up);
 
@@ -108,7 +114,8 @@ public class ProceduralAnimationSpider : MonoBehaviour
 		{
 			Vector3 targetPoint = desiredPositions[indexToMove] + Mathf.Clamp(velocity.magnitude * velocityMultiplier, 
 			0.0f, 1.5f) * (desiredPositions[indexToMove] - legTargets[indexToMove].position) + velocity * velocityMultiplier;
-			Vector3[] positionAndNormal = MatchToSurfaceFromAbove(targetPoint, raycastRange, transform.up);
+			Vector3[] positionAndNormal = MatchToSurfaceFromAbove(targetPoint, raycastRange, transform.position);
+			Debug.DrawRay(targetPoint, transform.position, Color.green);
 			legMoving[0] = true;
 			StartCoroutine(PerformStep(indexToMove, positionAndNormal[0]));
 		}
