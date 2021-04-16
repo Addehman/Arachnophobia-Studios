@@ -68,9 +68,9 @@ public class SpringJointWeb : MonoBehaviour
             joint = gameObject.AddComponent<SpringJoint>();
             joint.connectedBody = targetPoint.GetComponent<Rigidbody>();
 
-            joint.spring = 23f;
-            joint.damper = 80f;
-            joint.massScale = 0.1f;
+            joint.spring = 120f;
+            joint.damper = 75f;
+            joint.massScale = 3f;
             joint.autoConfigureConnectedAnchor = false;
             joint.anchor = new Vector3(0f, 0f, 0f);
             joint.connectedAnchor = new Vector3(0f, 0f, 0f);
