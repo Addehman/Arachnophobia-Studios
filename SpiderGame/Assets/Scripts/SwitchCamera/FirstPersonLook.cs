@@ -7,7 +7,7 @@ public class FirstPersonLook : MonoBehaviour
     public float mouseSensitivity = 100f;
     public Transform cameraBody;
     float xRotation = 0f;
-    float yRotation = 0f;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
