@@ -4,15 +4,9 @@ using UnityEngine;
 
 public class SpiderMovement : MonoBehaviour
 {
-<<<<<<< Updated upstream
-	[SerializeField] private Rigidbody rb;
-	[SerializeField] private Transform cam;
-	[SerializeField] private float playerSpeed = 0.1f, turnSmoothTime = 0.1f;
-=======
 	public Rigidbody rb;
 	public Transform cam;
 	public float playerSpeed = 1f, turnSmoothTime = 0.1f;
->>>>>>> Stashed changes
 	
 	private Vector3 playerVelocity;
 	private bool groundedPlayer;
