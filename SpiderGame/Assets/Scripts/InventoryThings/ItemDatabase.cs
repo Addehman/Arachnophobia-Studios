@@ -26,13 +26,13 @@ public class ItemDatabase : MonoBehaviour
     {
         items = new List<Item>()
         {
-           new Item(0, "Tomato", "Deli", new Dictionary<string, int>
+           new Item(0, "Tomato", "", new Dictionary<string, int>
            {
                {"Flavor", 5},
                {"Vitamin C", 1}
            }),
 
-           new Item(1, "Banana", "Juicy", new Dictionary<string, int>
+           new Item(1, "Banana", "", new Dictionary<string, int>
            {
                {"Flavor", 3},
                {"Potasium", 1},
@@ -40,18 +40,18 @@ public class ItemDatabase : MonoBehaviour
                {"Protein",1}
            }),
 
-           new Item(2, "Blueberry", "Blue", new Dictionary<string, int>
+           new Item(2, "Blueberry", "", new Dictionary<string, int>
            {
                {"Flavor", 3},
                {"Vitamin C", 1},
                {"Snails",1}
            }),
 
-           new Item(3, "Apple", "Blue", new Dictionary<string, int>
+           new Item(3, "Apple", "", new Dictionary<string, int>
            {
                {"Flavor", 3},
                {"Vitamin D", 1},
-               {"Snails",1}
+               {"Worms",1}
            })
         };
     }
