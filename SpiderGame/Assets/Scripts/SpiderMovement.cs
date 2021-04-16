@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class SpiderMovement : MonoBehaviour
 {
+<<<<<<< Updated upstream
 	[SerializeField] private Rigidbody rb;
 	[SerializeField] private Transform cam;
 	[SerializeField] private float playerSpeed = 0.1f, turnSmoothTime = 0.1f;
+=======
+	public Rigidbody rb;
+	public Transform cam;
+	public float playerSpeed = 1f, turnSmoothTime = 0.1f;
+>>>>>>> Stashed changes
 	
 	private Vector3 playerVelocity;
 	private bool groundedPlayer;
@@ -32,7 +38,7 @@ public class SpiderMovement : MonoBehaviour
 			}
 			if (vertical < -0.01f)
 			{
-				rb.AddForce((transform.forward * vertical * Time.fixedDeltaTime * 1000f) * -1);
+				rb.AddForce(-transform.forward * vertical * Time.fixedDeltaTime * 1000f);
 			}
 
 
@@ -42,7 +48,7 @@ public class SpiderMovement : MonoBehaviour
 			}
 			if (horizontal < -0.01f)
 			{
-				rb.AddForce((transform.forward * horizontal * Time.fixedDeltaTime * 1000f) * -1);
+				rb.AddForce(-transform.forward * horizontal * Time.fixedDeltaTime * 1000f);
 			}
 		}
 
@@ -64,11 +70,5 @@ public class SpiderMovement : MonoBehaviour
 		}
 
 		playerVelocity.y += gravityValue * Time.deltaTime;
-
-	}
-	
-	private void Update()
-	{
-		
 	}
 }
