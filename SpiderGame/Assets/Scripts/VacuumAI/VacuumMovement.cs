@@ -5,45 +5,54 @@ using UnityEngine;
 public class VacuumMovement : MonoBehaviour
 {
     Rigidbody rb;
-    Vector3 eulerAngleVelocity;
-
-    public bool isReversing;
 
     public Vector3 moveForward;
+    Vector3 eulerAngleVelocity;
+
+    int rotationSpeed = 1;
+
+    public Transform playerTransform;
+
+    public bool randomizeDirectionInProgress;
+    public bool playerInSight;
     
     void Start()
     {
         rb = GetComponent<Rigidbody>();
 
-        eulerAngleVelocity = new Vector3(0, -10, 0);
+        eulerAngleVelocity = new Vector3(0, -5, 0);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            print("Tryck");
+            StopCoroutine(RandomizeDirection());
+        }
     }
 
     void FixedUpdate()
     {
-        if (!isReversing)
+        if (playerInSight)
+        {
+            ChasePlayer();
+        }
+
+        if (!randomizeDirectionInProgress && !playerInSight)
         {
             rb.velocity = transform.forward;
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    public IEnumerator RandomizeDirection()
     {
-        print("Krock");
-
-        if (other.CompareTag("Wall"))
-        {
-            StartCoroutine(RandomizeDirection());
-        }
-    }
-
-    IEnumerator RandomizeDirection()
-    {
-        isReversing = true;
+        randomizeDirectionInProgress = true;
 
         float timePassed = 0;
 
         float reverseTime = 0.5f;
-        int rotationTime = Random.Range(4, 7);
+        float rotationTime = Random.Range(2f, 4.9f);
 
         if (Random.Range(0, 2) == 1)
         {
@@ -68,7 +77,12 @@ public class VacuumMovement : MonoBehaviour
 
             yield return null;
         }
+        randomizeDirectionInProgress = false;
+    }
 
-        isReversing = false;
+    private void ChasePlayer()
+    {
+        //TODO: Make Vacuum only rotate on Y-axis towards player. Save local variable of Y value?
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(playerTransform.position - transform.position), rotationSpeed * Time.deltaTime);
     }
 }
