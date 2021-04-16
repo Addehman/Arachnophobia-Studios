@@ -9,8 +9,8 @@ public class ItemTip : MonoBehaviour
 
     void Start()
     {
-    itemtip = GetComponentInChildren<Image>(); 
-    itemtip.gameObject.SetActive(false);
+        itemtip = GetComponentInChildren<Image>(); 
+        itemtip.gameObject.SetActive(false);
     }
 
     public void GenerateItemTip(Item item)
@@ -24,7 +24,6 @@ public class ItemTip : MonoBehaviour
         }
     }
         itemtip.GetComponentInChildren<Text>().text = string.Format("{0}\n{1}\n{2}\n", item.title, item.description, statText);
-        // {0} - fix for bold, curse, better format
         itemtip.gameObject.SetActive(true);
     }
     

@@ -40,9 +40,18 @@ public class UIInventory : MonoBehaviour
         //UpdateSlot(uIItems.Where(i => i.item == null), item);
     }
 
-    public void RemoveItem(Item item) // Fix this so its close to AddNewItem
+    public void RemoveItem(Item item) 
     {
-        UpdateSlot(uIItems.FindIndex(i => i.item == item), null);
+        foreach (var uIItem in uIItems)
+        {
+            if (uIItem.item == item)
+            {
+                uIItem.UpdateItem(item);
+                break;
+            }
+        }
+        /*UpdateSlot(uIItems.FindIndex(i => i.item == item), null);*/
+
     }
 }
 

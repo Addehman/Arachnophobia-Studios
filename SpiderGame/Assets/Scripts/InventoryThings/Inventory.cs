@@ -13,21 +13,12 @@ public class Inventory : MonoBehaviour
     private void Start()
     {
         toggleInventory.SetActive(false);
-
-        /*GiveItem("Banana");
-        GiveItem("Blueberry");
-        GiveItem("Apple");
-        GiveItem("Tomato");
-        GiveItem("Apple");
-        GiveItem("Apple");*/
     }
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            /*inventoryUI.gameObject.SetActive(!inventoryUI.gameObject.activeSelf);*/
-        
+       
             if (inventoryIsActive == true)
             {
                 toggleInventory.SetActive(false);
@@ -41,7 +32,6 @@ public class Inventory : MonoBehaviour
             }
         }
     }
-
     public void GiveItem(int id) // itemname
     {
         Item itemToAdd = itemDatabase.GetItem(id);
