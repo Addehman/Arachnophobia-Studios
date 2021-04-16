@@ -10,7 +10,6 @@ public class Item
     public Sprite icon;
     public Dictionary<string, int> stats = new Dictionary<string, int>();
 
-
     public Item(int id, string title, string description, Dictionary<string, int> stats)
     {
         this.id = id;

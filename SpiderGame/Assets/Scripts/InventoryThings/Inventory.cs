@@ -6,35 +6,63 @@ public class Inventory : MonoBehaviour
 {
     public List<Item> characterItems = new List<Item>();
     public ItemDatabase itemDatabase;
+    public UIInventory inventoryUI;
+    public GameObject toggleInventory;
+    bool inventoryIsActive = false;
 
     private void Start()
     {
-        GiveItem(0);
-        GiveItem(1);
-        GiveItem(2);
-        GiveItem(3);
-        RemoveItem(1);
+        toggleInventory.SetActive(false);
+
+        /*GiveItem("Banana");
+        GiveItem("Blueberry");
+        GiveItem("Apple");
+        GiveItem("Tomato");
+        GiveItem("Apple");
+        GiveItem("Apple");*/
     }
 
-    public void GiveItem(int id)
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            /*inventoryUI.gameObject.SetActive(!inventoryUI.gameObject.activeSelf);*/
+        
+            if (inventoryIsActive == true)
+            {
+                toggleInventory.SetActive(false);
+                inventoryIsActive = false;
+            }
+
+            else
+            {
+                toggleInventory.SetActive(true);
+                inventoryIsActive = true;
+            }
+        }
+    }
+
+    public void GiveItem(int id) // itemname
     {
         Item itemToAdd = itemDatabase.GetItem(id);
         characterItems.Add(itemToAdd);
+        inventoryUI.AddNewItem(itemToAdd);
         Debug.Log("Added item: " + itemToAdd.title);
     }
 
-    public Item CheckForItems(int id)
+    public Item CheckForItems(string title )
     {
-        return characterItems.Find(item => item.id == id);
+        return characterItems.Find(item => item.title == title);
     }
 
-    public void RemoveItem(int id)
+    public void RemoveItem(string title)
     {
-        Item item = CheckForItems(id);
-        if (item != null)
+        Item itemToRemove = CheckForItems(title);
+        if (itemToRemove != null)
         {
-            characterItems.Remove(item);
-            Debug.Log("Item Removed: " + item.title);
+            characterItems.Remove(itemToRemove);
+            inventoryUI.RemoveItem(itemToRemove);
+            Debug.Log("Item Removed: " + itemToRemove.title);
         }
     }
 }
