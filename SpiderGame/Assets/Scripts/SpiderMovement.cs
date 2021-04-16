@@ -6,7 +6,7 @@ public class SpiderMovement : MonoBehaviour
 {
 	[SerializeField] private Rigidbody rb;
 	[SerializeField] private Transform cam;
-	[SerializeField] private float playerSpeed = 1f, turnSmoothTime = 0.1f;
+	[SerializeField] private float playerSpeed = 0.1f, turnSmoothTime = 0.1f;
 	
 	private Vector3 playerVelocity;
 	private bool groundedPlayer;
