@@ -6,6 +6,7 @@ public class WebQuest : MonoBehaviour
 {
     public ChangeCamera changeCamera;
     public GameObject web;
+    public GameObject particle;
     int questCompleted;
     bool isOnWebSpot = false;
     bool isWebPlaced = false;
@@ -32,6 +33,15 @@ public class WebQuest : MonoBehaviour
             Debug.Log(questCompleted);
             Debug.Log("Enter webspot");
             isOnWebSpot = true;
+
+            if(isWebPlaced == false)
+            {
+                particle.SetActive(true);
+            }
+            else
+            {
+                particle.SetActive(false);
+            }
         }
     }
 
@@ -41,6 +51,7 @@ public class WebQuest : MonoBehaviour
         {
             Debug.Log("Exit webspot");
             isOnWebSpot = false;
+            particle.SetActive(false);
         }
     }
 }
