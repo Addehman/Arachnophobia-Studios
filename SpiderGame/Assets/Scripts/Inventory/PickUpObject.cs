@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Makes it possible to pick up and check the object via the Inventory
+
 public class PickUpObject : MonoBehaviour
 {
     bool canPickUp = false;
