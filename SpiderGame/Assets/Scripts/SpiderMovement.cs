@@ -11,84 +11,61 @@ public class SpiderMovement : MonoBehaviour
 	public Vector3 playerVelocity;
 	
 	private bool groundedPlayer;
-	private float jumpHeight = 1.0f, gravityValue = -9.81f, turnSmoothVelocity;
+	private float jumpHeight = 1.0f, gravityValue = -9.82f, turnSmoothVelocity;
 	private float horizontal;
 	private float vertical;
 
 	private enum GravityStates {Floor, NorthWall, EastWall, SouthWall, WestWall, Ceiling}
 	private GravityStates gravityState;
 
+	private void Start()
+	{
+		rb = GetComponent<Rigidbody>();
+		cam = GameObject.Find("Main Camera").GetComponent<Transform>();
+	}
 
 	private void FixedUpdate()
 	{
-		PlayerMovement();
+		// playerVelocity = rb.velocity;
 
+		vertical = Input.GetAxis("Vertical");
+		horizontal = Input.GetAxis("Horizontal");
+
+		// PlayerMovement();
 		PlayerRotation();
-
-		CheckForObsticleToClimb();
-
-		// Changes the height position of the player..
-		if (Input.GetButtonDown("Jump"))
-		{
-			if (groundedPlayer)
-			{
-				playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-			}
-
-			transform.rotation = Quaternion.Euler(0, 0, 0);
-			gravityState = GravityStates.Floor;
-		}
-
-		switch (gravityState)
-		{
-			case GravityStates.Floor:
-				print (gravityState);
-				playerVelocity.y += gravityValue * Time.deltaTime;
-				transform.rotation = Quaternion.Euler(0, 0, 0);
-				break;
-			case GravityStates.NorthWall:
-				print (gravityState);
-				playerVelocity.z -= gravityValue * Time.deltaTime;
-				transform.rotation = Quaternion.Euler(-90, 0, 0);
-				break;
-			case GravityStates.EastWall:
-				print (gravityState);
-				playerVelocity.x -= gravityValue * Time.deltaTime;
-				transform.rotation = Quaternion.Euler(-90, 0, 0);
-				break;
-			case GravityStates.SouthWall:
-				print (gravityState);
-				playerVelocity.z += gravityValue * Time.deltaTime;
-				transform.rotation = Quaternion.Euler(-90, 0, 0);
-				break;
-			case GravityStates.WestWall:
-				print (gravityState);
-				playerVelocity.x += gravityValue * Time.deltaTime;
-				transform.rotation = Quaternion.Euler(-90, 0, 0);
-				break;
-			case GravityStates.Ceiling:
-				print (gravityState);
-				playerVelocity.y -= gravityValue * Time.deltaTime;
-				transform.rotation = Quaternion.Euler(-90, 0, 0);
-				break;
-		}
-		
-		rb.velocity = playerVelocity;
+		// CheckForObsticleToClimb();
+		PlayerJump();
 	}
 
 	private void Update()
 	{
 		// Locking the rotation for x and z, but letting the y axis be as is.
 		// rb.rotation = Quaternion.Euler(0, rb.rotation.eulerAngles.y, 0);
+
+		SetGravity();
+	}
+
+	private void SetGravity()
+	{
+		Vector3 v = new Vector3();
+
+		v += transform.forward * horizontal;
+		v += transform.right * vertical;
+		v += transform.up * gravityValue;
+
+		rb.velocity = v;
+
+		Vector3 fwd = transform.TransformDirection(Vector3.down);
+		RaycastHit hit;
+
+		if (Physics.Raycast(transform.position, fwd, out hit, 10f))
+		{
+			transform.up = hit.normal;
+		}
 	}
 
 	private void PlayerMovement()
 	{
-		vertical = Input.GetAxis("Vertical");
-		horizontal = Input.GetAxis("Horizontal");
-
-		playerVelocity = rb.velocity;
-
 		float multiplier = 1f;
 		if (Input.GetKey(KeyCode.LeftShift))
 		{
@@ -137,6 +114,21 @@ public class SpiderMovement : MonoBehaviour
 		}
 	}
 
+	private void PlayerJump()
+	{
+		// Changes the height position of the player..
+		if (Input.GetButtonDown("Jump"))
+		{
+			if (groundedPlayer)
+			{
+				playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+			}
+
+			transform.rotation = Quaternion.Euler(0, 0, 0);
+			gravityState = GravityStates.Floor;
+		}
+	}
+
 	private void CheckForObsticleToClimb()
 	{
 		RaycastHit hitDown;
@@ -148,27 +140,27 @@ public class SpiderMovement : MonoBehaviour
 		{
 			groundedPlayer = true;
 
-			if (hitDown.collider.gameObject.CompareTag("Floor"))
+			if (hitDown.collider.gameObject.CompareTag("Floor") && gravityState != GravityStates.Floor)
 			{
 				gravityState = GravityStates.Floor;
 			}
-			else if (hitDown.collider.gameObject.CompareTag("NorthWall"))
+			else if (hitDown.collider.gameObject.CompareTag("NorthWall") && gravityState != GravityStates.NorthWall)
 			{
 				gravityState = GravityStates.NorthWall;
 			}
-			else if (hitDown.collider.gameObject.CompareTag("EastWall"))
+			else if (hitDown.collider.gameObject.CompareTag("EastWall") && gravityState != GravityStates.EastWall)
 			{
 				gravityState = GravityStates.EastWall;
 			}
-			else if (hitDown.collider.gameObject.CompareTag("SouthWall"))
+			else if (hitDown.collider.gameObject.CompareTag("SouthWall") && gravityState != GravityStates.WestWall)
 			{
 				gravityState = GravityStates.SouthWall;
 			}
-			else if (hitDown.collider.gameObject.CompareTag("WestWall"))
+			else if (hitDown.collider.gameObject.CompareTag("WestWall") && gravityState != GravityStates.WestWall)
 			{
 				gravityState = GravityStates.WestWall;
 			}
-			else if (hitDown.collider.gameObject.CompareTag("Ceiling"))
+			else if (hitDown.collider.gameObject.CompareTag("Ceiling") && gravityState != GravityStates.Ceiling)
 			{
 				gravityState = GravityStates.Ceiling;
 			}
@@ -187,13 +179,19 @@ public class SpiderMovement : MonoBehaviour
 			// transform.Rotate(transform.rotation.x - 1f, 0, 0);
 			if (hitForward.collider.gameObject.CompareTag("Floor"))
 			{
-				transform.Rotate(Vector3.Lerp(transform.rotation.eulerAngles, Vector3.zero, 1f));
+				// transform.Rotate(Vector3.Lerp(transform.rotation.eulerAngles, Vector3.zero, 1f));
 			}
-			else if (hitForward.collider.gameObject.CompareTag("NorthWall"))
+			if (hitForward.collider.gameObject.CompareTag("NorthWall"))
 			{
 				Quaternion playerRotation = transform.rotation;
 				Quaternion northwallRotation =  new Quaternion(-90, 0, 0, 0);
-				Quaternion.Lerp(playerRotation, northwallRotation, 1f);
+				// Quaternion.Lerp(playerRotation, northwallRotation, 1f);
+				for (float t = 0f; t < 1f;)
+				{
+					t += Time.deltaTime;
+					transform.rotation = Quaternion.Slerp(playerRotation, northwallRotation, t);
+					
+				}
 			}
 			// else if (hitForward.collider.gameObject.CompareTag(""))
 		}

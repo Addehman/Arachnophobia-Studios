@@ -11,7 +11,7 @@ public class CameraLook : MonoBehaviour {
     public float sensitivityY = 4f;
     public float minAngleY = -70.0f;
     public float maxAngleY = 70.0f;
-    private float distance = 0.2f;
+    public float distance = 0.2f;
 
     float currentX = 0f;
     float currentY = 0f;
