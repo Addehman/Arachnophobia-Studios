@@ -12,8 +12,14 @@ public class SpiderMovement : MonoBehaviour
 	private bool groundedPlayer;
 	private float jumpHeight = 1.0f, gravityValue = -9.81f, turnSmoothVelocity;
 
+	public Vector3 currentPosition;
 
-	private void FixedUpdate()
+    private void Update()
+    {
+		currentPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+    }
+
+    private void FixedUpdate()
 	{
 		float vertical = Input.GetAxis("Vertical");
 		float horizontal = Input.GetAxis("Horizontal");

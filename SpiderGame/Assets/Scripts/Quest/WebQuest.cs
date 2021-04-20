@@ -7,7 +7,9 @@ public class WebQuest : MonoBehaviour
     public ChangeCamera changeCamera;
     public GameObject web;
     public GameObject particle;
+
     int questCompleted;
+
     bool isOnWebSpot = false;
     bool isWebPlaced = false;
 
