@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-
-    public int health = 5;
-
     public Quest quest;
+    int fruit = 1;
 
     public void GoExploreTheWorld()
     {
+        int fruit = 1;
         // First quest - go from A to B || place 3 spiderwebs
-        health = 1;
 
         if (quest.isActive)
         {
             quest.finished.FruitCollected();
             if (quest.finished.IsReached())
             {
+                
                 quest.Complete();
             }
         }

@@ -7,12 +7,26 @@ using UnityEngine.UI;
 public class QuestGiver : MonoBehaviour
 {
     public Quest quest;
-
+    public int currentAmountOut;
     public Player player;
+
+    public QuestFinished questfinished;
 
     public GameObject questWindow;
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI descriptionText;
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            questfinished.FruitCollected();
+            questfinished.currentAmount++;
+            print(questfinished.currentAmount);
+        }
+        currentAmountOut = questfinished.currentAmount; 
+    }
 
     public void OpenQuestWindow()
     {
@@ -27,4 +41,5 @@ public class QuestGiver : MonoBehaviour
         quest.isActive = true;
         player.quest = quest;
     }
+
 }
