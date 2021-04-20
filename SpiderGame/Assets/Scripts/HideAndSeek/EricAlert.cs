@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class EricAlert : MonoBehaviour
 {
     public SpiderMovement spiderMovement;
+    public GameObject door;
 
     float currentTime = 0f;
 
@@ -13,6 +14,8 @@ public class EricAlert : MonoBehaviour
     float ericWarningTimer = 10f;
     float ericExitTimer = 5f;
     float ericDelayTimer = 5f;
+
+    bool isDoorOpen = false;
 
     IEnumerator ericWarningCoroutine;
     IEnumerator ericExitCoroutine;
@@ -29,8 +32,6 @@ public class EricAlert : MonoBehaviour
         EricExit
     }
 
-    bool isEricInc = false;
-    bool isEricInRoom = true;
     void Start()
     {
         currentState = State.EricNotInRoom;
@@ -39,7 +40,8 @@ public class EricAlert : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.DrawRay(transform.position, spiderMovement.currentPosition, Color.red, 1.0f);
+        Debug.DrawLine(transform.position, spiderMovement.currentPosition, Color.red, 1.0f);
+
         RaycastHit hit;
 
         if (currentState == State.EricEnter)
@@ -61,6 +63,16 @@ public class EricAlert : MonoBehaviour
 
     void Update()
     {
+        door.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, 45f, 0f), 2 * Time.deltaTime);
+        if (isDoorOpen == true)
+        {
+           // door.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, 45f, 0f), 2 * Time.deltaTime);
+        }
+        else
+        {
+           // door.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, 0f, 0f), 2 * Time.deltaTime);
+        }
+
         currentTime += Time.deltaTime;
 
         //Eric incomming, player should find a hide spot during this timer
@@ -76,6 +88,7 @@ public class EricAlert : MonoBehaviour
         {
             Debug.Log("Eric enter room");
             currentTime = 0f;
+            isDoorOpen = true;
             currentState = State.EricEnter;
         }
 
@@ -92,8 +105,10 @@ public class EricAlert : MonoBehaviour
         {
             Debug.Log("Eric timer reset");
             currentTime = 0f;
+            isDoorOpen = false;
             currentState = State.EricNotInRoom;
         }
+
 
         timer.text = currentTime.ToString();
     }
