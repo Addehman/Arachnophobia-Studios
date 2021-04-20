@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SpiderMovement : MonoBehaviour
 {
-	public BoxCollider frontTrigger;
 	public Rigidbody rb;
 	public Transform cam;
 	public float playerSpeed = 1f, turnSmoothTime = 0.1f;
@@ -12,10 +11,12 @@ public class SpiderMovement : MonoBehaviour
 	public Vector3 playerVelocity;
 	
 	private bool groundedPlayer;
-	private bool doClimbWall = false;
 	private float jumpHeight = 1.0f, gravityValue = -9.81f, turnSmoothVelocity;
 	private float horizontal;
 	private float vertical;
+
+	private enum GravityStates {Floor, NorthWall, EastWall, SouthWall, WestWall, Ceiling}
+	private GravityStates gravityState;
 
 
 	private void FixedUpdate()
@@ -27,19 +28,51 @@ public class SpiderMovement : MonoBehaviour
 		CheckForObsticleToClimb();
 
 		// Changes the height position of the player..
-		if (Input.GetButtonDown("Jump") && groundedPlayer)
+		if (Input.GetButtonDown("Jump"))
 		{
-			playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+			if (groundedPlayer)
+			{
+				playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+			}
+
+			transform.rotation = Quaternion.Euler(0, 0, 0);
+			gravityState = GravityStates.Floor;
 		}
 
-		if (doClimbWall == true)
+		switch (gravityState)
 		{
-			playerVelocity.x += gravityValue * Time.deltaTime;
+			case GravityStates.Floor:
+				print (gravityState);
+				playerVelocity.y += gravityValue * Time.deltaTime;
+				transform.rotation = Quaternion.Euler(0, 0, 0);
+				break;
+			case GravityStates.NorthWall:
+				print (gravityState);
+				playerVelocity.z -= gravityValue * Time.deltaTime;
+				transform.rotation = Quaternion.Euler(-90, 0, 0);
+				break;
+			case GravityStates.EastWall:
+				print (gravityState);
+				playerVelocity.x -= gravityValue * Time.deltaTime;
+				transform.rotation = Quaternion.Euler(-90, 0, 0);
+				break;
+			case GravityStates.SouthWall:
+				print (gravityState);
+				playerVelocity.z += gravityValue * Time.deltaTime;
+				transform.rotation = Quaternion.Euler(-90, 0, 0);
+				break;
+			case GravityStates.WestWall:
+				print (gravityState);
+				playerVelocity.x += gravityValue * Time.deltaTime;
+				transform.rotation = Quaternion.Euler(-90, 0, 0);
+				break;
+			case GravityStates.Ceiling:
+				print (gravityState);
+				playerVelocity.y -= gravityValue * Time.deltaTime;
+				transform.rotation = Quaternion.Euler(-90, 0, 0);
+				break;
 		}
-		else
-		{
-			playerVelocity.y += gravityValue * Time.deltaTime;
-		}
+		
 		rb.velocity = playerVelocity;
 	}
 
@@ -98,7 +131,7 @@ public class SpiderMovement : MonoBehaviour
 		{
 			float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
 			float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-			transform.rotation = Quaternion.Euler(transform.rotation.x, angle, 0f);
+			transform.rotation = Quaternion.Euler(0f, angle, 0f);
 			
 			Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 		}
@@ -106,18 +139,63 @@ public class SpiderMovement : MonoBehaviour
 
 	private void CheckForObsticleToClimb()
 	{
-		RaycastHit hit;
-		Ray ray = new Ray(transform.localPosition, transform.forward);
+		RaycastHit hitDown;
+		RaycastHit hitForward;
+		Ray rayDown = new Ray(transform.localPosition, -transform.up);
+		Ray rayForward = new Ray(transform.localPosition, transform.forward);
 
-		if (Physics.Raycast(ray, out hit, raycastRange) && vertical > 0)
+		if (Physics.Raycast(rayDown, out hitDown, raycastRange))
 		{
-			doClimbWall = true;
+			groundedPlayer = true;
+
+			if (hitDown.collider.gameObject.CompareTag("Floor"))
+			{
+				gravityState = GravityStates.Floor;
+			}
+			else if (hitDown.collider.gameObject.CompareTag("NorthWall"))
+			{
+				gravityState = GravityStates.NorthWall;
+			}
+			else if (hitDown.collider.gameObject.CompareTag("EastWall"))
+			{
+				gravityState = GravityStates.EastWall;
+			}
+			else if (hitDown.collider.gameObject.CompareTag("SouthWall"))
+			{
+				gravityState = GravityStates.SouthWall;
+			}
+			else if (hitDown.collider.gameObject.CompareTag("WestWall"))
+			{
+				gravityState = GravityStates.WestWall;
+			}
+			else if (hitDown.collider.gameObject.CompareTag("Ceiling"))
+			{
+				gravityState = GravityStates.Ceiling;
+			}
+		}
+		else
+		{
+			groundedPlayer = false;
+		}
+
+		if (Physics.Raycast(rayForward, out hitForward, raycastRange))
+		{
 			// print("Found obsticle");
 			Debug.DrawRay(transform.position, transform.forward, Color.red);
 			// Vector3 rotateTo = new Vector3(transform.rotation.x - 1f, 0, 0);
 			// print(rotateTo);
 			// transform.Rotate(transform.rotation.x - 1f, 0, 0);
-			transform.Rotate(-90, 0, 0);
+			if (hitForward.collider.gameObject.CompareTag("Floor"))
+			{
+				transform.Rotate(Vector3.Lerp(transform.rotation.eulerAngles, Vector3.zero, 1f));
+			}
+			else if (hitForward.collider.gameObject.CompareTag("NorthWall"))
+			{
+				Quaternion playerRotation = transform.rotation;
+				Quaternion northwallRotation =  new Quaternion(-90, 0, 0, 0);
+				Quaternion.Lerp(playerRotation, northwallRotation, 1f);
+			}
+			// else if (hitForward.collider.gameObject.CompareTag(""))
 		}
 		// else
 		// {
