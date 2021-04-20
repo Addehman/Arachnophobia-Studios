@@ -14,7 +14,7 @@ public class WallWalkTest : MonoBehaviour
 	void Start()
 	{
 		rb = GetComponent<Rigidbody>();
-		RaycastDownwards(); // set a temporary normal to be a default normal to set the gravity to when isGrounded is false.
+		RaycastDownwards(); // set a default normal to be a default normal to set the gravity to when isGrounded is false.
 	}
 
 	// Update is called once per frame
@@ -72,7 +72,7 @@ public class WallWalkTest : MonoBehaviour
 		if (Physics.Raycast(transform.position, forwardDir, out hitForward, 5f))
 		{
 			Debug.DrawRay(transform.position, forwardDir, Color.red, 0.5f);
-			Vector3 rayLength = transform.position - hitForward.transform.position;
+			Vector3 rayLength = transform.position - hitForward.point;
 			print ("Hit something, trying to rotate");
 			transform.eulerAngles = new Vector3(transform.eulerAngles.x * rayLength.magnitude, 0, 0); // think this isn't giving the correct values? does not rotate anyway
 		}
