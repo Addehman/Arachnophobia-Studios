@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Inventory for give, check or remove item in our inventory. 
+
 public class Inventory : MonoBehaviour
 {
-    public List<Item> characterItems = new List<Item>();
-    public ItemDatabase itemDatabase;
+    public List<ItemInfo> characterItems = new List<ItemInfo>();
+    public ItemDirectory itemDatabase;
     public UIInventory inventoryUI;
     public GameObject toggleInventory;
     bool inventoryIsActive = false;
@@ -34,25 +36,25 @@ public class Inventory : MonoBehaviour
     }
     public void GiveItem(int id) // itemname
     {
-        Item itemToAdd = itemDatabase.GetItem(id);
+        ItemInfo itemToAdd = itemDatabase.GetItem(id);
         characterItems.Add(itemToAdd);
         inventoryUI.AddNewItem(itemToAdd);
-        Debug.Log("Added item: " + itemToAdd.title);
+        Debug.Log("Added item: " + itemToAdd.headline);
     }
 
-    public Item CheckForItems(string title )
+    public ItemInfo CheckForItems(string title )
     {
-        return characterItems.Find(item => item.title == title);
+        return characterItems.Find(item => item.headline == title);
     }
 
     public void RemoveItem(string title)
     {
-        Item itemToRemove = CheckForItems(title);
+        ItemInfo itemToRemove = CheckForItems(title);
         if (itemToRemove != null)
         {
             characterItems.Remove(itemToRemove);
             inventoryUI.RemoveItem(itemToRemove);
-            Debug.Log("Item Removed: " + itemToRemove.title);
+            Debug.Log("Item Removed: " + itemToRemove.headline);
         }
     }
 }

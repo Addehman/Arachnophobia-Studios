@@ -6,26 +6,26 @@ using UnityEngine.EventSystems;
 
 public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public Item item;
+    public ItemInfo item;
     private Image spriteImage;
     private UIItem selectedItem;
-    private ItemTip itemTip;
+    private ItemTool itemTip;
 
     private void Awake()
     {
         spriteImage = GetComponent<Image>();
         UpdateItem(null);
         selectedItem = GameObject.Find("SelectedItem").GetComponent<UIItem>();
-        itemTip = GameObject.Find("ItemTip").GetComponent<ItemTip>();
+        itemTip = GameObject.Find("ItemTool").GetComponent<ItemTool>();
     }
 
-    public void UpdateItem(Item item)
+    public void UpdateItem(ItemInfo item)
     {
         this.item = item;
         if(this.item != null)
         {
             spriteImage.color = Color.white;
-            spriteImage.sprite = this.item.icon;
+            spriteImage.sprite = this.item.picture;
         }
         else
         {
@@ -39,7 +39,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
         {
             if (selectedItem.item != null)
             {
-                Item clone = new Item(selectedItem.item);
+                ItemInfo clone = new ItemInfo(selectedItem.item);
                 selectedItem.UpdateItem(this.item);
                 UpdateItem(clone);
             }

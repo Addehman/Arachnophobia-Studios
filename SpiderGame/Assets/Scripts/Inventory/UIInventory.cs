@@ -22,12 +22,12 @@ public class UIInventory : MonoBehaviour
         }
     }
 
-    public void UpdateSlot(int slot, Item item)
+    public void UpdateSlot(int slot, ItemInfo item)
     {
         uIItems[slot].UpdateItem(item);
     }
 
-    public void AddNewItem(Item item)
+    public void AddNewItem(ItemInfo item)
     {
         foreach (var uIItem in uIItems)
         {
@@ -37,10 +37,9 @@ public class UIInventory : MonoBehaviour
                 break;
             }
         }
-        //UpdateSlot(uIItems.Where(i => i.item == null), item);
     }
 
-    public void RemoveItem(Item item) 
+    public void RemoveItem(ItemInfo item) 
     {
         foreach (var uIItem in uIItems)
         {
@@ -50,8 +49,6 @@ public class UIInventory : MonoBehaviour
                 break;
             }
         }
-        /*UpdateSlot(uIItems.FindIndex(i => i.item == item), null);*/
-
     }
 }
 
