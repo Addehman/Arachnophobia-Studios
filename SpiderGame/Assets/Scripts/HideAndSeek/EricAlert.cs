@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class EricAlert : MonoBehaviour
 {
     public SpiderMovement spiderMovement;
-    public GameObject door;
+    public Animator animator;
 
     float currentTime = 0f;
 
@@ -63,7 +63,6 @@ public class EricAlert : MonoBehaviour
 
     void Update()
     {
-        door.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, 45f, 0f), 2 * Time.deltaTime);
         if (isDoorOpen == true)
         {
            // door.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, 45f, 0f), 2 * Time.deltaTime);
@@ -79,7 +78,9 @@ public class EricAlert : MonoBehaviour
         if (currentTime >= ericSpawnTimer && currentState == State.EricNotInRoom)
         {
             Debug.Log("Eric inc");
+
             currentTime = 0f;
+            animator.SetTrigger("IdleDoor");
             currentState = State.EricInc;
         }
 
@@ -87,25 +88,28 @@ public class EricAlert : MonoBehaviour
         if (currentTime >= ericWarningTimer && currentState == State.EricInc)
         {
             Debug.Log("Eric enter room");
+
             currentTime = 0f;
-            isDoorOpen = true;
+            animator.SetTrigger("OpenDoor");
             currentState = State.EricEnter;
         }
 
-        //Eric is exiting room, player dont have to worry anymore
+        //Eric turn around and exiting room, player dont have to worry anymore
         if (currentTime >= ericExitTimer && currentState == State.EricEnter)
         {
             Debug.Log("Eric exit room");
+
             currentTime = 0f;
             currentState = State.EricExit;
         }
 
-        //Nothing happens here
+        //Nothing happens here, door is closed
         if(currentTime >= ericDelayTimer && currentState == State.EricExit)
         {
             Debug.Log("Eric timer reset");
+
             currentTime = 0f;
-            isDoorOpen = false;
+            animator.SetTrigger("CloseDoor");
             currentState = State.EricNotInRoom;
         }
 
