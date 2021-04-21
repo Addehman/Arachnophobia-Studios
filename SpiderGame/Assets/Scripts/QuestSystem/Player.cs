@@ -5,11 +5,9 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public Quest quest;
-    int fruit = 1;
 
-    public void GoExploreTheWorld()
+    public void GoDoQuest()
     {
-        int fruit = 1;
         // First quest - go from A to B || place 3 spiderwebs
 
         if (quest.isActive)
@@ -17,9 +15,9 @@ public class Player : MonoBehaviour
             quest.finished.FruitCollected();
             if (quest.finished.IsReached())
             {
-                
                 quest.Complete();
             }
         }
     }
+    // Make sure that if the required amount is reached for the gathering  quest - it should say finish.
 }

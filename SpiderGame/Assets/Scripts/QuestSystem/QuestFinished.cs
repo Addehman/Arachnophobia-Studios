@@ -7,23 +7,24 @@ public class QuestFinished
 {
     public QuestGoals questType;
 
-    public int collectedAmount;
+    public int requiredAmount;
     public int currentAmount;
 
     public Player player;
 
     public QuestGiver questgiver;
+
     public bool IsReached()
     {
-        return (currentAmount >= collectedAmount);
+        return (currentAmount >= requiredAmount);
     }
 
     public void FruitCollected()
     {
-        if (questType == QuestGoals.GatherFood )
+        if (questType == QuestGoals.GatherFood)
         {
             currentAmount++;
-            player.GoExploreTheWorld();
+            /*player.GoDoQuest();*/
         }
         // Make sure this is hooked up to collecatles and player - easy to expand to other quests aswell. 
     }
