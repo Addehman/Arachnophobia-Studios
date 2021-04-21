@@ -25,6 +25,8 @@ public class WallWalkTest : MonoBehaviour
 
 	void Update() // Fixed?
 	{
+
+
 		vertical = Input.GetAxis("Vertical");
 		horizontal = Input.GetAxis("Horizontal");
 		
@@ -68,6 +70,7 @@ public class WallWalkTest : MonoBehaviour
 		RaycastHit hitDownCenter;
 		if (Physics.Raycast(transform.position, downDirCenter, out hitDownCenter, 1f))
 		{
+			Debug.DrawRay(transform.position, downDirCenter, Color.blue, 0.5f);
 			isGroundedCenter = true;
 		}
 		else
@@ -83,7 +86,7 @@ public class WallWalkTest : MonoBehaviour
 	private void RaycastDownwardsBack()
 	{
 		Vector3 downDirBack = transform.TransformDirection(Vector3.down);
-		Vector3 zOffset = new Vector3(0, 0, 0.45f);
+		Vector3 zOffset = transform.TransformDirection(Vector3.back) * 0.45f;
 		RaycastHit hitDownBack;
 		if (Physics.Raycast(transform.position - zOffset, downDirBack, out hitDownBack, 1f))
 		{
@@ -104,7 +107,7 @@ public class WallWalkTest : MonoBehaviour
 		RaycastHit hitForward;
 		if (Physics.Raycast(transform.position, forwardDir, out hitForward, 1f))
 		{
-			Debug.DrawRay(transform.position, forwardDir, Color.red, 0.5f);
+			Debug.DrawRay(transform.position, forwardDir, Color.green, 0.5f);
 			Vector3 rayLength = transform.position - hitForward.point;
 			print ("Hit something, trying to rotate");
 			transform.up = Vector3.Slerp(transform.up, hitForward.normal, 0.5f); // potentially use a coroutine to make a more smooth rotation
@@ -113,7 +116,7 @@ public class WallWalkTest : MonoBehaviour
 
 	private void PlayerRotation()
 	{
-		playerRotationY = transform.rotation.y + horizontal; // it is supposed to increment but only assigns it..
+		playerRotationY += transform.rotation.y + horizontal; 
 		transform.rotation = Quaternion.Euler(0f, playerRotationY, 0f);
 	}
 
