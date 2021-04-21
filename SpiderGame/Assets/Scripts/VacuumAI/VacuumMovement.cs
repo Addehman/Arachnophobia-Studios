@@ -5,45 +5,54 @@ using UnityEngine;
 public class VacuumMovement : MonoBehaviour
 {
     Rigidbody rb;
+
     Vector3 eulerAngleVelocity;
 
-    public bool isReversing;
+    int rotationSpeed = 2;
 
-    public Vector3 moveForward;
+    public Transform playerTransform;
+
+    public bool randomizeDirectionInProgress;
+    public bool playerInSight;
     
     void Start()
     {
         rb = GetComponent<Rigidbody>();
 
-        eulerAngleVelocity = new Vector3(0, -10, 0);
+        eulerAngleVelocity = new Vector3(0, -5, 0);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            print("Tryck");
+            StopCoroutine(RandomizeDirection());
+        }
     }
 
     void FixedUpdate()
     {
-        if (!isReversing)
+        if (playerInSight)
+        {
+            ChasePlayer();
+            rb.velocity = transform.forward;
+        }
+
+        if (!randomizeDirectionInProgress && !playerInSight)
         {
             rb.velocity = transform.forward;
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    public IEnumerator RandomizeDirection()
     {
-        print("Krock");
-
-        if (other.CompareTag("Wall"))
-        {
-            StartCoroutine(RandomizeDirection());
-        }
-    }
-
-    IEnumerator RandomizeDirection()
-    {
-        isReversing = true;
+        randomizeDirectionInProgress = true;
 
         float timePassed = 0;
 
         float reverseTime = 0.5f;
-        int rotationTime = Random.Range(4, 7);
+        float rotationTime = Random.Range(2f, 4.9f);
 
         if (Random.Range(0, 2) == 1)
         {
@@ -68,7 +77,13 @@ public class VacuumMovement : MonoBehaviour
 
             yield return null;
         }
+        randomizeDirectionInProgress = false;
+    }
 
-        isReversing = false;
+    private void ChasePlayer()
+    {
+        transform.rotation = Quaternion.Slerp(transform.rotation, 
+            Quaternion.LookRotation(new Vector3(playerTransform.position.x, 0f, playerTransform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)), 
+            rotationSpeed * Time.deltaTime);
     }
 }
