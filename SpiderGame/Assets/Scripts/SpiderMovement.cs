@@ -18,14 +18,6 @@ public class SpiderMovement : MonoBehaviour
 
     private void Update()
     {
-		if(ericAlert.playerDetected == true)
-        {
-		//	rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
-
-			rb.isKinematic = true;
-			rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-		}
-
 		currentPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
     }
 
