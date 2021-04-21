@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class EricAlert : MonoBehaviour
 {
     public SpiderMovement spiderMovement;
+    public GameOver gameOver;
     public Animator animator;
 
     float currentTime = 0f;
@@ -15,7 +16,7 @@ public class EricAlert : MonoBehaviour
     float ericExitTimer = 5f;
     float ericDelayTimer = 5f;
 
-    bool isDoorOpen = false;
+    public bool playerDetected = false;
 
     IEnumerator ericWarningCoroutine;
     IEnumerator ericExitCoroutine;
@@ -50,6 +51,8 @@ public class EricAlert : MonoBehaviour
             {
                 if (hit.collider.gameObject.tag == "Player")
                 {
+                    playerDetected = true;
+                    gameOver.GameOverScreen();
                     Debug.Log("Player Detected");
                 }
 
@@ -63,15 +66,6 @@ public class EricAlert : MonoBehaviour
 
     void Update()
     {
-        if (isDoorOpen == true)
-        {
-           // door.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, 45f, 0f), 2 * Time.deltaTime);
-        }
-        else
-        {
-           // door.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, 0f, 0f), 2 * Time.deltaTime);
-        }
-
         currentTime += Time.deltaTime;
 
         //Eric incomming, player should find a hide spot during this timer
