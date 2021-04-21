@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO: Create more QuestGoals, FruitCollected only checks for pickup. Placement for webs, bevare of things etc - check and fix this
+
 [System.Serializable]
 public class QuestFinished
 {
     public QuestGoals questType;
+    public Player player;
+    public QuestNPC questgiver;
 
     public int requiredAmount;
     public int currentAmount;
 
-    public Player player;
-
-    public QuestGiver questgiver;
 
     public bool IsReached()
     {
@@ -21,12 +22,14 @@ public class QuestFinished
 
     public void FruitCollected()
     {
+        Debug.Log($"QuestType: {questType} ");
         if (questType == QuestGoals.GatherFood)
         {
             currentAmount++;
-            /*player.GoDoQuest();*/
+            Debug.Log("Collected");
         }
         // Make sure this is hooked up to collecatles and player - easy to expand to other quests aswell. 
+        Debug.Log($" currentamount:{currentAmount}");
     }
 
     public enum QuestGoals
@@ -38,6 +41,6 @@ public class QuestFinished
         Hide,
         GordonRamsey
 
-            // Several different quest we want to achieve in the game
+     // Several different quest we want to achieve in the game
     }
 }

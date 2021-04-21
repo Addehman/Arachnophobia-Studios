@@ -2,14 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO: Player - Instead of GetKeyDown P - place things on collection or spider web to find out how to make it.
+
 public class Player : MonoBehaviour
 {
     public Quest quest;
 
-    public void GoDoQuest()
+    private void Update()
     {
-        // First quest - go from A to B || place 3 spiderwebs
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            GoDoQuest();
+        }
+    }
 
+    public void GoDoQuest() // First quest - go from A to B || place 3 spiderwebs
+    {
         if (quest.isActive)
         {
             quest.finished.FruitCollected();

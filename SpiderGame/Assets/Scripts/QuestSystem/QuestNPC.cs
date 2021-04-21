@@ -4,30 +4,17 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class QuestGiver : MonoBehaviour
+// TODO: Check so the quest we want is added here.
+
+public class QuestNPC : MonoBehaviour
 {
     public Quest quest;
     public Player player;
-/*    public int currentAmountOut;*/
-
-    public QuestFinished questfinished;
 
     public GameObject questWindow;
 
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI descriptionText;
-
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            questfinished.currentAmount++;
-            questfinished.FruitCollected();
-            print(questfinished.currentAmount);
-        }
- /*       currentAmountOut = questfinished.currentAmount;*/ 
-    }
 
     public void OpenQuestWindow()
     {
@@ -39,7 +26,7 @@ public class QuestGiver : MonoBehaviour
     public void AcceptQuest()
     {
         questWindow.SetActive(false);
-        quest.isActive = true;
+        quest.SetQuest(quest.finished);
         player.quest = quest;
     }
 
