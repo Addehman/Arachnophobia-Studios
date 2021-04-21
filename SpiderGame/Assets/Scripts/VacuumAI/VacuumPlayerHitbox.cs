@@ -5,7 +5,6 @@ using UnityEngine;
 public class VacuumPlayerHitbox : MonoBehaviour
 {
     VacuumMovement vacuumMove;
-    Transform playerTransform;
 
     private void Start()
     {
@@ -30,9 +29,4 @@ public class VacuumPlayerHitbox : MonoBehaviour
             vacuumMove.playerInSight = false;
         }
     }
-
-    /* private void OnTriggerStay(Collider other)
-     {
-
-     }*/
 }

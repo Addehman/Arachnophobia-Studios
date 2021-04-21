@@ -6,10 +6,9 @@ public class VacuumMovement : MonoBehaviour
 {
     Rigidbody rb;
 
-    public Vector3 moveForward;
     Vector3 eulerAngleVelocity;
 
-    int rotationSpeed = 1;
+    int rotationSpeed = 2;
 
     public Transform playerTransform;
 
@@ -37,6 +36,7 @@ public class VacuumMovement : MonoBehaviour
         if (playerInSight)
         {
             ChasePlayer();
+            rb.velocity = transform.forward;
         }
 
         if (!randomizeDirectionInProgress && !playerInSight)
@@ -82,7 +82,8 @@ public class VacuumMovement : MonoBehaviour
 
     private void ChasePlayer()
     {
-        //TODO: Make Vacuum only rotate on Y-axis towards player. Save local variable of Y value?
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(playerTransform.position - transform.position), rotationSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, 
+            Quaternion.LookRotation(new Vector3(playerTransform.position.x, 0f, playerTransform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)), 
+            rotationSpeed * Time.deltaTime);
     }
 }
