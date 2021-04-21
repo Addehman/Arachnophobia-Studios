@@ -488,7 +488,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78f053077a801984ab1ccea33cad87ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rayFwdMod1: 0.25
+  rayFwdModDown1: 1
+  rayFwdMod2: 0.5
+  rayFwdModDown2: 1
+  rayFwdMod3: 0.75
+  rayFwdModDown3: 1
+  rayFwdMod4: 1
+  rayFwdModDown4: 1
+  rayFwdMod5: 1
+  rayFwdModDown5: 0.63
+  rayFwdMod6: 1
+  rayFwdModDown6: 0.38
+  rayBwdMod1: 0.25
+  rayBwdModDown1: 1
+  rayBwdMod2: 0.5
+  rayBwdModDown2: 1
+  rayBwdMod3: 0.75
+  rayBwdModDown3: 1
+  rayBwdMod4: 1
+  rayBwdModDown4: 1
+  rayBwdMod5: 1
+  rayBwdModDown5: 0.63
+  rayBwdMod6: 1
+  rayBwdModDown6: 0.38
   playerSpeed: 2
+  sprintMulti: 0
+  jumpStrength: 300
+  playerToGroundRange: 0.3
+  isGrounded: 0
 --- !u!4 &506567014 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3275268700651071322, guid: effe43af96067b2408910830f8b0340f, type: 3}
@@ -1434,10 +1462,11 @@ MonoBehaviour:
   - {fileID: 504301872278610165}
   stepSize: 0.5
   stepHeight: 0.2
-  stepSizePosMod: -1
+  stepSizePosMod: 1
   smoothness: 3
   bodyOrientation: 0
   defaultLegPositions: []
+  doDrawGizmos: 1
 --- !u!114 &1968192465
 MonoBehaviour:
   m_ObjectHideFlags: 0
