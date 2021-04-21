@@ -19,7 +19,7 @@ public class VacuumMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        eulerAngleVelocity = new Vector3(0, -5, 0);
+        eulerAngleVelocity = new Vector3(0, -50, 0);
     }
 
     private void Update()
@@ -52,7 +52,7 @@ public class VacuumMovement : MonoBehaviour
         float timePassed = 0;
 
         float reverseTime = 0.5f;
-        float rotationTime = Random.Range(2f, 4.9f);
+        float rotationTime = Random.Range(2f, 4f);
 
         if (Random.Range(0, 2) == 1)
         {
@@ -70,7 +70,7 @@ public class VacuumMovement : MonoBehaviour
 
         while (timePassed >= reverseTime && timePassed < rotationTime)
         {
-            Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.fixedDeltaTime);
+            Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime);
             rb.MoveRotation(rb.rotation * deltaRotation);
 
             timePassed += Time.deltaTime;
