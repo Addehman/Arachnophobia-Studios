@@ -14,7 +14,7 @@ public class VacuumWallHitbox : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         print(other);
-        if (other.CompareTag("Wall"))
+        if (!other.CompareTag("Floor"))
         {
             if (!vacuumMove.randomizeDirectionInProgress)
             {
