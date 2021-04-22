@@ -4,202 +4,180 @@ using UnityEngine;
 
 public class SpiderMovement : MonoBehaviour
 {
-	public Rigidbody rb;
-	public Transform cam;
-	public float playerSpeed = 1f, turnSmoothTime = 0.1f;
-	public float raycastRange = 1f;
-	public Vector3 playerVelocity;
-	
-	private bool groundedPlayer;
-	private float jumpHeight = 1.0f, gravityValue = -9.82f, turnSmoothVelocity;
-	private float horizontal;
-	private float vertical;
+	[Header("Raycast Forwards Adjustments")]
+	[SerializeField] private float rayFwdMod1 		= 0.25f;
+	[SerializeField] private float rayFwdModDown1 	= 1f;
+	[SerializeField] private float rayFwdMod2 		= 0.5f;
+	[SerializeField] private float rayFwdModDown2	= 1f;
+	[SerializeField] private float rayFwdMod3		= 0.75f;
+	[SerializeField] private float rayFwdModDown3	= 1f;
+	[SerializeField] private float rayFwdMod4		= 1f;
+	[SerializeField] private float rayFwdModDown4	= 1f;
+	[SerializeField] private float rayFwdMod5		= 1f;
+	[SerializeField] private float rayFwdModDown5	= 0.63f;
+	[SerializeField] private float rayFwdMod6		= 1f;
+	[SerializeField] private float rayFwdModDown6	= 0.38f;
+	[Space(2f)]
 
-	private enum GravityStates {Floor, NorthWall, EastWall, SouthWall, WestWall, Ceiling}
-	private GravityStates gravityState;
+	[Header("Raycast Backwards Adjustments")]
+	[SerializeField] private float rayBwdMod1		= 0.25f;
+	[SerializeField] private float rayBwdModDown1	= 1f;
+	[SerializeField] private float rayBwdMod2		= 0.5f;
+	[SerializeField] private float rayBwdModDown2	= 1f;
+	[SerializeField] private float rayBwdMod3		= 0.75f;
+	[SerializeField] private float rayBwdModDown3	= 1f;
+	[SerializeField] private float rayBwdMod4		= 1f;
+	[SerializeField] private float rayBwdModDown4	= 1f;
+	[SerializeField] private float rayBwdMod5		= 1f;
+	[SerializeField] private float rayBwdModDown5	= 0.63f;
+	[SerializeField] private float rayBwdMod6		= 1f;
+	[SerializeField] private float rayBwdModDown6	= 0.38f;
+	[Space(5f)]
 
-	private void Start()
+	[Header("Player Settings")]
+	[SerializeField] private float playerSpeed = 2f;
+	[SerializeField] private float sprintMulti;
+	[SerializeField] private float jumpStrength = 300f;
+	[SerializeField] private float playerToGroundRange = 0.3f;
+	[Space(5f)]
+
+	[SerializeField] private bool isGrounded;
+
+	private Rigidbody rb;
+	private List<Vector3> averageNormalDirections = new List<Vector3>();
+	private Vector3 averageNormalDirection;
+	private Vector3 myNormal;
+
+
+	void Start()
 	{
 		rb = GetComponent<Rigidbody>();
-		cam = GameObject.Find("Main Camera").GetComponent<Transform>();
 	}
 
-	private void FixedUpdate()
+	// Update is called once per frame
+	void Update()
 	{
-		// playerVelocity = rb.velocity;
+		averageNormalDirections.Clear();
 
-		vertical = Input.GetAxis("Vertical");
-		horizontal = Input.GetAxis("Horizontal");
+		RaycastsToCast();
+		Sprint();
+		SpiderJump();
 
-		// PlayerMovement();
-		PlayerRotation();
-		// CheckForObsticleToClimb();
-		PlayerJump();
-	}
+		for (int i = 0; i < averageNormalDirections.Count; i++)
+			averageNormalDirection += averageNormalDirections[i];
 
-	private void Update()
-	{
-		// Locking the rotation for x and z, but letting the y axis be as is.
-		// rb.rotation = Quaternion.Euler(0, rb.rotation.eulerAngles.y, 0);
+		averageNormalDirection /= averageNormalDirections.Count;
 
-		SetGravity();
-	}
-
-	private void SetGravity()
-	{
-		Vector3 v = new Vector3();
-
-		v += transform.forward * horizontal;
-		v += transform.right * vertical;
-		v += transform.up * gravityValue;
-
-		rb.velocity = v;
-
-		Vector3 fwd = transform.TransformDirection(Vector3.down);
-		RaycastHit hit;
-
-		if (Physics.Raycast(transform.position, fwd, out hit, 10f))
+		if (averageNormalDirections.Count == 0)
 		{
-			transform.up = hit.normal;
-		}
-	}
-
-	private void PlayerMovement()
-	{
-		float multiplier = 1f;
-		if (Input.GetKey(KeyCode.LeftShift))
-		{
-			multiplier = 2f;
+			averageNormalDirection = Vector3.up;
 		}
 
-		if (rb.velocity.magnitude < playerSpeed * multiplier)
-		{
-			if (vertical > 0.01f)
-			{
-				rb.AddForce(transform.forward * vertical * Time.fixedDeltaTime * 1000f);
-			}
-			if (vertical < -0.01f)
-			{
-				rb.AddForce(-transform.forward * vertical * Time.fixedDeltaTime * 1000f);
-			}
+		var lerpSpeed = 10f;
 
+		transform.Rotate(0, Input.GetAxis("Horizontal") * 90 * Time.deltaTime, 0);
 
-			if (horizontal > 0.01f)
-			{
-				rb.AddForce(transform.forward * horizontal * Time.fixedDeltaTime * 1000f);
-			}
-			if (horizontal < -0.01f)
-			{
-				rb.AddForce(-transform.forward * horizontal * Time.fixedDeltaTime * 1000f);
-			}
-		}
-		
-		if (vertical == 0 || horizontal == 0)
-		{
-			rb.velocity = Vector3.zero;
-		}
+		myNormal = Vector3.Slerp(myNormal, averageNormalDirection, lerpSpeed * Time.deltaTime);
+		// find forward direction with new myNormal:
+		Vector3 myForward = Vector3.Cross(transform.right, myNormal);
+		// align character to the new myNormal while keeping the forward direction:
+		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
+		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+
+		transform.Translate(0, 0, Input.GetAxis("Vertical") * (playerSpeed + sprintMulti) * Time.deltaTime);
 	}
 
-	private void PlayerRotation()
+	private void RaycastsToCast()
 	{
-		Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+		RaycastHelper(transform.TransformDirection(Vector3.forward), false);
+		RaycastHelper(transform.TransformDirection(Vector3.back), false);
+		RaycastHelper(transform.TransformDirection(Vector3.down), true);
 
-		if (direction.magnitude >= 0.1f)
-		{
-			float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-			float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-			transform.rotation = Quaternion.Euler(0f, angle, 0f);
-			
-			Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-		}
+		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod1 + transform.TransformDirection(Vector3.down) * rayBwdModDown1, false);
+		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod2 + transform.TransformDirection(Vector3.down) * rayBwdModDown2, false);
+		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod3 + transform.TransformDirection(Vector3.down) * rayBwdModDown3, false);
+		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod4 + transform.TransformDirection(Vector3.down) * rayBwdModDown4, false);
+		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod5 + transform.TransformDirection(Vector3.down) * rayBwdModDown5, false);
+		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod6 + transform.TransformDirection(Vector3.down) * rayBwdModDown6, false);
+
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod1 + transform.TransformDirection(Vector3.down) * rayFwdModDown1, false);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod2 + transform.TransformDirection(Vector3.down) * rayFwdModDown2, false);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod3 + transform.TransformDirection(Vector3.down) * rayFwdModDown3, false);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod4 + transform.TransformDirection(Vector3.down) * rayFwdModDown4, false);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod5 + transform.TransformDirection(Vector3.down) * rayFwdModDown5, false);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod6 + transform.TransformDirection(Vector3.down) * rayFwdModDown6, false);
+
+		RaycastHelper(transform.TransformDirection(Vector3.right) + transform.TransformDirection(Vector3.down), false);
+		RaycastHelper(transform.TransformDirection(Vector3.left) + transform.TransformDirection(Vector3.down), false);
 	}
 
-	private void PlayerJump()
+	private void RaycastHelper(Vector3 direction, bool isDownRay)
 	{
-		// Changes the height position of the player..
-		if (Input.GetButtonDown("Jump"))
+		if (isDownRay == true)
 		{
-			if (groundedPlayer)
+			RaycastHit hit;
+			if (Physics.Raycast(transform.position, direction, out hit, 2))
 			{
-				playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-			}
+				Debug.DrawRay(transform.position, direction, Color.red, 0.5f);
+				averageNormalDirections.Add(hit.normal);
 
-			transform.rotation = Quaternion.Euler(0, 0, 0);
-			gravityState = GravityStates.Floor;
-		}
-	}
-
-	private void CheckForObsticleToClimb()
-	{
-		RaycastHit hitDown;
-		RaycastHit hitForward;
-		Ray rayDown = new Ray(transform.localPosition, -transform.up);
-		Ray rayForward = new Ray(transform.localPosition, transform.forward);
-
-		if (Physics.Raycast(rayDown, out hitDown, raycastRange))
-		{
-			groundedPlayer = true;
-
-			if (hitDown.collider.gameObject.CompareTag("Floor") && gravityState != GravityStates.Floor)
-			{
-				gravityState = GravityStates.Floor;
+				float rbVelocity = rb.velocity.y;
+				if (hit.distance < playerToGroundRange && rbVelocity < 0f)
+				{
+					isGrounded = true;
+				}
 			}
-			else if (hitDown.collider.gameObject.CompareTag("NorthWall") && gravityState != GravityStates.NorthWall)
+			else
 			{
-				gravityState = GravityStates.NorthWall;
-			}
-			else if (hitDown.collider.gameObject.CompareTag("EastWall") && gravityState != GravityStates.EastWall)
-			{
-				gravityState = GravityStates.EastWall;
-			}
-			else if (hitDown.collider.gameObject.CompareTag("SouthWall") && gravityState != GravityStates.WestWall)
-			{
-				gravityState = GravityStates.SouthWall;
-			}
-			else if (hitDown.collider.gameObject.CompareTag("WestWall") && gravityState != GravityStates.WestWall)
-			{
-				gravityState = GravityStates.WestWall;
-			}
-			else if (hitDown.collider.gameObject.CompareTag("Ceiling") && gravityState != GravityStates.Ceiling)
-			{
-				gravityState = GravityStates.Ceiling;
+				isGrounded = false;
 			}
 		}
 		else
 		{
-			groundedPlayer = false;
-		}
-
-		if (Physics.Raycast(rayForward, out hitForward, raycastRange))
-		{
-			// print("Found obsticle");
-			Debug.DrawRay(transform.position, transform.forward, Color.red);
-			// Vector3 rotateTo = new Vector3(transform.rotation.x - 1f, 0, 0);
-			// print(rotateTo);
-			// transform.Rotate(transform.rotation.x - 1f, 0, 0);
-			if (hitForward.collider.gameObject.CompareTag("Floor"))
+			RaycastHit hit;
+			if (Physics.Raycast(transform.position, direction, out hit, 2))
 			{
-				// transform.Rotate(Vector3.Lerp(transform.rotation.eulerAngles, Vector3.zero, 1f));
+				Debug.DrawRay(transform.position, direction, Color.red, 0.5f);
+				averageNormalDirections.Add(hit.normal);
 			}
-			if (hitForward.collider.gameObject.CompareTag("NorthWall"))
-			{
-				Quaternion playerRotation = transform.rotation;
-				Quaternion northwallRotation =  new Quaternion(-90, 0, 0, 0);
-				// Quaternion.Lerp(playerRotation, northwallRotation, 1f);
-				for (float t = 0f; t < 1f;)
-				{
-					t += Time.deltaTime;
-					transform.rotation = Quaternion.Slerp(playerRotation, northwallRotation, t);
-					
-				}
-			}
-			// else if (hitForward.collider.gameObject.CompareTag(""))
 		}
-		// else
-		// {
-		// 	doClimbWall = false;
-		// 	// print("Found nothing...");
-		// 	Debug.DrawRay(transform.position, transform.forward, Color.red);
-		// }
 	}
+
+	private void FixedUpdate()
+	{
+		// apply constant weight force according to character normal:
+		rb.AddForce(-9.8f * rb.mass * transform.up);
+	}
+
+	private void SpiderJump() //It's possible to spam the jump-button to get a slightly higher jump than intended, need to find a more proper way to jump
+	{
+		if (Input.GetButtonDown("Jump") && isGrounded == true)
+		{
+			rb.AddForce(transform.up * jumpStrength);
+			isGrounded = false;
+		}
+	}
+
+	private void Sprint()
+	{
+		if (Input.GetKey(KeyCode.LeftShift))
+		{
+			sprintMulti = 2f;
+		}
+		
+		if (Input.GetKeyUp(KeyCode.LeftShift))
+		{
+			sprintMulti = 0f;
+		}
+	}
+
+	// void OnDrawGizmos()
+	// {
+	// 	// Draws a blue line from this transform to the target
+	// 	Gizmos.color = Color.blue;
+	// 	Vector3 startPos = transform.position;
+	// 	Vector3 endPos = transform.position + transform.TransformDirection(Vector3.forward) * 2 - transform.up * 2;
+	// 	Gizmos.DrawLine(startPos, endPos);
+	// 	Gizmos.DrawLine(startPos, transform.position - transform.TransformDirection(Vector3.forward) * 2 - transform.up * 2);
+	// }
 }
