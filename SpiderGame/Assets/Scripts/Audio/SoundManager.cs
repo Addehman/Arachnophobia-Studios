@@ -28,7 +28,7 @@ public class SoundManager : MonoBehaviour
 
     void GetSoundComponents()
     {
-        soundClip = new AudioClip[8];
+        soundClip = new AudioClip[9];
         soundClip[0] = Resources.Load<AudioClip>("Audio/EricFootStep");
         soundClip[1] = Resources.Load<AudioClip>("Audio/Detected");
         soundClip[2] = Resources.Load<AudioClip>("Audio/EricDoor");

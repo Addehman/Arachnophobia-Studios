@@ -46,13 +46,13 @@ public class EricAlert : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.DrawLine(transform.position, spiderMovement.currentPosition, Color.red, 1.0f);
+        Debug.DrawLine(transform.position, spiderMovement.transform.position, Color.red, 1.0f);
         
         RaycastHit hit;
 
         if (isRaycasting == true)
         {
-            if (Physics.Linecast(transform.position, spiderMovement.currentPosition, out hit))
+            if (Physics.Linecast(transform.position, spiderMovement.transform.position, out hit))
             {
                 if (hit.collider.gameObject.tag == "Player")
                 {
