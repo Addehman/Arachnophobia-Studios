@@ -10,7 +10,7 @@ public class UIAppear : MonoBehaviour
     [SerializeField] private GameObject window;
 
     public Player player;
-    
+
 
     void OnTriggerEnter(Collider other)
     {

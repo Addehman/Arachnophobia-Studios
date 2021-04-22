@@ -8,8 +8,6 @@ using UnityEngine;
 public class QuestFinished
 {
     public QuestGoals questType;
-    public Player player;
-    public QuestNPC questgiver;
 
     public int requiredAmount;
     public int currentAmount;
@@ -41,6 +39,6 @@ public class QuestFinished
         Hide,
         GordonRamsey
 
-     // Several different quest we want to achieve in the game
+        // Several different quest we want to achieve in the game
     }
 }

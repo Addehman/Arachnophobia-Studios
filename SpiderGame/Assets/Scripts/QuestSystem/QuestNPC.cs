@@ -30,26 +30,3 @@ public class QuestNPC : MonoBehaviour
         gameObject.SetActive(false);
     }
 }
-
-
-/*[SerializeField] private GameObject window;
-
-public Quest quest;
-
-void OnTriggerEnter(Collider other)
-{
-    if (other.CompareTag("Player") && quest.isCompleted == false && quest.isAccepted == false)
-    {
-        Debug.Log("In");
-        window.SetActive(true);
-    }
-}
-
-void OnTriggerExit(Collider other)
-{
-    if (other.CompareTag("Player"))
-    {
-        Debug.Log("Out");
-        window.SetActive(false);
-    }
-}*/

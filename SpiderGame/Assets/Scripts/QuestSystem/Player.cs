@@ -1,20 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 // TODO: Player - Instead of GetKeyDown P - place things on collection or spider web to find out how to make it.
+
+// When quest picked up - go for pick up food - check so that pickup collecatable puts in inventory & quest.
 
 public class Player : MonoBehaviour
 {
     public Quest quest;
+    public PickUpObject pickUpObject;
 
-    private void Update()
+    private void Start()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            GoDoQuest();
-        }
+        pickUpObject = GetComponent<PickUpObject>();
+        pickUpObject.pickedUpItem += PickUpObject_pickedUpItem;
     }
+
+    private void PickUpObject_pickedUpItem()
+    {
+        GoDoQuest();
+    }
+
+
 
     public void GoDoQuest() // First quest - go from A to B || place 3 spiderwebs
     {
