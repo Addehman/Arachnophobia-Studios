@@ -9,6 +9,7 @@ public class ProceduralAnimationSpider : MonoBehaviour
 	[SerializeField] private int smoothness = 1;
 	[SerializeField] private bool bodyOrientation = true;
 	[SerializeField] private Vector3[] defaultLegPositions;
+	[SerializeField] private bool doDrawGizmos = true;
 
 	private float raycastRange = 1f, velocityMultiplier = 15f;
 	private Vector3[] lastLegPositions;
@@ -127,12 +128,15 @@ public class ProceduralAnimationSpider : MonoBehaviour
 
 	private void OnDrawGizmosSelected()
 	{
-		for (int i = 0; i < numberOfLegs; i++)
+		if (doDrawGizmos == true)
 		{
-				Gizmos.color = Color.red;
-				Gizmos.DrawWireSphere(legTargets[i].position, 0.05f);
-				Gizmos.color = Color.green;
-				Gizmos.DrawWireSphere(transform.TransformPoint(defaultLegPositions[i]), stepSize);
+			for (int i = 0; i < numberOfLegs; i++)
+			{
+					Gizmos.color = Color.red;
+					Gizmos.DrawWireSphere(legTargets[i].position, 0.05f);
+					Gizmos.color = Color.green;
+					Gizmos.DrawWireSphere(transform.TransformPoint(defaultLegPositions[i]), stepSize);
+			}
 		}
 	}
 }

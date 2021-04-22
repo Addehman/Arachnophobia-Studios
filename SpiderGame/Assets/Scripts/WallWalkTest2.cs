@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpiderMovement : MonoBehaviour
+public class WallWalkTest2 : MonoBehaviour
 {
-	[HideInInspector] public Rigidbody rb;
-
 	[Header("Raycast Forwards Adjustments")]
 	[SerializeField] private float rayFwdMod1 		= 0.25f;
 	[SerializeField] private float rayFwdModDown1 	= 1f;
@@ -41,11 +39,11 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private float sprintMulti;
 	[SerializeField] private float jumpStrength = 300f;
 	[SerializeField] private float playerToGroundRange = 0.3f;
-	public Vector3 currentPosition;
 	[Space(5f)]
 
 	[SerializeField] private bool isGrounded;
 
+	private Rigidbody rb;
 	private List<Vector3> averageNormalDirections = new List<Vector3>();
 	private Vector3 averageNormalDirection;
 	private Vector3 myNormal;
@@ -60,8 +58,6 @@ public class SpiderMovement : MonoBehaviour
 	void Update()
 	{
 		averageNormalDirections.Clear();
-
-		currentPosition = transform.position;
 
 		RaycastsToCast();
 		Sprint();
@@ -120,9 +116,9 @@ public class SpiderMovement : MonoBehaviour
 		if (isDownRay == true)
 		{
 			RaycastHit hit;
-			if (Physics.Raycast(transform.position, direction, out hit, 0.1f))
+			if (Physics.Raycast(transform.position, direction, out hit, 2))
 			{
-				Debug.DrawRay(transform.position, direction, Color.red, 0.1f);
+				Debug.DrawRay(transform.position, direction, Color.red, 0.5f);
 				averageNormalDirections.Add(hit.normal);
 
 				float rbVelocity = rb.velocity.y;
@@ -139,9 +135,9 @@ public class SpiderMovement : MonoBehaviour
 		else
 		{
 			RaycastHit hit;
-			if (Physics.Raycast(transform.position, direction, out hit, 0.1f))
+			if (Physics.Raycast(transform.position, direction, out hit, 2))
 			{
-				Debug.DrawRay(transform.position, direction, Color.red, 0.1f);
+				Debug.DrawRay(transform.position, direction, Color.red, 0.5f);
 				averageNormalDirections.Add(hit.normal);
 			}
 		}
