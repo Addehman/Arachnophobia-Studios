@@ -152,7 +152,7 @@ public class EricAlert : MonoBehaviour
         {
             Debug.Log("Eric exit room");
 
-            soundManager.Door();
+            soundManager.CloseDoor();
             animator.SetTrigger("CloseDoor");
 
             ericSpawnTimer = Random.Range(3f, 5f);
