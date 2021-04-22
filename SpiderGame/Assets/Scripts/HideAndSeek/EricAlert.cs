@@ -5,21 +5,24 @@ using UnityEngine.UI;
 
 public class EricAlert : MonoBehaviour
 {
+    public SoundManager soundManager;
     public SpiderMovement spiderMovement;
     public GameOver gameOver;
     public Animator animator;
 
     float currentTime = 0f;
+    float currentRaycastTimer = 0f;
 
     float ericSpawnTimer;
     float ericWarningTimer = 10f;
+    float ericHmmTimer = 10f;
+    float ericOpenDoorTimer = 5f;
+    float ericBeginRaycastTimer = 2f;
     float ericExitTimer = 5f;
-    float ericDelayTimer = 5f;
+    float detectionTimer;
 
     public bool playerDetected = false;
-
-    IEnumerator ericWarningCoroutine;
-    IEnumerator ericExitCoroutine;
+    bool isRaycasting = false;
 
     public Text timer;
 
@@ -29,35 +32,36 @@ public class EricAlert : MonoBehaviour
     {
         EricNotInRoom,
         EricInc,
-        EricEnter,
+        EricOpenDoor,
+        EricRaycast,
+        EricHmm,
         EricExit
     }
 
     void Start()
     {
         currentState = State.EricNotInRoom;
-        ericSpawnTimer = Random.Range(4f, 10f);
+        ericSpawnTimer = Random.Range(7f, 10f);
     }
 
     private void FixedUpdate()
     {
         Debug.DrawLine(transform.position, spiderMovement.currentPosition, Color.red, 1.0f);
-
+        
         RaycastHit hit;
 
-        if (currentState == State.EricEnter)
+        if (isRaycasting == true)
         {
             if (Physics.Linecast(transform.position, spiderMovement.currentPosition, out hit))
             {
                 if (hit.collider.gameObject.tag == "Player")
                 {
                     playerDetected = true;
-                    gameOver.GameOverScreen();
                     Debug.Log("Player Detected");
                 }
-
                 else
                 {
+                    playerDetected = false;
                     Debug.Log("No detection");
                 }
             }
@@ -68,42 +72,92 @@ public class EricAlert : MonoBehaviour
     {
         currentTime += Time.deltaTime;
 
-        //Eric incomming, player should find a hide spot during this timer
+        if(playerDetected == true)
+        {
+            detectionTimer += Time.deltaTime;
+
+            if (detectionTimer >= 3f)
+            {
+                //not playing 
+                soundManager.Detected();
+                gameOver.GameOverScreen();
+            }
+        }
+        else if(playerDetected == false)
+        {
+            detectionTimer = 0f;
+        }
+
+        //Eric is not active and not in room
         if (currentTime >= ericSpawnTimer && currentState == State.EricNotInRoom)
         {
-            Debug.Log("Eric inc");
+            Debug.Log("Eric not room");
+
+            animator.SetTrigger("IdleDoor");
 
             currentTime = 0f;
-            animator.SetTrigger("IdleDoor");
             currentState = State.EricInc;
         }
 
-        //Eric is entering room and starting raycasting
+        //Eric incomming, player should find a hide spot during this timer
         if (currentTime >= ericWarningTimer && currentState == State.EricInc)
         {
-            Debug.Log("Eric enter room");
+            Debug.Log("Eric inc");
+
+            soundManager.audioSource.loop = true;
+            soundManager.EricFootStep();
 
             currentTime = 0f;
+            currentState = State.EricOpenDoor; 
+        }
+
+        //Eric Open Door
+        if(currentTime >= ericOpenDoorTimer && currentState == State.EricOpenDoor)
+        {
+            Debug.Log("Eric Open door");
+
+            soundManager.audioSource.loop = false;
+            soundManager.Door();
             animator.SetTrigger("OpenDoor");
-            currentState = State.EricEnter;
+
+            currentTime = 0f;
+            currentState = State.EricRaycast;
+        }
+
+        //Eric is entering room and starting raycasting
+        if (currentTime >= ericBeginRaycastTimer && currentState == State.EricRaycast)
+        {
+            Debug.Log("Eric enter, doing Raycast");
+            isRaycasting = true;
+
+            currentTime = 0f;
+            currentState = State.EricHmm;
         }
 
         //Eric turn around and exiting room, player dont have to worry anymore
-        if (currentTime >= ericExitTimer && currentState == State.EricEnter)
+        if (currentTime >= ericHmmTimer && currentState == State.EricHmm)
         {
-            Debug.Log("Eric exit room");
+            Debug.Log("Eric no detection");
+
+            playerDetected = false;
+            isRaycasting = false;
+            soundManager.EricHmm();
 
             currentTime = 0f;
             currentState = State.EricExit;
         }
 
         //Nothing happens here, door is closed
-        if(currentTime >= ericDelayTimer && currentState == State.EricExit)
+        if(currentTime >= ericExitTimer && currentState == State.EricExit)
         {
-            Debug.Log("Eric timer reset");
+            Debug.Log("Eric exit room");
+
+            soundManager.Door();
+            animator.SetTrigger("CloseDoor");
+
+            ericSpawnTimer = Random.Range(3f, 5f);
 
             currentTime = 0f;
-            animator.SetTrigger("CloseDoor");
             currentState = State.EricNotInRoom;
         }
 
