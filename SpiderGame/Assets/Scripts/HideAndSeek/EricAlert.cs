@@ -23,6 +23,7 @@ public class EricAlert : MonoBehaviour
 
     public bool playerDetected = false;
     bool isRaycasting = false;
+    bool showedGameOver = false;
 
     public Text timer;
 
@@ -78,9 +79,12 @@ public class EricAlert : MonoBehaviour
 
             if (detectionTimer >= 3f)
             {
-                //not playing 
-                soundManager.Detected();
-                gameOver.GameOverScreen();
+                if(showedGameOver == false)
+                {
+                    soundManager.Detected();
+                    gameOver.GameOverScreen();
+                    showedGameOver = true;
+                }
             }
         }
         else if(playerDetected == false)
@@ -91,7 +95,7 @@ public class EricAlert : MonoBehaviour
         //Eric is not active and not in room
         if (currentTime >= ericSpawnTimer && currentState == State.EricNotInRoom)
         {
-            Debug.Log("Eric not room");
+            Debug.Log("Eric is not in room/respawning");
 
             animator.SetTrigger("IdleDoor");
 
