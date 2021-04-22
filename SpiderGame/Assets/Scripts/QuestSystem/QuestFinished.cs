@@ -34,8 +34,8 @@ public class QuestFinished
 
     public enum QuestGoals
     {
-        AtoB,
         GatherFood,
+        AtoB,
         GoExploreTheWorld,
         SpiderwebPlacement,
         Hide,

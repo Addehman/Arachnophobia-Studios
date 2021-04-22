@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 
 // TODO: Check so the quest we want is added here.
 
@@ -28,6 +27,29 @@ public class QuestNPC : MonoBehaviour
         questWindow.SetActive(false);
         quest.SetQuest(quest.finished);
         player.quest = quest;
+        gameObject.SetActive(false);
     }
-
 }
+
+
+/*[SerializeField] private GameObject window;
+
+public Quest quest;
+
+void OnTriggerEnter(Collider other)
+{
+    if (other.CompareTag("Player") && quest.isCompleted == false && quest.isAccepted == false)
+    {
+        Debug.Log("In");
+        window.SetActive(true);
+    }
+}
+
+void OnTriggerExit(Collider other)
+{
+    if (other.CompareTag("Player"))
+    {
+        Debug.Log("Out");
+        window.SetActive(false);
+    }
+}*/

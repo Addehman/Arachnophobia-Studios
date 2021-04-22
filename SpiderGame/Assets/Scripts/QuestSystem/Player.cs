@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
 
     public void GoDoQuest() // First quest - go from A to B || place 3 spiderwebs
     {
-        if (quest.isActive)
+        if (quest.isAccepted)
         {
             quest.finished.FruitCollected();
             if (quest.finished.IsReached())
