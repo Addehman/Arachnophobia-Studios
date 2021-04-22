@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpiderMovement : MonoBehaviour
+public class WallWalkTest2 : MonoBehaviour
 {
 	[Header("Raycast Forwards Adjustments")]
 	[SerializeField] private float rayFwdMod1 		= 0.25f;
