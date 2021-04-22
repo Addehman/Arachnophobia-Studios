@@ -18,7 +18,7 @@ public class QuestFinished
         return (currentAmount >= requiredAmount);
     }
 
-    public void FruitCollected()
+    public void GatherFood()
     {
         Debug.Log($"QuestType: {questType} ");
         if (questType == QuestGoals.GatherFood)

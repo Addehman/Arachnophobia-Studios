@@ -221,11 +221,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1474483963330626021, guid: 0c3a7cb4627e0754882dc1c0646df603, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -2.4072617e-37
+      value: -1e-45
       objectReference: {fileID: 0}
     - target: {fileID: 1474483963330626021, guid: 0c3a7cb4627e0754882dc1c0646df603, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 1.384046e-38
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1474483963397753076, guid: 0c3a7cb4627e0754882dc1c0646df603, type: 3}
       propertyPath: m_Rigs.Array.data[0]
@@ -273,7 +273,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1474483963657902170, guid: 0c3a7cb4627e0754882dc1c0646df603, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9951334
+      value: 0.99513334
       objectReference: {fileID: 0}
     - target: {fileID: 1474483963657902170, guid: 0c3a7cb4627e0754882dc1c0646df603, type: 3}
       propertyPath: m_LocalRotation.x
@@ -281,11 +281,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1474483963657902170, guid: 0c3a7cb4627e0754882dc1c0646df603, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -1.7487024e-15
+      value: 1e-45
       objectReference: {fileID: 0}
     - target: {fileID: 1474483963657902170, guid: 0c3a7cb4627e0754882dc1c0646df603, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 2.388387e-16
+      value: -0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c3a7cb4627e0754882dc1c0646df603, type: 3}
@@ -303,7 +303,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8491687331440451568, guid: 1a32a54d9e717444c9d2f66dd5f38d7f, type: 3}
       propertyPath: m_Name
-      value: Canvas_1
+      value: QuestCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 8491687331440451572, guid: 1a32a54d9e717444c9d2f66dd5f38d7f, type: 3}
       propertyPath: m_Pivot.x
@@ -389,6 +389,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8491687332101188847, guid: 1a32a54d9e717444c9d2f66dd5f38d7f, type: 3}
+      propertyPath: m_Name
+      value: QuestWindow
+      objectReference: {fileID: 0}
     - target: {fileID: 8491687332237831961, guid: 1a32a54d9e717444c9d2f66dd5f38d7f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -400,6 +404,10 @@ PrefabInstance:
     - target: {fileID: 8491687332237831961, guid: 1a32a54d9e717444c9d2f66dd5f38d7f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: QuestNPC, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8491687333046888460, guid: 1a32a54d9e717444c9d2f66dd5f38d7f, type: 3}
+      propertyPath: m_Name
+      value: InformationAboutQuest
       objectReference: {fileID: 0}
     - target: {fileID: 8491687333155996586, guid: 1a32a54d9e717444c9d2f66dd5f38d7f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -558,7 +566,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4011040541753971287, guid: f306e8b5d000c014482feb7a27f5cc96, type: 3}
       propertyPath: m_Name
-      value: Cube
+      value: TriggerForQuest
       objectReference: {fileID: 0}
     - target: {fileID: 4011040541753971307, guid: f306e8b5d000c014482feb7a27f5cc96, type: 3}
       propertyPath: m_RootOrder
@@ -625,7 +633,7 @@ GameObject:
   - component: {fileID: 586986462}
   - component: {fileID: 586986461}
   m_Layer: 0
-  m_Name: TESTItemDatabaseTEST
+  m_Name: ItemDatabaseInformation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -694,8 +702,6 @@ MonoBehaviour:
     description: 
     finished:
       questType: 0
-      player: {fileID: 0}
-      questgiver: {fileID: 0}
       requiredAmount: 0
       currentAmount: 0
   pickUpObject: {fileID: 0}
@@ -796,7 +802,7 @@ GameObject:
   m_Component:
   - component: {fileID: 821071155}
   m_Layer: 0
-  m_Name: PickUpParent
+  m_Name: PickUpHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1575,7 +1581,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3859649217345896075, guid: d11a8c70dfe2b5b468730fbec80bac2a, type: 3}
       propertyPath: m_Name
-      value: QuestNPC
+      value: QuestHolder/NPC
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d11a8c70dfe2b5b468730fbec80bac2a, type: 3}
@@ -1783,7 +1789,7 @@ GameObject:
   - component: {fileID: 1957791375}
   - component: {fileID: 1957791374}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: InventoryCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2128,7 +2134,7 @@ PrefabInstance:
       objectReference: {fileID: 1478660795}
     - target: {fileID: 7757864954142948418, guid: 6952b9667563f8f49ab0988c16351513, type: 3}
       propertyPath: m_Name
-      value: TestForInventory
+      value: HolderForInventoryForScene
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6952b9667563f8f49ab0988c16351513, type: 3}

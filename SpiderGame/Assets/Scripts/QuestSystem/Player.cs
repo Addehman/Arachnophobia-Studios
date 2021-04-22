@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-// TODO: Player - Instead of GetKeyDown P - place things on collection or spider web to find out how to make it.
-
-// When quest picked up - go for pick up food - check so that pickup collecatable puts in inventory & quest.
-
 public class Player : MonoBehaviour
 {
     public Quest quest;
@@ -23,18 +19,15 @@ public class Player : MonoBehaviour
         GoDoQuest();
     }
 
-
-
-    public void GoDoQuest() // First quest - go from A to B || place 3 spiderwebs
+    public void GoDoQuest() //This function hold the quest that is needed to be done right now. At the moment, fruitcollected.
     {
         if (quest.isAccepted)
         {
-            quest.finished.FruitCollected();
+            quest.finished.GatherFood();
             if (quest.finished.IsReached())
             {
                 quest.Complete();
             }
         }
     }
-    // Make sure that if the required amount is reached for the gathering  quest - it should say finish.
 }
