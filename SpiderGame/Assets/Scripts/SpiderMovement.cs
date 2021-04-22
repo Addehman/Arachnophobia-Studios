@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SpiderMovement : MonoBehaviour
 {
+	[HideInInspector] public Rigidbody rb;
+
 	[Header("Raycast Forwards Adjustments")]
 	[SerializeField] private float rayFwdMod1 		= 0.25f;
 	[SerializeField] private float rayFwdModDown1 	= 1f;
@@ -43,7 +45,6 @@ public class SpiderMovement : MonoBehaviour
 
 	[SerializeField] private bool isGrounded;
 
-	private Rigidbody rb;
 	private List<Vector3> averageNormalDirections = new List<Vector3>();
 	private Vector3 averageNormalDirection;
 	private Vector3 myNormal;
@@ -116,9 +117,9 @@ public class SpiderMovement : MonoBehaviour
 		if (isDownRay == true)
 		{
 			RaycastHit hit;
-			if (Physics.Raycast(transform.position, direction, out hit, 2))
+			if (Physics.Raycast(transform.position, direction, out hit, 0.1f))
 			{
-				Debug.DrawRay(transform.position, direction, Color.red, 0.5f);
+				Debug.DrawRay(transform.position, direction, Color.red, 0.1f);
 				averageNormalDirections.Add(hit.normal);
 
 				float rbVelocity = rb.velocity.y;
@@ -135,9 +136,9 @@ public class SpiderMovement : MonoBehaviour
 		else
 		{
 			RaycastHit hit;
-			if (Physics.Raycast(transform.position, direction, out hit, 2))
+			if (Physics.Raycast(transform.position, direction, out hit, 0.1f))
 			{
-				Debug.DrawRay(transform.position, direction, Color.red, 0.5f);
+				Debug.DrawRay(transform.position, direction, Color.red, 0.1f);
 				averageNormalDirections.Add(hit.normal);
 			}
 		}
