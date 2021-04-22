@@ -41,6 +41,7 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private float sprintMulti;
 	[SerializeField] private float jumpStrength = 300f;
 	[SerializeField] private float playerToGroundRange = 0.3f;
+	public Vector3 currentPosition;
 	[Space(5f)]
 
 	[SerializeField] private bool isGrounded;
@@ -59,6 +60,8 @@ public class SpiderMovement : MonoBehaviour
 	void Update()
 	{
 		averageNormalDirections.Clear();
+
+		currentPosition = transform.position;
 
 		RaycastsToCast();
 		Sprint();
