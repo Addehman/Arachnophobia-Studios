@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpiderMovement : MonoBehaviour
 {
 	[HideInInspector] public Rigidbody rb;
+	[HideInInspector] public Vector3 currentPosition;
 
 	[Header("Main Raycasts Adjustment")]
 	[SerializeField] private float rayFwdMod	= 1f;
@@ -50,9 +51,9 @@ public class SpiderMovement : MonoBehaviour
 	[Header("Player Settings")]
 	[SerializeField] private float playerSpeed = 2f;
 	[SerializeField] private float sprintMulti;
-	[SerializeField] private float jumpStrength = 300f;
+	[SerializeField] private float jumpUpStrength = 100f;
+	[SerializeField] private float jumpFwdStrength = 50f;
 	[SerializeField] private float playerToGroundRange = 0.3f;
-	public Vector3 currentPosition;
 	[Space(5f)]
 
 	[Header("Debug")]
@@ -62,6 +63,7 @@ public class SpiderMovement : MonoBehaviour
 	private List<Vector3> averageNormalDirections = new List<Vector3>();
 	private Vector3 averageNormalDirection;
 	private Vector3 myNormal;
+	private float gravityValue = -9.82f;
 
 
 	void Start()
@@ -78,6 +80,7 @@ public class SpiderMovement : MonoBehaviour
 
 		RaycastsToCast();
 		Sprint();
+		// isClimbing();
 		SpiderJump();
 
 		for (int i = 0; i < averageNormalDirections.Count; i++)
@@ -170,14 +173,52 @@ public class SpiderMovement : MonoBehaviour
 	private void FixedUpdate()
 	{
 		// apply constant weight force according to character normal:
-		rb.AddForce(-9.8f * rb.mass * transform.up);
+		if (isGrounded == true)
+		{
+			rb.AddForce(gravityValue * rb.mass * transform.up);
+		}
+		else
+		{
+			rb.AddForce(gravityValue * rb.mass * Vector3.up);
+		}
+	}
+
+	private bool isClimbing()
+	{
+		if (transform.rotation.x > 20f)
+		{
+			return true;
+		}
+		else if (transform.rotation.y > 20f)
+		{
+			return true;
+		}
+		else if (transform.rotation.z > 20f)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	private void SpiderJump() //It's possible to spam the jump-button to get a slightly higher jump than intended, need to find a more proper way to jump
 	{
-		if (Input.GetButtonDown("Jump") && isGrounded == true)
+		/*if (isClimbing() == true && Input.GetButtonDown("Jump") && isGrounded == true)
 		{
-			rb.AddForce(transform.up * jumpStrength);
+			rb.AddForce((transform.up + transform.forward) * 30);
+			isGrounded = false;
+		}
+		else */
+		if (Input.GetKey(KeyCode.W) == false && Input.GetButtonDown("Jump") && isGrounded == true)
+		{
+			rb.AddForce(transform.up * jumpUpStrength);
+			isGrounded = false;
+		}
+		else if (Input.GetKey(KeyCode.W) && Input.GetButtonDown("Jump") && isGrounded == true)
+		{
+			rb.AddForce((transform.up + transform.forward) * jumpFwdStrength);
 			isGrounded = false;
 		}
 	}
