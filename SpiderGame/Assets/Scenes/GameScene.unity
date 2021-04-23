@@ -1723,6 +1723,24 @@ Transform:
   m_Father: {fileID: 525649236}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &488259524 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4500f2ca8f9ce6b4dbf6def4d8ef1c92, type: 3}
+  m_PrefabInstance: {fileID: 609182243}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &488259528
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488259524}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.26839018, y: 0.40430093, z: 0.21396795}
+  m_Center: {x: 0.00030976543, y: 0.0014621615, z: 0.10698208}
 --- !u!1001 &489668605
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6959,6 +6977,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kitchen_SmallProps_OpenMovingBox
       objectReference: {fileID: 0}
+    - target: {fileID: 3451118302482216456, guid: 4500f2ca8f9ce6b4dbf6def4d8ef1c92, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4500f2ca8f9ce6b4dbf6def4d8ef1c92, type: 3}
 --- !u!1001 &628240243
@@ -9274,6 +9296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 1474483963838458596}
+  currentPosition: {x: 1.6893911, y: 1.8894316, z: 0.2269907}
   rayFwdMod: 1
   rayBwdMod: 1
   rayDownMod: 1
@@ -9306,9 +9329,9 @@ MonoBehaviour:
   raysBackOriginOffset: 0
   playerSpeed: 0.2
   sprintMulti: 0
-  jumpStrength: 100
+  jumpUpStrength: 100
+  jumpFwdStrength: 50
   playerToGroundRange: 0.3
-  currentPosition: {x: 1.6893911, y: 1.8894316, z: 0.2269907}
   isGrounded: 1
   drawRayGizmos: 1
 --- !u!1 &967096676
@@ -18051,6 +18074,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2047653900}
   - component: {fileID: 2047653901}
+  - component: {fileID: 2047653902}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -18081,11 +18105,24 @@ MeshCollider:
   m_GameObject: {fileID: 2047653899}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8328861467212362863, guid: ac062bdac8c140043b88582de97bce04, type: 3}
+--- !u!65 &2047653902
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047653899}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.21707378, y: 0.38856757, z: 0.25452042}
+  m_Center: {x: 0.060768217, y: -0.0045980806, z: 0.13268998}
 --- !u!4 &2088274747 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8200501404590344391, guid: effe43af96067b2408910830f8b0340f, type: 3}
