@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerWalkOnWallsScript : MonoBehaviour
 {
     Vector3 facing_direction = Vector3.forward;
     float detect_distance = 1.0f;
