@@ -48,6 +48,7 @@ public class SoundManager : MonoBehaviour
 
     public void Detected()
     {
+        audioSource.Stop();
         audioSource.clip = soundClip[1];
         audioSource.Play();
     }
