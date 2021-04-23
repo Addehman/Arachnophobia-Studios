@@ -22,12 +22,12 @@ public class GameOver : MonoBehaviour
 
     public void RestartButton()
     {
-        SceneManager.LoadScene("GameScene");
+        /*SceneManager.LoadScene("GameScene");*/
     }
 
     public void BackToMainMenu()
     {
-
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void ExitButton()
