@@ -20,7 +20,7 @@ public class Inventory : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-       
+
             if (inventoryIsActive == true)
             {
                 toggleInventory.SetActive(false);
@@ -42,7 +42,7 @@ public class Inventory : MonoBehaviour
         Debug.Log("Added item: " + itemToAdd.headline);
     }
 
-    public ItemInfo CheckForItems(string title )
+    public ItemInfo CheckForItems(string title)
     {
         return characterItems.Find(item => item.headline == title);
     }

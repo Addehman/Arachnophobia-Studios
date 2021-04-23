@@ -39,7 +39,7 @@ public class UIInventory : MonoBehaviour
         }
     }
 
-    public void RemoveItem(ItemInfo item) 
+    public void RemoveItem(ItemInfo item)
     {
         foreach (var uIItem in uIItems)
         {

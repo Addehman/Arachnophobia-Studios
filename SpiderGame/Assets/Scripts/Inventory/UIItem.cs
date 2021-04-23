@@ -63,7 +63,6 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
         {
             itemTip.GenerateItemTip(this.item);
         }
-
     }
 
     public void OnPointerExit(PointerEventData eventData)
