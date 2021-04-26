@@ -8,7 +8,10 @@ public class VacuumMovement : MonoBehaviour
 
     Vector3 eulerAngleVelocity;
 
-    int rotationSpeed = 2;
+    private int rotationSpeed = 2;
+    private float forwardSpeedMultiplier = 0.5f;
+    private float reverseSpeedMultiplier = 0.4f;
+
 
     public Transform playerTransform;
 
@@ -36,12 +39,12 @@ public class VacuumMovement : MonoBehaviour
         if (playerInSight)
         {
             ChasePlayer();
-            rb.velocity = transform.forward;
+            rb.velocity = transform.forward * forwardSpeedMultiplier;
         }
 
         if (!randomizeDirectionInProgress && !playerInSight)
         {
-            rb.velocity = transform.forward;
+            rb.velocity = transform.forward * forwardSpeedMultiplier;
         }
     }
 
@@ -61,7 +64,7 @@ public class VacuumMovement : MonoBehaviour
 
         while (timePassed < reverseTime)
         {
-            rb.velocity = -transform.forward;
+            rb.velocity = -transform.forward * reverseSpeedMultiplier;
 
             timePassed += Time.deltaTime;
 
