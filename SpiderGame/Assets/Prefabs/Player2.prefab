@@ -626,9 +626,14 @@ MonoBehaviour:
   rayBwdModDown5: 0.063
   rayBwdMod6: 0.1
   rayBwdModDown6: 0.038
-  raycastReach: 0.05
+  raycastReach: 0.06
   rayDownOriginOffset: 0
   raysBackOriginOffset: 0
+  raycastReachEdge: 0.1
+  edgeRayOriginOffset: 0.03
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 55
   playerSpeed: 0.2
   sprintMulti: 0
   jumpUpStrength: 100
@@ -636,6 +641,9 @@ MonoBehaviour:
   playerToGroundRange: 0.3
   isGrounded: 1
   drawRayGizmos: 1
+  fwdRayNoHit: 0
+  backRayNoHit: 0
+  averageNormalDirections: []
 --- !u!114 &5734397690749995814
 MonoBehaviour:
   m_ObjectHideFlags: 0
