@@ -82,6 +82,8 @@ public class SpringJointWeb : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, maxDistance))
         {
+            thirdPersonCamera.SetActive(true);
+            firstPersonCamera.SetActive(false);
             currentState = State.IsSwinging;
             GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);
             joint = gameObject.AddComponent<SpringJoint>();
@@ -110,6 +112,8 @@ public class SpringJointWeb : MonoBehaviour
         {
             return;
         }
+
+        changeCamera.crosshair.SetActive(false);
 
         lineRenderer.SetPosition(0, gameObject.transform.position);
         lineRenderer.SetPosition(1, GameObject.Find("TargetPoint(Clone)").transform.position);
