@@ -5,10 +5,15 @@ using UnityEngine.UI;
 
 public class EricAlert : MonoBehaviour
 {
+    public RaycastToggler raycastToggler;
     public SoundManager soundManager;
     public SpiderMovement spiderMovement;
     public GameOver gameOver;
-    public Animator animator;
+
+    public Animator animatorDoor1;
+    public Animator animatorDoor2;
+
+    public int ericSpawnPosition;
 
     float currentTime = 0f;
     float currentRaycastTimer = 0f;
@@ -97,7 +102,18 @@ public class EricAlert : MonoBehaviour
         {
             Debug.Log("Eric is not in room/respawning");
 
-            animator.SetTrigger("IdleDoor");
+            if (ericSpawnPosition == 0)
+            {
+                animatorDoor1.SetTrigger("IdleDoor");
+            }
+            else if (ericSpawnPosition == 1)
+            {
+                animatorDoor2.SetTrigger("IdleDoor");
+            }
+
+            ericSpawnPosition = Random.Range(0, 2);
+            Debug.Log(ericSpawnPosition);
+            raycastToggler.Start();
 
             currentTime = 0f;
             currentState = State.EricInc;
@@ -122,7 +138,15 @@ public class EricAlert : MonoBehaviour
 
             soundManager.audioSource.loop = false;
             soundManager.Door();
-            animator.SetTrigger("OpenDoor");
+
+            if (ericSpawnPosition == 0)
+            {
+                animatorDoor1.SetTrigger("OpenDoor");
+            }
+            else if (ericSpawnPosition == 1)
+            {
+                animatorDoor2.SetTrigger("OpenDoor");
+            }
 
             currentTime = 0f;
             currentState = State.EricRaycast;
@@ -142,7 +166,6 @@ public class EricAlert : MonoBehaviour
         if (currentTime >= ericHmmTimer && currentState == State.EricHmm)
         {
             Debug.Log("Eric no detection");
-
             playerDetected = false;
             isRaycasting = false;
             soundManager.EricHmm();
@@ -157,14 +180,21 @@ public class EricAlert : MonoBehaviour
             Debug.Log("Eric exit room");
 
             soundManager.CloseDoor();
-            animator.SetTrigger("CloseDoor");
+
+            if (ericSpawnPosition == 0)
+            {
+                animatorDoor1.SetTrigger("CloseDoor");
+            }
+            else if (ericSpawnPosition == 1)
+            {
+                animatorDoor2.SetTrigger("CloseDoor");
+            }
 
             ericSpawnTimer = Random.Range(3f, 5f);
 
             currentTime = 0f;
             currentState = State.EricNotInRoom;
         }
-
 
         timer.text = currentTime.ToString();
     }
