@@ -170,6 +170,7 @@ public class EricAlert : MonoBehaviour
         if (currentTime >= ericHmmTimer && currentState == State.EricHmm)
         {
             Debug.Log("Eric no detection");
+            ericsVision.SetActive(false);
             playerDetected = false;
             isRaycasting = false;
             soundManager.EricHmm();
