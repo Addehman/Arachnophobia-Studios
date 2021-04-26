@@ -64,11 +64,14 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private bool drawRayGizmos;
 	[SerializeField] private bool fwdRayNoHit = false;
 	[SerializeField] private bool backRayNoHit = false;
-
+	[SerializeField] private bool isFwdRayHitting;
 	[SerializeField] private List<Vector3> averageNormalDirections = new List<Vector3>();
+
 	private Vector3 averageNormalDirection;
 	private Vector3 myNormal;
 	private float gravityValue = -9.82f;
+	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any}
+	private RaycastTypes raycastType;
 
 
 	void Start()
@@ -111,27 +114,26 @@ public class SpiderMovement : MonoBehaviour
 
 	private void RaycastsToCast()
 	{
-		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod, 0f, false, false, false);
-		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod, 0f, false, false, false);
-		RaycastHelper(transform.TransformDirection(Vector3.down) * rayDownMod, rayDownOriginOffset, true, false, false);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod, 0f, RaycastTypes.MainForwards);
+		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod, 0f, RaycastTypes.MainBackwards);
+		RaycastHelper(transform.TransformDirection(Vector3.down) * rayDownMod, rayDownOriginOffset, RaycastTypes.MainDown);
 
-		RaycastHelper(transform.TransformDirection(Vector3.right) + transform.TransformDirection(Vector3.down), 0f, false, false, false);
-		RaycastHelper(transform.TransformDirection(Vector3.left) + transform.TransformDirection(Vector3.down), 0f, false, false, false);
+		RaycastHelper(transform.TransformDirection(Vector3.right) + transform.TransformDirection(Vector3.down), 0f, RaycastTypes.Any);
+		RaycastHelper(transform.TransformDirection(Vector3.left) + transform.TransformDirection(Vector3.down), 0f, RaycastTypes.Any);
 
-		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod1 + transform.TransformDirection(Vector3.down) * rayFwdModDown1, 0f, false, true, false);
-		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod2 + transform.TransformDirection(Vector3.down) * rayFwdModDown2, 0f, false, true, false);
-		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod3 + transform.TransformDirection(Vector3.down) * rayFwdModDown3, 0f, false, true, false);
-		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod4 + transform.TransformDirection(Vector3.down) * rayFwdModDown4, 0f, false, true, false);
-		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod5 + transform.TransformDirection(Vector3.down) * rayFwdModDown5, 0f, false, true, false);
-		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod6 + transform.TransformDirection(Vector3.down) * rayFwdModDown6, 0f, false, true, false);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod1 + transform.TransformDirection(Vector3.down) * rayFwdModDown1, 0f, RaycastTypes.Forwards);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod2 + transform.TransformDirection(Vector3.down) * rayFwdModDown2, 0f, RaycastTypes.Forwards);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod3 + transform.TransformDirection(Vector3.down) * rayFwdModDown3, 0f, RaycastTypes.Forwards);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod4 + transform.TransformDirection(Vector3.down) * rayFwdModDown4, 0f, RaycastTypes.Forwards);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod5 + transform.TransformDirection(Vector3.down) * rayFwdModDown5, 0f, RaycastTypes.Forwards);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * rayFwdMod6 + transform.TransformDirection(Vector3.down) * rayFwdModDown6, 0f, RaycastTypes.Forwards);
 
-		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod1 + transform.TransformDirection(Vector3.down) * rayBwdModDown1, raysBackOriginOffset, false, false, true);
-		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod2 + transform.TransformDirection(Vector3.down) * rayBwdModDown2, raysBackOriginOffset, false, false, true);
-		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod3 + transform.TransformDirection(Vector3.down) * rayBwdModDown3, raysBackOriginOffset, false, false, true);
-		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod4 + transform.TransformDirection(Vector3.down) * rayBwdModDown4, raysBackOriginOffset, false, false, true);
-		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod5 + transform.TransformDirection(Vector3.down) * rayBwdModDown5, raysBackOriginOffset, false, false, true);
-		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod6 + transform.TransformDirection(Vector3.down) * rayBwdModDown6, raysBackOriginOffset, false, false, true);
-
+		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod1 + transform.TransformDirection(Vector3.down) * rayBwdModDown1, raysBackOriginOffset, RaycastTypes.Backwards);
+		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod2 + transform.TransformDirection(Vector3.down) * rayBwdModDown2, raysBackOriginOffset, RaycastTypes.Backwards);
+		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod3 + transform.TransformDirection(Vector3.down) * rayBwdModDown3, raysBackOriginOffset, RaycastTypes.Backwards);
+		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod4 + transform.TransformDirection(Vector3.down) * rayBwdModDown4, raysBackOriginOffset, RaycastTypes.Backwards);
+		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod5 + transform.TransformDirection(Vector3.down) * rayBwdModDown5, raysBackOriginOffset, RaycastTypes.Backwards);
+		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod6 + transform.TransformDirection(Vector3.down) * rayBwdModDown6, raysBackOriginOffset, RaycastTypes.Backwards);
 		// Edge Raycasts:
 		if (fwdRayNoHit == true)
 		{
@@ -142,7 +144,7 @@ public class SpiderMovement : MonoBehaviour
 		// 	EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -edgeRayOriginOffset);
 		// }
 	}
-
+	// Special "Hook"- or Edge-Raycasts, used to look over edges to find footing where the other rays won't reach.
 	private void EdgeRaycastHelper(Vector3 direction, float originOffsetValue)
 	{
 		RaycastHit hit;
@@ -156,77 +158,94 @@ public class SpiderMovement : MonoBehaviour
 			averageNormalDirections.Add(hit.normal);
 		}
 	}
-
-	private void RaycastHelper(Vector3 direction, float originOffsetValue, bool isDownRay, bool isFwdRay, bool isBackRay)
+	// Main Raycasts function, that casts the rays that balances the player's rotation according to all the normals that these rays find.
+	private void RaycastHelper(Vector3 direction, float originOffsetValue, RaycastTypes inRaycastType)
 	{
 		Vector3 originOffset = transform.TransformDirection(Vector3.back) * originOffsetValue;
-		if (isDownRay == true) // if it's the ray that is shot straight down, then it's also checking for Ground to set isGrounded.
+		RaycastHit hit;
+		
+		switch (inRaycastType)
 		{
-			RaycastHit hit;
-			if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
-			{
-				if (drawRayGizmos == true)
+			// case RaycastTypes.MainForwards:
+			// 	if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
+			// 	{
+			// 		if (drawRayGizmos == true)
+			// 		{
+			// 			Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
+			// 		}
+			// 		averageNormalDirections.Add(hit.normal);
+			// 		isFwdRayHitting = true;
+			// 	}
+			// 	else
+			// 	{
+			// 		isFwdRayHitting = false;
+			// 	}
+			// 	break;
+			case RaycastTypes.MainDown:
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
 				{
-					Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
-				}
-				averageNormalDirections.Add(hit.normal);
+					if (drawRayGizmos == true)
+					{
+						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
+					}
+					averageNormalDirections.Add(hit.normal);
 
-				float rbVelocity = rb.velocity.y;
-				if (hit.distance < playerToGroundRange && rbVelocity < 0f)
-				{
-					isGrounded = true;
+					float rbVelocity = rb.velocity.y;
+					if (hit.distance < playerToGroundRange && rbVelocity < 0f)
+					{
+						isGrounded = true;
+					}
 				}
-			}
-			else
-			{
-				isGrounded = false;
-			}
-		}
-		else if (isFwdRay == true)
-		{
-			RaycastHit hit;
-			if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
-			{
-				if (drawRayGizmos == true)
+				else
 				{
-					Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
+					isGrounded = false;
 				}
-				averageNormalDirections.Add(hit.normal);
-				fwdRayNoHit = false;
-			}
-			else
-			{
-				fwdRayNoHit = true;
-			}
-		}
+				break;
+			case RaycastTypes.Forwards:
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
+				{
+					if (drawRayGizmos == true)
+					{
+						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
+					}
+					averageNormalDirections.Add(hit.normal);
+					fwdRayNoHit = false;
+				}
+				else
+				{
+					fwdRayNoHit = true;
+				}
+				break;
+			// case RaycastTypes.Backwards:
+			// 	if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach))
+			// 	{
+			// 		if (drawRayGizmos == true)
+			// 		{
+			// 			Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
+			// 		}
+			// 		averageNormalDirections.Add(hit.normal);
+			// 		backRayNoHit = false;
+			// 	}
+			// 	else
+			// 	{
+			// 		backRayNoHit = true;
+			// 	}
+			// 	break;
+			default:
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
+				{
+					if (drawRayGizmos == true)
+					{
+						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
+					}
+					averageNormalDirections.Add(hit.normal);
+				}
+				break;
 		// else if (isBackRay == true)
 		// {
 		// 	RaycastHit hit;
-		// 	if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach))
-		// 	{
-		// 		if (drawRayGizmos == true)
-		// 		{
-		// 			Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
-		// 		}
-		// 		averageNormalDirections.Add(hit.normal);
-		// 		backRayNoHit = false;
-		// 	}
-		// 	else
-		// 	{
-		// 		backRayNoHit = true;
-		// 	}
+		// 	
 		// }
-		else
-		{
-			RaycastHit hit;
-			if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
-			{
-				if (drawRayGizmos == true)
-				{
-					Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
-				}
-				averageNormalDirections.Add(hit.normal);
-			}
 		}
 	}
 
@@ -295,14 +314,8 @@ public class SpiderMovement : MonoBehaviour
 		}
 	}
 
-	private void SpiderJump() //It's possible to spam the jump-button to get a slightly higher jump than intended, need to find a more proper way to jump
+	private void SpiderJump()
 	{
-		/*if (isClimbing() == true && Input.GetButtonDown("Jump") && isGrounded == true)
-		{
-			rb.AddForce((transform.up + transform.forward) * 30);
-			isGrounded = false;
-		}
-		else */
 		if (Input.GetKey(KeyCode.W) == false && Input.GetButtonDown("Jump") && isGrounded == true)
 		{
 			rb.AddForce(transform.up * jumpUpStrength);
@@ -314,7 +327,7 @@ public class SpiderMovement : MonoBehaviour
 			isGrounded = false;
 		}
 	}
-
+	// Binds key for player to use to increase move speed.
 	private void Sprint()
 	{
 		if (Input.GetKey(KeyCode.LeftShift))
@@ -327,14 +340,4 @@ public class SpiderMovement : MonoBehaviour
 			sprintMulti = 0f;
 		}
 	}
-
-	// void OnDrawGizmos()
-	// {
-	// 	// Draws a blue line from this transform to the target
-	// 	Gizmos.color = Color.blue;
-	// 	Vector3 startPos = transform.position;
-	// 	Vector3 endPos = transform.position + transform.TransformDirection(Vector3.forward) * 2 - transform.up * 2;
-	// 	Gizmos.DrawLine(startPos, endPos);
-	// 	Gizmos.DrawLine(startPos, transform.position - transform.TransformDirection(Vector3.forward) * 2 - transform.up * 2);
-	// }
 }

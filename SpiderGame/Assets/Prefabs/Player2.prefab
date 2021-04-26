@@ -451,9 +451,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 0
   m_Radius: 0.12
-  m_Height: 0
+  m_Height: 0.5
   m_Direction: 2
-  m_Center: {x: 0, y: -0.03, z: 0}
+  m_Center: {x: 0, y: -0.03, z: -0.13}
 --- !u!54 &2147525893710105599
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -643,6 +643,7 @@ MonoBehaviour:
   drawRayGizmos: 1
   fwdRayNoHit: 0
   backRayNoHit: 0
+  isFwdRayHitting: 0
   averageNormalDirections: []
 --- !u!114 &5734397690749995814
 MonoBehaviour:
