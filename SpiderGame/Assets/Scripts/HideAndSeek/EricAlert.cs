@@ -13,6 +13,8 @@ public class EricAlert : MonoBehaviour
     public Animator animatorDoor1;
     public Animator animatorDoor2;
 
+    public GameObject ericsVision;
+
     public int ericSpawnPosition;
 
     float currentTime = 0f;
@@ -62,11 +64,13 @@ public class EricAlert : MonoBehaviour
             {
                 if (hit.collider.gameObject.tag == "Player")
                 {
+                    ericsVision.SetActive(true);
                     playerDetected = true;
                     Debug.Log("Player Detected");
                 }
                 else
                 {
+                    ericsVision.SetActive(false);
                     playerDetected = false;
                     Debug.Log("No detection");
                 }
