@@ -7437,6 +7437,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4500f2ca8f9ce6b4dbf6def4d8ef1c92, type: 3}
+--- !u!1 &614872880 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 587a623a4e1bc1e47be3b94e6cf68003, type: 3}
+  m_PrefabInstance: {fileID: 895576852}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &614872881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 614872880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e10a41e2097324c478c70930e3b3175e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ClockHourHandTransform: {fileID: 1603679928}
+  ClockMinuteHandTransform: {fileID: 1995073758}
 --- !u!1001 &628240243
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17361,6 +17380,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2221285882246513669, guid: 5e7a0e862d22e7844a17309c7fdbc123, type: 3}
   m_PrefabInstance: {fileID: 1583264389}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1603679928 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3087328280725547936, guid: 587a623a4e1bc1e47be3b94e6cf68003, type: 3}
+  m_PrefabInstance: {fileID: 895576852}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1610721256 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 776def62fc76df948bb463cad610ec95, type: 3}
@@ -18879,6 +18903,11 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.30766264, y: 0.3076626, z: 0.2252947}
   m_Center: {x: 0.000000012764206, y: -0.0000000123274795, z: 0.11264731}
+--- !u!4 &1995073758 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8169376419634850038, guid: 587a623a4e1bc1e47be3b94e6cf68003, type: 3}
+  m_PrefabInstance: {fileID: 895576852}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2034286199 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5019401604661115028, guid: d36e4269dffd4cb43bf7e8998fe68e6f, type: 3}
@@ -20738,7 +20767,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8120661785874172195
 Transform:
   m_ObjectHideFlags: 0
