@@ -8,11 +8,12 @@ public class UIInventory : MonoBehaviour
     public List<UIItem> uIItems = new List<UIItem>();
     public GameObject slotPrefab;
     public Transform slotPanel;
-    public int numberOfSlots = 9;
+    public int numberOfSlots = 12; // Add so that we dont need to double change between this and inspector value.
 
     private void Awake()
     {
         uIItems = new List<UIItem>();
+        numberOfSlots = 12;
 
         for (int i = 0; i < numberOfSlots; i++)
         {
@@ -20,6 +21,7 @@ public class UIInventory : MonoBehaviour
             instance.transform.SetParent(slotPanel);
             uIItems.Add(instance.GetComponentInChildren<UIItem>());
         }
+
     }
 
     public void UpdateSlot(int slot, ItemInfo item)

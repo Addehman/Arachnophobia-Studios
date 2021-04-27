@@ -23,12 +23,16 @@ public class Inventory : MonoBehaviour
 
             if (inventoryIsActive == true)
             {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
                 toggleInventory.SetActive(false);
                 inventoryIsActive = false;
             }
 
             else
             {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.Confined;
                 toggleInventory.SetActive(true);
                 inventoryIsActive = true;
             }

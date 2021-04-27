@@ -14,7 +14,7 @@ public class GameOver : MonoBehaviour
     public void GameOverScreen()
     {
         Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.Confined; //None
         gameOverScreen.SetActive(true);
         spiderMovement.rb.isKinematic = true;
         spiderMovement.enabled = false;
