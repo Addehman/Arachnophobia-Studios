@@ -7,6 +7,8 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public Rigidbody rb;
 	[HideInInspector] public Vector3 currentPosition;
 
+	[SerializeField] Transform cam;
+
 	[Header("Main Raycasts Adjustment")]
 	[SerializeField] private float rayFwdMod	= 1f;
 	[SerializeField] private float rayBwdMod	= 1f;
@@ -57,6 +59,8 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private float jumpUpStrength = 100f;
 	[SerializeField] private float jumpFwdStrength = 50f;
 	[SerializeField] private float playerToGroundRange = 0.3f;
+	[SerializeField] private float turnSmoothTime = 0.1f;
+	[SerializeField] private float turnSmoothVelocity;
 	[Space(5f)]
 
 	[Header("Debug")]
@@ -110,6 +114,8 @@ public class SpiderMovement : MonoBehaviour
 		// align character to the new myNormal while keeping the forward direction:
 		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
 		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+		//try and make tha camera rotate with the player. Doesn't work as of now.
+		cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 	}
 
 	private void RaycastsToCast()
@@ -264,12 +270,28 @@ public class SpiderMovement : MonoBehaviour
 
 	private void Movement()
 	{
-		float vertical = Input.GetAxis("Vertical");
-		float horizontal = Input.GetAxis("Horizontal");
+		float vertical = Input.GetAxisRaw("Vertical");
+		float horizontal = Input.GetAxisRaw("Horizontal");
 
-		transform.Rotate(0, horizontal * 90 * Time.deltaTime, 0);
+		Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+		if (direction.magnitude >= 0.1f)
+		{
+			float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+			float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+			transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+			Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+			transform.Translate(moveDirection.normalized * (playerSpeed + sprintMulti) * Time.deltaTime, Space.World);
+		}
+
+		/*transform.Rotate(0, horizontal * 90 * Time.deltaTime, 0);
 		// transform.Translate(horizontal * (playerSpeed + sprintMulti) * Time.deltaTime, 0, 0);
-		transform.Translate(0, 0, vertical * (playerSpeed + sprintMulti) * Time.deltaTime);
+		transform.Translate(0, 0, vertical * (playerSpeed + sprintMulti) * Time.deltaTime);*/
+
+
+
+
 		// if (vertical > 0.01f)
 		// {
 		// 	rb.AddForce(transform.forward * vertical * Time.deltaTime * playerSpeed);
