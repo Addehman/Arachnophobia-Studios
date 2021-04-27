@@ -28,7 +28,7 @@ public class SoundManager : MonoBehaviour
 
     void GetSoundComponents()
     {
-        soundClip = new AudioClip[9];
+        soundClip = new AudioClip[10];
         soundClip[0] = Resources.Load<AudioClip>("Audio/EricFootStep");
         soundClip[1] = Resources.Load<AudioClip>("Audio/Detected");
         soundClip[2] = Resources.Load<AudioClip>("Audio/EricDoor");
@@ -38,6 +38,7 @@ public class SoundManager : MonoBehaviour
         soundClip[6] = Resources.Load<AudioClip>("Audio/GameMusic");
         soundClip[7] = Resources.Load<AudioClip>("Audio/EricCough");
         soundClip[8] = Resources.Load<AudioClip>("Audio/EricCloseDoor");
+        soundClip[9] = Resources.Load<AudioClip>("Audio/Burn");
     }
 
     public void EricFootStep()
@@ -80,18 +81,12 @@ public class SoundManager : MonoBehaviour
     public void CloseDoor()
     {
         audioSource.clip = soundClip[8];
-        audioSource.Play();
+        audioSource.PlayDelayed(2f);
     }
 
-
-    public enum ClipEnum : int
+    public void HotHobBurn()
     {
-        FootStep,
-        Detected,
-        Door,
-        EnterRoom,
-        Vacuum,
-        WebShoot,
-        GameMusic
+        audioSource.clip = soundClip[9];
+        audioSource.Play();
     }
 }

@@ -6,9 +6,11 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    public SoundManager soundManager;
+    public GameOver gameOver;
     public Quest quest;
-    public float currentHealth = 100f;
-    public float maxHealth = 100f;
+    float currentHealth;
+    float maxHealth = 100f;
     private PickUpObject pickUpObject;
     public Image healthBar;
     public float burnTimer;
@@ -43,16 +45,23 @@ public class Player : MonoBehaviour
     }
     private void OnTriggerStay (Collider other)
     {
-        if (other.gameObject.name == "Trigger")
+        if (other.gameObject.name == "HotHob")
         {
-            Debug.Log("Hot!");
+            //Debug.Log("Hot!");
             burnTimer += Time.deltaTime;
 
-            if (burnTimer > 2f)
+            if (burnTimer > 2f && currentHealth > 0f)
             {
                 burnTimer = 0f;
                 currentHealth -= 10f;
+                soundManager.HotHobBurn();
+
                 Debug.Log(currentHealth);
+            }
+
+            if(currentHealth <= 0f)
+            {
+                gameOver.GameOverScreen();
             }
         }
     }
