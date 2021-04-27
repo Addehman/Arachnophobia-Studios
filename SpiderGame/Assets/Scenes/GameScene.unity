@@ -7240,6 +7240,10 @@ PrefabInstance:
       value: Blueberry
       objectReference: {fileID: 0}
     - target: {fileID: 5019401604661115025, guid: d36e4269dffd4cb43bf7e8998fe68e6f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5019401604661115025, guid: d36e4269dffd4cb43bf7e8998fe68e6f, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -7249,7 +7253,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5019401604661115028, guid: d36e4269dffd4cb43bf7e8998fe68e6f, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5019401604661115028, guid: d36e4269dffd4cb43bf7e8998fe68e6f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15356,6 +15360,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ingredients_Tomato_Prefab
       objectReference: {fileID: 0}
+    - target: {fileID: 6477969529685468687, guid: 792dc9f6a032f0c40bdccc89af1404df, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 792dc9f6a032f0c40bdccc89af1404df, type: 3}
 --- !u!4 &1304436785 stripped
@@ -17527,8 +17535,8 @@ Transform:
   m_LocalPosition: {x: -0.117518306, y: 0.37247914, z: 0.26385915}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1404724164}
   - {fileID: 2030358303}
+  - {fileID: 1404724164}
   - {fileID: 517472587}
   - {fileID: 1215248939}
   - {fileID: 2047077618}
@@ -18379,9 +18387,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ingredients_Apple_Prefab
       objectReference: {fileID: 0}
+    - target: {fileID: 6321855649575305406, guid: 27ece589249780e4a94c22ca8f5210f1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 6696974259518691844, guid: 27ece589249780e4a94c22ca8f5210f1, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6696974259518691844, guid: 27ece589249780e4a94c22ca8f5210f1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -18748,6 +18760,26 @@ PrefabInstance:
     - target: {fileID: 701400690644394271, guid: cd303fe7c8ef65a488e3bc362af6556c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 701400690644394273, guid: cd303fe7c8ef65a488e3bc362af6556c, type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 74374647}
+    - target: {fileID: 701400690644394273, guid: cd303fe7c8ef65a488e3bc362af6556c, type: 3}
+      propertyPath: slowPlayerSpeed
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 701400690644394273, guid: cd303fe7c8ef65a488e3bc362af6556c, type: 3}
+      propertyPath: layerMask.m_Bits
+      value: 183
+      objectReference: {fileID: 0}
+    - target: {fileID: 701400690644394273, guid: cd303fe7c8ef65a488e3bc362af6556c, type: 3}
+      propertyPath: normalPlayerSpeed
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 701400690644394273, guid: cd303fe7c8ef65a488e3bc362af6556c, type: 3}
+      propertyPath: edgeRayOriginOffset1
+      value: 0.04
       objectReference: {fileID: 0}
     - target: {fileID: 701400690720533381, guid: cd303fe7c8ef65a488e3bc362af6556c, type: 3}
       propertyPath: m_Layer
@@ -19647,9 +19679,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ingredients_Banana_Prefab
       objectReference: {fileID: 0}
+    - target: {fileID: 3687188683089524485, guid: ead9f370faedf9d4c9a960e3aa3fd255, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4062341691428072895, guid: ead9f370faedf9d4c9a960e3aa3fd255, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4062341691428072895, guid: ead9f370faedf9d4c9a960e3aa3fd255, type: 3}
       propertyPath: m_LocalPosition.x

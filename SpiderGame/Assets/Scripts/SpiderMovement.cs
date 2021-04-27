@@ -50,11 +50,14 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private float rayDownOriginOffset = -0.01f;
 	[SerializeField] private float raysBackOriginOffset = -0.02f;
 	[SerializeField] private float raycastReachEdge = 0.1f;
-	[SerializeField] private float edgeRayOriginOffset = 0.2f;
+	[SerializeField] private float edgeRayOriginOffset = 0.03f;
+	[SerializeField] private float edgeRayOriginOffset1 = 0.04f;
 	[SerializeField] private LayerMask layerMask;
 
 	[Header("Player Settings")]
-	[SerializeField] private float playerSpeed = 2f;
+	[SerializeField] private float playerSpeed = 0.2f;
+	[SerializeField] private float slowPlayerSpeed = 0.05f;
+	[SerializeField] private float normalPlayerSpeed = 0.2f;
 	[SerializeField] private float sprintMulti;
 	[SerializeField] private float jumpUpStrength = 100f;
 	[SerializeField] private float jumpFwdStrength = 50f;
@@ -69,9 +72,10 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private bool fwdRayNoHit = false;
 	[SerializeField] private bool backRayNoHit = false;
 	[SerializeField] private bool isFwdRayHitting;
+	[SerializeField] private Vector3 mainDownRayNormalDirection;
+	[SerializeField] private Vector3 averageNormalDirection;
 	[SerializeField] private List<Vector3> averageNormalDirections = new List<Vector3>();
 
-	private Vector3 averageNormalDirection;
 	private Vector3 myNormal;
 	private float gravityValue = -9.82f;
 	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any}
@@ -143,7 +147,13 @@ public class SpiderMovement : MonoBehaviour
 		// Edge Raycasts:
 		if (fwdRayNoHit == true)
 		{
+			playerSpeed = slowPlayerSpeed;
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), edgeRayOriginOffset);
+			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), edgeRayOriginOffset1);
+		}
+		else 
+		{
+			playerSpeed = normalPlayerSpeed;
 		}
 		// else if (backRayNoHit == true)
 		// {
@@ -195,6 +205,7 @@ public class SpiderMovement : MonoBehaviour
 						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
 					}
 					averageNormalDirections.Add(hit.normal);
+					mainDownRayNormalDirection = hit.normal;
 
 					float rbVelocity = rb.velocity.y;
 					if (hit.distance < playerToGroundRange && rbVelocity < 0f)
@@ -205,6 +216,7 @@ public class SpiderMovement : MonoBehaviour
 				else
 				{
 					isGrounded = false;
+					mainDownRayNormalDirection = Vector3.zero;
 				}
 				break;
 			case RaycastTypes.Forwards:
@@ -273,21 +285,47 @@ public class SpiderMovement : MonoBehaviour
 		float vertical = Input.GetAxisRaw("Vertical");
 		float horizontal = Input.GetAxisRaw("Horizontal");
 
-		Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+		// Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-		if (direction.magnitude >= 0.1f)
-		{
-			float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-			float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-			transform.rotation = Quaternion.Euler(0f, angle, 0f);
+		// if (direction.magnitude >= 0.1f)
+		// {
+		// 	float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+		// 	float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
 
-			Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-			transform.Translate(moveDirection.normalized * (playerSpeed + sprintMulti) * Time.deltaTime, Space.World);
-		}
+		// 	// Here we are determining what direction that the camera should apply it's direction to on the player.
+		// 	// NOTES: This doesn't do the trick.. Doesn't seem to make any difference
 
-		/*transform.Rotate(0, horizontal * 90 * Time.deltaTime, 0);
+		// 	// float directX = Mathf.Round(mainDownRayNormalDirection.x);
+		// 	float directX = Mathf.Abs(averageNormalDirection.x);
+		// 	float directY = Mathf.Abs(averageNormalDirection.y);
+		// 	float directZ = Mathf.Abs(averageNormalDirection.z);
+		// 	Vector3 moveDirection;
+
+		// 	if (directX > directY && directX > directZ)
+		// 	{
+		// 		print ("setting to direction to X");
+		// 		transform.rotation = Quaternion.Euler(angle, 0f, 0f);
+		// 		moveDirection = Quaternion.Euler(targetAngle, 0f, 0f) * Vector3.forward; // should it really be forward? maybe transform.forward? I've tried Vector3.up..
+		// 	}
+		// 	else if (directZ > directX && directZ > directY)
+		// 	{
+		// 		print ("setting to direction to Z");
+		// 		transform.rotation = Quaternion.Euler(0f, 0f, angle);
+		// 		moveDirection = Quaternion.Euler(0f, 0f, targetAngle) * Vector3.forward;
+		// 	}
+		// 	else
+		// 	{
+		// 		print ("setting to direction to Y");
+		// 		transform.rotation = Quaternion.Euler(0f, angle, 0f);
+		// 		moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+		// 	}
+			
+		// 	transform.Translate(moveDirection.normalized * (playerSpeed + sprintMulti) * Time.deltaTime, Space.World);
+		// }
+
+		transform.Rotate(0, horizontal * 90 * Time.deltaTime, 0);
 		// transform.Translate(horizontal * (playerSpeed + sprintMulti) * Time.deltaTime, 0, 0);
-		transform.Translate(0, 0, vertical * (playerSpeed + sprintMulti) * Time.deltaTime);*/
+		transform.Translate(0, 0, vertical * (playerSpeed + sprintMulti) * Time.deltaTime);
 
 
 
