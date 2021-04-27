@@ -92,7 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2615482527255429778}
   m_Layer: 0
-  m_Name: Kitchen_Furniture_Cabinet
+  m_Name: Furniture_Cabinet_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -112,7 +112,6 @@ Transform:
   - {fileID: 2486655679416624748}
   - {fileID: 6877027097226707479}
   - {fileID: 8991116745471756884}
-  - {fileID: 8399858625328132642}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -212,51 +211,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.59999996, y: 0.8199529, z: 0.40264222}
   m_Center: {x: 0, y: 0.40997645, z: -0.0010427088}
---- !u!1 &6589549721579344415
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8399858625328132642}
-  - component: {fileID: 2005437571655570839}
-  m_Layer: 0
-  m_Name: Collisions2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8399858625328132642
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6589549721579344415}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2615482527255429778}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &2005437571655570839
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6589549721579344415}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 5358915128574053833, guid: b22210bb95c0a3c469363854096d5729, type: 3}
 --- !u!1 &7607138123250508265
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,4 +255,4 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 9117810597299402581, guid: b22210bb95c0a3c469363854096d5729, type: 3}
+  m_Mesh: {fileID: -3986037228577670134, guid: 220c88052e7283b44b9dc72711f7e613, type: 3}
