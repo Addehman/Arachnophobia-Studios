@@ -4,26 +4,27 @@ using UnityEngine;
 
 public class RaycastToggler : MonoBehaviour
 {
-    public GameObject ericRaycast1;
-    public GameObject ericRaycast2;
+    public GameObject ericPosition1;
+    public GameObject ericPosition2;
+
+    public int ericSpawnPosition;
 
     public EricAlert ericAlert;
 
-    public void Start()
+    public void RandomEricPosition()
     {
-        if(ericAlert.ericSpawnPosition == 0)
+        ericSpawnPosition = Random.Range(0, 2);
+        Debug.Log("RandomPositionIs: " + ericSpawnPosition);
+
+        if (ericSpawnPosition == 0)
         {
-            ericRaycast2.SetActive(false);
-            ericRaycast1.SetActive(true);
-        }
-        else if(ericAlert.ericSpawnPosition == 1)
-        {
-            ericRaycast1.SetActive(false);
-            ericRaycast2.SetActive(true);
+            ericPosition2.SetActive(false);
+            ericPosition1.SetActive(true);
         }
         else
         {
-            Debug.LogError(ericAlert.ericSpawnPosition);
+            ericPosition1.SetActive(false);
+            ericPosition2.SetActive(true);
         }
     }
 }

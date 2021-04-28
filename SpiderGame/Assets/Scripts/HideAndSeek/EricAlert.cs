@@ -6,12 +6,14 @@ using UnityEngine.UI;
 public class EricAlert : MonoBehaviour
 {
     public RaycastToggler raycastToggler;
-    public SoundManager soundManager;
+    SoundManager soundManager;
     public SpiderMovement spiderMovement;
     public GameOver gameOver;
 
     public Animator animatorDoor1;
     public Animator animatorDoor2;
+
+    AudioSource audioSourceEric;
 
     public GameObject ericsVision;
 
@@ -48,6 +50,9 @@ public class EricAlert : MonoBehaviour
 
     void Start()
     {
+    //    animatorDoor = GetComponent<Animator>();
+        audioSourceEric = GetComponent<AudioSource>();
+        soundManager = FindObjectOfType<SoundManager>();
         currentState = State.EricNotInRoom;
         ericSpawnTimer = Random.Range(7f, 10f);
     }
@@ -90,7 +95,9 @@ public class EricAlert : MonoBehaviour
             {
                 if(showedGameOver == false)
                 {
-                    soundManager.Detected();
+                    audioSourceEric.clip = Resources.Load<AudioClip>("Audio/Detected");
+                    audioSourceEric.Play();
+
                     gameOver.GameOverScreen();
                     showedGameOver = true;
                 }
@@ -105,19 +112,20 @@ public class EricAlert : MonoBehaviour
         if (currentTime >= ericSpawnTimer && currentState == State.EricNotInRoom)
         {
             Debug.Log("Eric is not in room/respawning");
+            //  ericSpawnPosition = Random.Range(0, 2);
 
-            if (ericSpawnPosition == 0)
+            raycastToggler.RandomEricPosition();
+            
+            if (raycastToggler.ericSpawnPosition == 0)
             {
                 animatorDoor1.SetTrigger("IdleDoor");
             }
-            else if (ericSpawnPosition == 1)
+            else if (raycastToggler.ericSpawnPosition == 1)
             {
                 animatorDoor2.SetTrigger("IdleDoor");
             }
-
-            ericSpawnPosition = Random.Range(0, 2);
-            Debug.Log(ericSpawnPosition);
-            raycastToggler.Start();
+            
+            Debug.Log(raycastToggler.ericSpawnPosition);
 
             currentTime = 0f;
             currentState = State.EricInc;
@@ -128,8 +136,9 @@ public class EricAlert : MonoBehaviour
         {
             Debug.Log("Eric inc");
 
-            soundManager.audioSource.loop = true;
-            soundManager.EricFootStep();
+            audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricFootStep");
+            audioSourceEric.loop = true;
+            audioSourceEric.Play();
 
             currentTime = 0f;
             currentState = State.EricOpenDoor; 
@@ -139,15 +148,16 @@ public class EricAlert : MonoBehaviour
         if(currentTime >= ericOpenDoorTimer && currentState == State.EricOpenDoor)
         {
             Debug.Log("Eric Open door");
+            
+            audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricDoor");
+            audioSourceEric.loop = false;
+            audioSourceEric.Play();
 
-            soundManager.audioSource.loop = false;
-            soundManager.Door();
-
-            if (ericSpawnPosition == 0)
+            if (raycastToggler.ericSpawnPosition == 0)
             {
                 animatorDoor1.SetTrigger("OpenDoor");
             }
-            else if (ericSpawnPosition == 1)
+            else if (raycastToggler.ericSpawnPosition == 1)
             {
                 animatorDoor2.SetTrigger("OpenDoor");
             }
@@ -173,7 +183,9 @@ public class EricAlert : MonoBehaviour
             ericsVision.SetActive(false);
             playerDetected = false;
             isRaycasting = false;
-            soundManager.EricHmm();
+
+            audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricEnterRoom");
+            audioSourceEric.Play();
 
             currentTime = 0f;
             currentState = State.EricExit;
@@ -184,16 +196,17 @@ public class EricAlert : MonoBehaviour
         {
             Debug.Log("Eric exit room");
 
-            soundManager.CloseDoor();
-
-            if (ericSpawnPosition == 0)
+            audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricCloseDoor");
+            audioSourceEric.Play();
+            
+            if (raycastToggler.ericSpawnPosition == 0)
             {
                 animatorDoor1.SetTrigger("CloseDoor");
             }
-            else if (ericSpawnPosition == 1)
+            else if (raycastToggler.ericSpawnPosition == 1)
             {
                 animatorDoor2.SetTrigger("CloseDoor");
-            }
+            }        
 
             ericSpawnTimer = Random.Range(3f, 5f);
 
