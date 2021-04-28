@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     public SoundManager soundManager;
+    SpiderAudio spiderAudio;
     public GameOver gameOver;
     public Quest quest;
     float currentHealth;
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        spiderAudio = GetComponent<SpiderAudio>();
         pickUpObject = GetComponent<PickUpObject>();
         pickUpObject.pickedUpItem += PickUpObject_pickedUpItem;
         currentHealth = maxHealth;
@@ -47,14 +49,14 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.name == "HotHob")
         {
-            //Debug.Log("Hot!");
             burnTimer += Time.deltaTime;
 
             if (burnTimer > 2f && currentHealth > 0f)
             {
                 burnTimer = 0f;
                 currentHealth -= 10f;
-                soundManager.HotHobBurn();
+
+                spiderAudio.Burn();
 
                 Debug.Log(currentHealth);
             }

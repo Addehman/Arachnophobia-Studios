@@ -7,6 +7,7 @@ public class SpringJointWeb : MonoBehaviour
     float maxDistance = 100f;
 
     SpringJoint joint;
+    SpiderAudio spiderAudio;
     LineRenderer lineRenderer;
     State currentState = State.IsGrounded;
     public ChangeCamera changeCamera;
@@ -29,6 +30,12 @@ public class SpringJointWeb : MonoBehaviour
     {
         lineRenderer = GetComponent<LineRenderer>();
     }
+
+    private void Start()
+    {
+        spiderAudio = GetComponent<SpiderAudio>();
+    }
+
     private void Update()
     {
         if(changeCamera.camMode == 1)
@@ -63,6 +70,8 @@ public class SpringJointWeb : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, maxDistance))
         {
+            spiderAudio.WebShoot();
+
             spiderAnimator.SetBool("Web", true);
             thirdPersonCamera.SetActive(true);
             firstPersonCamera.SetActive(false);
@@ -86,6 +95,8 @@ public class SpringJointWeb : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, maxDistance))
         {
+            spiderAudio.WebShoot();
+
             spiderAnimator.SetBool("Web", true);
             thirdPersonCamera.SetActive(true);
             firstPersonCamera.SetActive(false);

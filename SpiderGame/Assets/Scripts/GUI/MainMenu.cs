@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    public GameObject howToPlay;
     public void PlayButton()
     {
         SceneManager.LoadScene("GameScene");
@@ -13,7 +14,7 @@ public class MainMenu : MonoBehaviour
 
     public void HowToPlayButton()
     {
-        Debug.Log("How to play");
+        howToPlay.SetActive(true);
     }
 
     public void CreditsButton()
@@ -24,5 +25,10 @@ public class MainMenu : MonoBehaviour
     public void QuitGameButton()
     {
         Application.Quit();
+    }
+
+    public void Back()
+    {
+        howToPlay.SetActive(false);
     }
 }
