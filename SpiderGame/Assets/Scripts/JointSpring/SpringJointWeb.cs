@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class SpringJointWeb : MonoBehaviour
 {
-    public GameObject targetPointPrefab;
     float maxDistance = 100f;
+
     SpringJoint joint;
     LineRenderer lineRenderer;
     State currentState = State.IsGrounded;
     public ChangeCamera changeCamera;
 
+    public Animator spiderAnimator;
+
     public GameObject thirdPersonCamera;
     public GameObject firstPersonCamera;
+    public GameObject targetPointPrefab;
 
     enum State
     {
@@ -60,6 +63,7 @@ public class SpringJointWeb : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, maxDistance))
         {
+            spiderAnimator.SetBool("Web", true);
             thirdPersonCamera.SetActive(true);
             firstPersonCamera.SetActive(false);
             changeCamera.camMode = 0;
@@ -82,6 +86,7 @@ public class SpringJointWeb : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, maxDistance))
         {
+            spiderAnimator.SetBool("Web", true);
             thirdPersonCamera.SetActive(true);
             firstPersonCamera.SetActive(false);
             currentState = State.IsSwinging;
@@ -100,6 +105,7 @@ public class SpringJointWeb : MonoBehaviour
 
     void StopWeb()
     {
+        spiderAnimator.SetBool("Web", false);
         GameObject currentPoint = GameObject.Find("TargetPoint(Clone)");
         Destroy(currentPoint);
         Destroy(joint);
