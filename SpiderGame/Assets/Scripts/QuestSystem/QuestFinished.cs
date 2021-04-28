@@ -8,10 +8,8 @@ using UnityEngine;
 public class QuestFinished
 {
     public QuestGoals questType;
-
     public int requiredAmount;
     public int currentAmount;
-
 
     public bool IsReached()
     {

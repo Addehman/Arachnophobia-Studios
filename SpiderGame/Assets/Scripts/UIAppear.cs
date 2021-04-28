@@ -10,26 +10,22 @@ public class UIAppear : MonoBehaviour
     [SerializeField] private GameObject window;
 
     public Player player;
-/*
-    void Update()
-    {
-        //Press the space bar to apply no locking to the Cursor
-        if (Input.GetKey(KeyCode.Q))
-        {
-            Cursor.lockState = CursorLockMode.Confined;
 
-        }
-
-    }*/
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && player.quest.isCompleted == false && player.quest.isAccepted == false)
         {
-
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
             Debug.Log("In");
+            window.SetActive(true);
+        }
+
+        if (other.CompareTag("Player") && player.quest.isCompleted == true)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Confined;
             window.SetActive(true);
         }
     }
