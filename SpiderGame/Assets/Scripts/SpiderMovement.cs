@@ -63,7 +63,6 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private float jumpFwdStrength = 50f;
 	[SerializeField] private float playerToGroundRange = 0.3f;
 	[SerializeField] private float turnSmoothTime = 0.1f;
-	[SerializeField] private float turnSmoothVelocity;
 	[Space(5f)]
 
 	[Header("Debug")]
@@ -77,6 +76,7 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private List<Vector3> averageNormalDirections = new List<Vector3>();
 
 	private Vector3 myNormal;
+	private float turnSmoothVelocity;
 	private float gravityValue = -9.82f;
 	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any}
 	private RaycastTypes raycastType;
@@ -285,47 +285,50 @@ public class SpiderMovement : MonoBehaviour
 		float vertical = Input.GetAxisRaw("Vertical");
 		float horizontal = Input.GetAxisRaw("Horizontal");
 
-		// Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+		Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-		// if (direction.magnitude >= 0.1f)
-		// {
-		// 	float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-		// 	float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+		if (direction.magnitude >= 0.1f)
+		{
+			float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+			float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
 
-		// 	// Here we are determining what direction that the camera should apply it's direction to on the player.
-		// 	// NOTES: This doesn't do the trick.. Doesn't seem to make any difference
+			// Here we are determining what direction that the camera should apply it's direction to on the player.
+			// NOTES: This doesn't do the trick.. Doesn't seem to make any difference
 
-		// 	// float directX = Mathf.Round(mainDownRayNormalDirection.x);
-		// 	float directX = Mathf.Abs(averageNormalDirection.x);
-		// 	float directY = Mathf.Abs(averageNormalDirection.y);
-		// 	float directZ = Mathf.Abs(averageNormalDirection.z);
-		// 	Vector3 moveDirection;
+			// float directX = Mathf.Round(mainDownRayNormalDirection.x);
+			float directX = Mathf.Abs(averageNormalDirection.x);
+			float directY = Mathf.Abs(averageNormalDirection.y);
+			float directZ = Mathf.Abs(averageNormalDirection.z);
+			Vector3 moveDirection;
 
-		// 	if (directX > directY && directX > directZ)
-		// 	{
-		// 		print ("setting to direction to X");
-		// 		transform.rotation = Quaternion.Euler(angle, 0f, 0f);
-		// 		moveDirection = Quaternion.Euler(targetAngle, 0f, 0f) * Vector3.forward; // should it really be forward? maybe transform.forward? I've tried Vector3.up..
-		// 	}
-		// 	else if (directZ > directX && directZ > directY)
-		// 	{
-		// 		print ("setting to direction to Z");
-		// 		transform.rotation = Quaternion.Euler(0f, 0f, angle);
-		// 		moveDirection = Quaternion.Euler(0f, 0f, targetAngle) * Vector3.forward;
-		// 	}
-		// 	else
-		// 	{
-		// 		print ("setting to direction to Y");
-		// 		transform.rotation = Quaternion.Euler(0f, angle, 0f);
-		// 		moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-		// 	}
+			if (directX > directY && directX > directZ)
+			{
+				print ("setting to direction to X");
+				transform.rotation = Quaternion.Euler(angle, 0f, 0f);
+				moveDirection = Quaternion.Euler(targetAngle, 0f, 0f) * Vector3.forward; // should it really be forward? maybe transform.forward? I've tried Vector3.up..
+			}
+			else if (directZ > directX && directZ > directY)
+			{
+				print ("setting to direction to Z");
+				transform.rotation = Quaternion.Euler(0f, 0f, angle);
+				moveDirection = Quaternion.Euler(0f, 0f, targetAngle) * Vector3.forward;
+			}
+			else
+			{
+				print ("setting to direction to Y");
+				transform.rotation = Quaternion.Euler(0f, angle, 0f);
+				moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+			}
+
+			// transform.rotation = Quaternion.Euler(0f, angle, 0f);
+			// Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 			
-		// 	transform.Translate(moveDirection.normalized * (playerSpeed + sprintMulti) * Time.deltaTime, Space.World);
-		// }
+			transform.Translate(moveDirection.normalized * (playerSpeed + sprintMulti) * Time.deltaTime, Space.World);
+		}
 
-		transform.Rotate(0, horizontal * 90 * Time.deltaTime, 0);
-		// transform.Translate(horizontal * (playerSpeed + sprintMulti) * Time.deltaTime, 0, 0);
-		transform.Translate(0, 0, vertical * (playerSpeed + sprintMulti) * Time.deltaTime);
+		// transform.Rotate(0, horizontal * 90 * Time.deltaTime, 0);
+		// // transform.Translate(horizontal * (playerSpeed + sprintMulti) * Time.deltaTime, 0, 0);
+		// transform.Translate(0, 0, vertical * (playerSpeed + sprintMulti) * Time.deltaTime);
 
 
 
