@@ -67,6 +67,8 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private bool isFwdRayHitting;
 	[SerializeField] private List<Vector3> averageNormalDirections = new List<Vector3>();
 
+	public Animator spiderAnimator;
+
 	private Vector3 averageNormalDirection;
 	private Vector3 myNormal;
 	private float gravityValue = -9.82f;
@@ -194,6 +196,8 @@ public class SpiderMovement : MonoBehaviour
 					if (hit.distance < playerToGroundRange && rbVelocity < 0f)
 					{
 						isGrounded = true;
+						//adam titta på denna
+						spiderAnimator.SetBool("Jump", false);
 					}
 				}
 				else
@@ -318,11 +322,13 @@ public class SpiderMovement : MonoBehaviour
 	{
 		if (Input.GetKey(KeyCode.W) == false && Input.GetButtonDown("Jump") && isGrounded == true)
 		{
+			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce(transform.up * jumpUpStrength);
 			isGrounded = false;
 		}
 		else if (Input.GetKey(KeyCode.W) && Input.GetButtonDown("Jump") && isGrounded == true)
 		{
+			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce((transform.up + transform.forward) * jumpFwdStrength);
 			isGrounded = false;
 		}

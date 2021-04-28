@@ -10,6 +10,7 @@ public class GameOver : MonoBehaviour
     public SpiderMovement spiderMovement;
     public GameObject gameOverScreen;
     public GameObject restartButton;
+    public Animator spiderAnimator;
 
     public void GameOverScreen()
     {
@@ -18,6 +19,7 @@ public class GameOver : MonoBehaviour
         gameOverScreen.SetActive(true);
         spiderMovement.rb.isKinematic = true;
         spiderMovement.enabled = false;
+        spiderAnimator.SetBool("Dead", true);
     }
 
     public void RestartButton()
