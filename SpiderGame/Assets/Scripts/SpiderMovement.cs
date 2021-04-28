@@ -16,39 +16,39 @@ public class SpiderMovement : MonoBehaviour
 	[Space(2f)]
 
 	[Header("Forwards-Raycasts Adjustment")]
-	[SerializeField] private float rayFwdMod1 		= 0.25f;
-	[SerializeField] private float rayFwdModDown1 	= 1f;
-	[SerializeField] private float rayFwdMod2 		= 0.5f;
-	[SerializeField] private float rayFwdModDown2	= 1f;
-	[SerializeField] private float rayFwdMod3		= 0.75f;
-	[SerializeField] private float rayFwdModDown3	= 1f;
-	[SerializeField] private float rayFwdMod4		= 1f;
-	[SerializeField] private float rayFwdModDown4	= 1f;
-	[SerializeField] private float rayFwdMod5		= 1f;
-	[SerializeField] private float rayFwdModDown5	= 0.63f;
-	[SerializeField] private float rayFwdMod6		= 1f;
-	[SerializeField] private float rayFwdModDown6	= 0.38f;
+	[SerializeField] private float rayFwdMod1 		= 0.025f;
+	[SerializeField] private float rayFwdModDown1 	= 0.1f;
+	[SerializeField] private float rayFwdMod2 		= 0.05f;
+	[SerializeField] private float rayFwdModDown2	= 0.1f;
+	[SerializeField] private float rayFwdMod3		= 0.075f;
+	[SerializeField] private float rayFwdModDown3	= 0.1f;
+	[SerializeField] private float rayFwdMod4		= 0.11f;
+	[SerializeField] private float rayFwdModDown4	= 0.1f;
+	[SerializeField] private float rayFwdMod5		= 0.1f;
+	[SerializeField] private float rayFwdModDown5	= 0.063f;
+	[SerializeField] private float rayFwdMod6		= 0.1f;
+	[SerializeField] private float rayFwdModDown6	= 0.038f;
 	[Space(2f)]
 
 	[Header("Backwards-Raycasts Adjustment")]
-	[SerializeField] private float rayBwdMod1		= 0.25f;
-	[SerializeField] private float rayBwdModDown1	= 1f;
-	[SerializeField] private float rayBwdMod2		= 0.5f;
-	[SerializeField] private float rayBwdModDown2	= 1f;
-	[SerializeField] private float rayBwdMod3		= 0.75f;
-	[SerializeField] private float rayBwdModDown3	= 1f;
-	[SerializeField] private float rayBwdMod4		= 1f;
-	[SerializeField] private float rayBwdModDown4	= 1f;
-	[SerializeField] private float rayBwdMod5		= 1f;
-	[SerializeField] private float rayBwdModDown5	= 0.63f;
-	[SerializeField] private float rayBwdMod6		= 1f;
-	[SerializeField] private float rayBwdModDown6	= 0.38f;
+	[SerializeField] private float rayBwdMod1		= 0.025f;
+	[SerializeField] private float rayBwdModDown1	= 0.1f;
+	[SerializeField] private float rayBwdMod2		= 0.05f;
+	[SerializeField] private float rayBwdModDown2	= 0.1f;
+	[SerializeField] private float rayBwdMod3		= 0.075f;
+	[SerializeField] private float rayBwdModDown3	= 0.1f;
+	[SerializeField] private float rayBwdMod4		= 0.11f;
+	[SerializeField] private float rayBwdModDown4	= 0.1f;
+	[SerializeField] private float rayBwdMod5		= 0.1f;
+	[SerializeField] private float rayBwdModDown5	= 0.063f;
+	[SerializeField] private float rayBwdMod6		= 0.1f;
+	[SerializeField] private float rayBwdModDown6	= 0.038f;
 	[Space(5f)]
 
 	[Header("Raycast Settings")]
-	[SerializeField] private float raycastReach = 0.1f;
-	[SerializeField] private float rayDownOriginOffset = -0.01f;
-	[SerializeField] private float raysBackOriginOffset = -0.02f;
+	[SerializeField] private float raycastReach = 0.06f;
+	[SerializeField] private float rayDownOriginOffset = 0f;
+	[SerializeField] private float raysBackOriginOffset = 0f;
 	[SerializeField] private float raycastReachEdge = 0.1f;
 	[SerializeField] private float edgeRayOriginOffset = 0.03f;
 	[SerializeField] private float edgeRayOriginOffset1 = 0.04f;
@@ -58,7 +58,7 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private float playerSpeed = 0.2f;
 	[SerializeField] private float slowPlayerSpeed = 0.05f;
 	[SerializeField] private float normalPlayerSpeed = 0.2f;
-	[SerializeField] private float sprintMulti;
+	[SerializeField] private float sprintMultiAmount = 0.2f;
 	[SerializeField] private float jumpUpStrength = 100f;
 	[SerializeField] private float jumpFwdStrength = 50f;
 	[SerializeField] private float playerToGroundRange = 0.3f;
@@ -78,6 +78,7 @@ public class SpiderMovement : MonoBehaviour
 	private Vector3 myNormal;
 	private float turnSmoothVelocity;
 	private float gravityValue = -9.82f;
+	private float sprintMulti;
 	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any}
 	private RaycastTypes raycastType;
 
@@ -85,6 +86,14 @@ public class SpiderMovement : MonoBehaviour
 	void Start()
 	{
 		rb = GetComponent<Rigidbody>();
+		if (GameObject.Find("Main Camera") != null)
+		{
+			cam = GameObject.Find("Main Camera").transform;
+		}
+		else 
+		{
+			Debug.LogWarning("Couldn't find 'Main Camera'-gamObject. Assign the main camera object Manually.");
+		}
 	}
 
 	// Update is called once per frame
@@ -395,7 +404,7 @@ public class SpiderMovement : MonoBehaviour
 	{
 		if (Input.GetKey(KeyCode.LeftShift))
 		{
-			sprintMulti = 0.2f;
+			sprintMulti = sprintMultiAmount;
 		}
 		
 		if (Input.GetKeyUp(KeyCode.LeftShift))
