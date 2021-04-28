@@ -20,7 +20,6 @@ public class Inventory : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-
             if (inventoryIsActive == true)
             {
                 Cursor.visible = false;

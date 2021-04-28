@@ -13,7 +13,7 @@ public class Quest
 
     public QuestFinished finished;
 
-    public void Complete()
+    public void Complete() 
     {
         isAccepted = false;
         isCompleted = true;
