@@ -7,6 +7,8 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public Rigidbody rb;
 	[HideInInspector] public Vector3 currentPosition;
 
+	[SerializeField] Transform cam;
+
 	[Header("Main Raycasts Adjustment")]
 	[SerializeField] private float rayFwdMod	= 1f;
 	[SerializeField] private float rayBwdMod	= 1f;
@@ -14,49 +16,53 @@ public class SpiderMovement : MonoBehaviour
 	[Space(2f)]
 
 	[Header("Forwards-Raycasts Adjustment")]
-	[SerializeField] private float rayFwdMod1 		= 0.25f;
-	[SerializeField] private float rayFwdModDown1 	= 1f;
-	[SerializeField] private float rayFwdMod2 		= 0.5f;
-	[SerializeField] private float rayFwdModDown2	= 1f;
-	[SerializeField] private float rayFwdMod3		= 0.75f;
-	[SerializeField] private float rayFwdModDown3	= 1f;
-	[SerializeField] private float rayFwdMod4		= 1f;
-	[SerializeField] private float rayFwdModDown4	= 1f;
-	[SerializeField] private float rayFwdMod5		= 1f;
-	[SerializeField] private float rayFwdModDown5	= 0.63f;
-	[SerializeField] private float rayFwdMod6		= 1f;
-	[SerializeField] private float rayFwdModDown6	= 0.38f;
+	[SerializeField] private float rayFwdMod1 		= 0.025f;
+	[SerializeField] private float rayFwdModDown1 	= 0.1f;
+	[SerializeField] private float rayFwdMod2 		= 0.05f;
+	[SerializeField] private float rayFwdModDown2	= 0.1f;
+	[SerializeField] private float rayFwdMod3		= 0.075f;
+	[SerializeField] private float rayFwdModDown3	= 0.1f;
+	[SerializeField] private float rayFwdMod4		= 0.11f;
+	[SerializeField] private float rayFwdModDown4	= 0.1f;
+	[SerializeField] private float rayFwdMod5		= 0.1f;
+	[SerializeField] private float rayFwdModDown5	= 0.063f;
+	[SerializeField] private float rayFwdMod6		= 0.1f;
+	[SerializeField] private float rayFwdModDown6	= 0.038f;
 	[Space(2f)]
 
 	[Header("Backwards-Raycasts Adjustment")]
-	[SerializeField] private float rayBwdMod1		= 0.25f;
-	[SerializeField] private float rayBwdModDown1	= 1f;
-	[SerializeField] private float rayBwdMod2		= 0.5f;
-	[SerializeField] private float rayBwdModDown2	= 1f;
-	[SerializeField] private float rayBwdMod3		= 0.75f;
-	[SerializeField] private float rayBwdModDown3	= 1f;
-	[SerializeField] private float rayBwdMod4		= 1f;
-	[SerializeField] private float rayBwdModDown4	= 1f;
-	[SerializeField] private float rayBwdMod5		= 1f;
-	[SerializeField] private float rayBwdModDown5	= 0.63f;
-	[SerializeField] private float rayBwdMod6		= 1f;
-	[SerializeField] private float rayBwdModDown6	= 0.38f;
+	[SerializeField] private float rayBwdMod1		= 0.025f;
+	[SerializeField] private float rayBwdModDown1	= 0.1f;
+	[SerializeField] private float rayBwdMod2		= 0.05f;
+	[SerializeField] private float rayBwdModDown2	= 0.1f;
+	[SerializeField] private float rayBwdMod3		= 0.075f;
+	[SerializeField] private float rayBwdModDown3	= 0.1f;
+	[SerializeField] private float rayBwdMod4		= 0.11f;
+	[SerializeField] private float rayBwdModDown4	= 0.1f;
+	[SerializeField] private float rayBwdMod5		= 0.1f;
+	[SerializeField] private float rayBwdModDown5	= 0.063f;
+	[SerializeField] private float rayBwdMod6		= 0.1f;
+	[SerializeField] private float rayBwdModDown6	= 0.038f;
 	[Space(5f)]
 
 	[Header("Raycast Settings")]
-	[SerializeField] private float raycastReach = 0.1f;
-	[SerializeField] private float rayDownOriginOffset = -0.01f;
-	[SerializeField] private float raysBackOriginOffset = -0.02f;
+	[SerializeField] private float raycastReach = 0.06f;
+	[SerializeField] private float rayDownOriginOffset = 0f;
+	[SerializeField] private float raysBackOriginOffset = 0f;
 	[SerializeField] private float raycastReachEdge = 0.1f;
-	[SerializeField] private float edgeRayOriginOffset = 0.2f;
+	[SerializeField] private float edgeRayOriginOffset = 0.03f;
+	[SerializeField] private float edgeRayOriginOffset1 = 0.04f;
 	[SerializeField] private LayerMask layerMask;
 
 	[Header("Player Settings")]
-	[SerializeField] private float playerSpeed = 2f;
-	[SerializeField] private float sprintMulti;
+	[SerializeField] private float playerSpeed = 0.2f;
+	[SerializeField] private float slowPlayerSpeed = 0.05f;
+	[SerializeField] private float normalPlayerSpeed = 0.2f;
+	[SerializeField] private float sprintMultiAmount = 0.2f;
 	[SerializeField] private float jumpUpStrength = 100f;
 	[SerializeField] private float jumpFwdStrength = 50f;
 	[SerializeField] private float playerToGroundRange = 0.3f;
+	[SerializeField] private float turnSmoothTime = 0.1f;
 	[Space(5f)]
 
 	[Header("Debug")]
@@ -65,13 +71,15 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private bool fwdRayNoHit = false;
 	[SerializeField] private bool backRayNoHit = false;
 	[SerializeField] private bool isFwdRayHitting;
+	[SerializeField] private Vector3 mainDownRayNormalDirection;
+	[SerializeField] private Vector3 averageNormalDirection;
 	[SerializeField] private List<Vector3> averageNormalDirections = new List<Vector3>();
 
 	public Animator spiderAnimator;
-
-	private Vector3 averageNormalDirection;
 	private Vector3 myNormal;
+	private float turnSmoothVelocity;
 	private float gravityValue = -9.82f;
+	private float sprintMulti;
 	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any}
 	private RaycastTypes raycastType;
 
@@ -79,6 +87,14 @@ public class SpiderMovement : MonoBehaviour
 	void Start()
 	{
 		rb = GetComponent<Rigidbody>();
+		if (GameObject.Find("Main Camera") != null)
+		{
+			cam = GameObject.Find("Main Camera").transform;
+		}
+		else 
+		{
+			Debug.LogWarning("Couldn't find 'Main Camera'-gamObject. Assign the main camera object Manually.");
+		}
 	}
 
 	// Update is called once per frame
@@ -112,6 +128,8 @@ public class SpiderMovement : MonoBehaviour
 		// align character to the new myNormal while keeping the forward direction:
 		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
 		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+		//try and make tha camera rotate with the player. Doesn't work as of now.
+		cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 	}
 
 	private void RaycastsToCast()
@@ -139,7 +157,13 @@ public class SpiderMovement : MonoBehaviour
 		// Edge Raycasts:
 		if (fwdRayNoHit == true)
 		{
+			playerSpeed = slowPlayerSpeed;
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), edgeRayOriginOffset);
+			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), edgeRayOriginOffset1);
+		}
+		else 
+		{
+			playerSpeed = normalPlayerSpeed;
 		}
 		// else if (backRayNoHit == true)
 		// {
@@ -191,18 +215,20 @@ public class SpiderMovement : MonoBehaviour
 						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
 					}
 					averageNormalDirections.Add(hit.normal);
+					mainDownRayNormalDirection = hit.normal;
 
 					float rbVelocity = rb.velocity.y;
 					if (hit.distance < playerToGroundRange && rbVelocity < 0f)
 					{
 						isGrounded = true;
-						//adam titta på denna
+						//adam titta pÃ¥ denna
 						spiderAnimator.SetBool("Jump", false);
 					}
 				}
 				else
 				{
 					isGrounded = false;
+					mainDownRayNormalDirection = Vector3.zero;
 				}
 				break;
 			case RaycastTypes.Forwards:
@@ -268,12 +294,57 @@ public class SpiderMovement : MonoBehaviour
 
 	private void Movement()
 	{
-		float vertical = Input.GetAxis("Vertical");
-		float horizontal = Input.GetAxis("Horizontal");
+		float vertical = Input.GetAxisRaw("Vertical");
+		float horizontal = Input.GetAxisRaw("Horizontal");
+
+		// Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+		// if (direction.magnitude >= 0.1f)
+		// {
+		// 	float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+		// 	float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+
+			// Here we are determining what direction that the camera should apply it's direction to on the player.
+			// NOTES: This doesn't do the trick.. Doesn't seem to make any difference
+
+			// float directX = Mathf.Round(mainDownRayNormalDirection.x);
+			// float directX = Mathf.Abs(averageNormalDirection.x);
+			// float directY = Mathf.Abs(averageNormalDirection.y);
+			// float directZ = Mathf.Abs(averageNormalDirection.z);
+			// Vector3 moveDirection;
+
+			// if (directX > directY && directX > directZ)
+			// {
+			// 	print ("setting to direction to X");
+			// 	transform.rotation = Quaternion.Euler(angle, 0f, 0f);
+			// 	moveDirection = Quaternion.Euler(targetAngle, 0f, 0f) * Vector3.forward; // should it really be forward? maybe transform.forward? I've tried Vector3.up..
+			// }
+			// else if (directZ > directX && directZ > directY)
+			// {
+			// 	print ("setting to direction to Z");
+			// 	transform.rotation = Quaternion.Euler(0f, 0f, angle);
+			// 	moveDirection = Quaternion.Euler(0f, 0f, targetAngle) * Vector3.forward;
+			// }
+			// else
+			// {
+			// 	print ("setting to direction to Y");
+			// 	transform.rotation = Quaternion.Euler(0f, angle, 0f);
+			// 	moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+			// }
+
+			// // transform.rotation = Quaternion.Euler(0f, angle, 0f);
+			// // Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+			
+			// transform.Translate(moveDirection.normalized * (playerSpeed + sprintMulti) * Time.deltaTime, Space.World);
+		// }
 
 		transform.Rotate(0, horizontal * 90 * Time.deltaTime, 0);
-		// transform.Translate(horizontal * (playerSpeed + sprintMulti) * Time.deltaTime, 0, 0);
+		// // transform.Translate(horizontal * (playerSpeed + sprintMulti) * Time.deltaTime, 0, 0);
 		transform.Translate(0, 0, vertical * (playerSpeed + sprintMulti) * Time.deltaTime);
+
+
+
+
 		// if (vertical > 0.01f)
 		// {
 		// 	rb.AddForce(transform.forward * vertical * Time.deltaTime * playerSpeed);
@@ -338,7 +409,7 @@ public class SpiderMovement : MonoBehaviour
 	{
 		if (Input.GetKey(KeyCode.LeftShift))
 		{
-			sprintMulti = 0.2f;
+			sprintMulti = sprintMultiAmount;
 		}
 		
 		if (Input.GetKeyUp(KeyCode.LeftShift))
