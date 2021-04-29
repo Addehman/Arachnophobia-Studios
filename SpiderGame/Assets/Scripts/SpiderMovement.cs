@@ -74,6 +74,7 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private Vector3 mainDownRayNormalDirection;
 	[SerializeField] private Vector3 averageNormalDirection;
 	[SerializeField] private List<Vector3> averageNormalDirections = new List<Vector3>();
+	[SerializeField] private Vector3 fwdRayHitNormalDebug;
 
 	public Animator spiderAnimator;
 	private Vector3 myNormal;
@@ -192,21 +193,33 @@ public class SpiderMovement : MonoBehaviour
 		
 		switch (inRaycastType)
 		{
-			// case RaycastTypes.MainForwards:
-			// 	if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
-			// 	{
-			// 		if (drawRayGizmos == true)
-			// 		{
-			// 			Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
-			// 		}
-			// 		averageNormalDirections.Add(hit.normal);
-			// 		isFwdRayHitting = true;
-			// 	}
-			// 	else
-			// 	{
-			// 		isFwdRayHitting = false;
-			// 	}
-			// 	break;
+			case RaycastTypes.MainForwards:
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
+				{
+					if (drawRayGizmos == true)
+					{
+						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
+					}
+
+					// it seems that when adding more of the same on the same raycast will give it more weight, thus we might be able to remove some of the raycasts! 
+					//Specifically those forward might be possible to cut away.
+					averageNormalDirections.Add(hit.normal);
+					averageNormalDirections.Add(hit.normal);
+					averageNormalDirections.Add(hit.normal);
+					averageNormalDirections.Add(hit.normal);
+					averageNormalDirections.Add(hit.normal);
+					averageNormalDirections.Add(hit.normal);
+					averageNormalDirections.Add(hit.normal);
+					averageNormalDirections.Add(hit.normal);
+					averageNormalDirections.Add(hit.normal);
+					// isFwdRayHitting = true;
+					fwdRayHitNormalDebug = hit.normal;
+				}
+				else
+				{
+					// isFwdRayHitting = false;
+				}
+				break;
 			case RaycastTypes.MainDown:
 				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
 				{
