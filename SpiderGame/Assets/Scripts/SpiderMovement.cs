@@ -75,6 +75,7 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private Vector3 averageNormalDirection;
 	[SerializeField] private List<Vector3> averageNormalDirections = new List<Vector3>();
 	[SerializeField] private Vector3 fwdRayHitNormalDebug;
+	[SerializeField] private int raycastWeightMultiplier = 9;
 
 	public Animator spiderAnimator;
 	private Vector3 myNormal;
@@ -203,15 +204,8 @@ public class SpiderMovement : MonoBehaviour
 
 					// it seems that when adding more of the same on the same raycast will give it more weight, thus we might be able to remove some of the raycasts! 
 					//Specifically those forward might be possible to cut away.
-					averageNormalDirections.Add(hit.normal);
-					averageNormalDirections.Add(hit.normal);
-					averageNormalDirections.Add(hit.normal);
-					averageNormalDirections.Add(hit.normal);
-					averageNormalDirections.Add(hit.normal);
-					averageNormalDirections.Add(hit.normal);
-					averageNormalDirections.Add(hit.normal);
-					averageNormalDirections.Add(hit.normal);
-					averageNormalDirections.Add(hit.normal);
+					RaycastMultiWeight(averageNormalDirections, raycastWeightMultiplier, hit.normal);
+				
 					// isFwdRayHitting = true;
 					fwdRayHitNormalDebug = hit.normal;
 				}
@@ -289,6 +283,14 @@ public class SpiderMovement : MonoBehaviour
 		// 	RaycastHit hit;
 		// 	
 		// }
+		}
+	}
+
+	private void RaycastMultiWeight(List<Vector3> listToAddTo, int amountToMultiply, Vector3 normalToAdd)
+	{
+		for (int i = 0; i < amountToMultiply; i++)
+		{
+			listToAddTo.Add(normalToAdd);
 		}
 	}
 
