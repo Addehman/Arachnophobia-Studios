@@ -603,6 +603,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 2147525893710105599}
   currentPosition: {x: 1.6893911, y: 1.8894316, z: 0.2269907}
+  cam: {fileID: 0}
   rayFwdMod: 1
   rayBwdMod: 1
   rayDownMod: 1
@@ -635,19 +636,25 @@ MonoBehaviour:
   raysBackOriginOffset: 0
   raycastReachEdge: 0.1
   edgeRayOriginOffset: 0.03
+  edgeRayOriginOffset1: 0.04
   layerMask:
     serializedVersion: 2
     m_Bits: 55
   playerSpeed: 0.2
-  sprintMulti: 0
+  slowPlayerSpeed: 0.05
+  normalPlayerSpeed: 0.2
+  sprintMultiAmount: 0.2
   jumpUpStrength: 100
   jumpFwdStrength: 50
   playerToGroundRange: 0.3
+  turnSmoothTime: 0.1
   isGrounded: 1
   drawRayGizmos: 1
   fwdRayNoHit: 0
   backRayNoHit: 0
   isFwdRayHitting: 0
+  mainDownRayNormalDirection: {x: 0, y: 0, z: 0}
+  averageNormalDirection: {x: 0, y: 0, z: 0}
   averageNormalDirections: []
   spiderAnimator: {fileID: 905555197}
 --- !u!114 &5734397690749995814
@@ -2211,11 +2218,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 21543d2b66928224f8a9536ff3811682, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.05
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 21543d2b66928224f8a9536ff3811682, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071067
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 21543d2b66928224f8a9536ff3811682, type: 3}
       propertyPath: m_LocalRotation.x
@@ -2223,15 +2230,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 21543d2b66928224f8a9536ff3811682, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 21543d2b66928224f8a9536ff3811682, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 21543d2b66928224f8a9536ff3811682, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 21543d2b66928224f8a9536ff3811682, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -2240,22 +2247,6 @@ PrefabInstance:
     - target: {fileID: 400002, guid: 21543d2b66928224f8a9536ff3811682, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11900000, guid: 21543d2b66928224f8a9536ff3811682, type: 3}
-      propertyPath: m_FieldOfView
-      value: 57.81
-      objectReference: {fileID: 0}
-    - target: {fileID: 11900000, guid: 21543d2b66928224f8a9536ff3811682, type: 3}
-      propertyPath: m_FarClipPlane
-      value: 0.29
-      objectReference: {fileID: 0}
-    - target: {fileID: 11900000, guid: 21543d2b66928224f8a9536ff3811682, type: 3}
-      propertyPath: m_Orthographic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11900000, guid: 21543d2b66928224f8a9536ff3811682, type: 3}
-      propertyPath: m_IgnoreLayers.m_Bits
-      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21543d2b66928224f8a9536ff3811682, type: 3}
