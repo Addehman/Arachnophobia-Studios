@@ -28,15 +28,6 @@ public class UIInventory : MonoBehaviour
         }
     }
 
-    public void DestroySlotPrefab()
-    {
-        for (int i = 0; i < uIItems.Count; i++)
-        {
-            Destroy(uIItems[i]);
-        }
-        uIItems.Clear();
-    }
-
     public void UpdateSlot(int slot, ItemInfo item)
     {
         uIItems[slot].UpdateItem(item);

@@ -27,7 +27,7 @@ public class PickUpObject : MonoBehaviour
 
             if (pickedUpItem != null)
             {
-                pickedUpItem(); // Now you are here - flagged here
+                pickedUpItem(); 
             }
 
             if (thisObjectThatWeStandOn != null)

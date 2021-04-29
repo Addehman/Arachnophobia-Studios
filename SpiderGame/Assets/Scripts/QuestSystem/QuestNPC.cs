@@ -12,7 +12,6 @@ public class QuestNPC : MonoBehaviour
     public Inventory inventory;
     public UIInventory uiInventory;
     public ItemInfo itemInfo;
-    
 
     public GameObject questWindow;
     public GameObject deliverWindow;
@@ -20,6 +19,7 @@ public class QuestNPC : MonoBehaviour
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI descriptionText;
 
+    // No reference in script - used in Inspector for UI-buttons.
     public void OpenQuestWindow()
     {
         questWindow.SetActive(true);
@@ -41,19 +41,16 @@ public class QuestNPC : MonoBehaviour
         quest.Complete();
         player.quest = quest;
         gameObject.SetActive(false);
-/*        ClearInventory();*/
-        //Add so that AcceptQuest will be accepted and finished instead of going through entire process.
+        ClearInventory();
     }
-/*
+
+    // Resets color on Images for Inventory and clear UiItems list so its refresh for new quest.
     public void ClearInventory()
     {
-        uiInventory.DestroySlotPrefab();
-        uiInventory.InstantiateSlotPrefab(); // add new - not multiply
-
-
-
-        *//*uiInventory.uIItems.Clear();
-        inventory.RemoveItem("Banana");*//*
-    }*/
-
+        for (int i = 0; i < uiInventory.uIItems.Count; i++)
+        {
+            uiInventory.uIItems[i].item = null;
+            uiInventory.uIItems[i].spriteImage.color = Color.clear;
+        }
+    }
 }
