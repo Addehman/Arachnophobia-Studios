@@ -60,4 +60,13 @@ public class Inventory : MonoBehaviour
             Debug.Log("Item Removed: " + itemToRemove.headline);
         }
     }
+
+    public void RemoveAllItems()
+    {
+        for (int i = 0; i < characterItems.Count; i++)
+        {
+            characterItems.Clear();
+            inventoryUI.RemoveItem(null);
+        }
+    }
 }

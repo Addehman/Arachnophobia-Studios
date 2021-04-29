@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public ItemInfo item;
-    private Image spriteImage;
+    public Image spriteImage; // private?
     private UIItem selectedItem;
     private ItemTool itemTip;
 
@@ -26,10 +26,12 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
         {
             spriteImage.color = Color.white;
             spriteImage.sprite = this.item.picture;
+            print("DoesNotWork");
         }
         else
         {
             spriteImage.color = Color.clear;
+            print("Works");
         }
     }
 
