@@ -7,7 +7,8 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public Rigidbody rb;
 	[HideInInspector] public Vector3 currentPosition;
 
-	[SerializeField] Transform cam;
+	[SerializeField] private Transform cam;
+	[SerializeField] private Animator spiderAnimator;
 
 	[Header("Main Raycasts Adjustment")]
 	[SerializeField] private float rayFwdMod	= 1f;
@@ -76,9 +77,9 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private Vector3 averageNormalDirection;
 	[SerializeField] private List<Vector3> averageNormalDirections = new List<Vector3>();
 	[SerializeField] private Vector3 fwdRayHitNormalDebug;
-	[SerializeField] private int raycastWeightMultiplier = 9;
+	[SerializeField] private int fwdRaycastWeightMultiplier = 9;
+	[SerializeField] private int backRaycastWeightMultiplier = 2;
 
-	public Animator spiderAnimator;
 	private Vector3 myNormal;
 	private float turnSmoothVelocity;
 	private float gravityValue = -9.82f;
@@ -205,7 +206,7 @@ public class SpiderMovement : MonoBehaviour
 
 					// it seems that when adding more of the same on the same raycast will give it more weight, thus we might be able to remove some of the raycasts! 
 					//Specifically those forward might be possible to cut away.
-					RaycastWeightMulti(averageNormalDirections, raycastWeightMultiplier, hit.normal);
+					RaycastWeightMulti(averageNormalDirections, fwdRaycastWeightMultiplier, hit.normal);
 				
 					// isFwdRayHitting = true;
 					fwdRayHitNormalDebug = hit.normal;
@@ -237,6 +238,16 @@ public class SpiderMovement : MonoBehaviour
 				{
 					isGrounded = false;
 					mainDownRayNormalDirection = Vector3.zero;
+				}
+				break;
+			case RaycastTypes.MainBackwards:
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
+				{
+					if (drawRayGizmos == true)
+					{
+						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
+					}
+					RaycastWeightMulti(averageNormalDirections, backRaycastWeightMultiplier, hit.normal);
 				}
 				break;
 			case RaycastTypes.Forwards:

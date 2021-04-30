@@ -604,6 +604,7 @@ MonoBehaviour:
   rb: {fileID: 2147525893710105599}
   currentPosition: {x: 1.6893911, y: 1.8894316, z: 0.2269907}
   cam: {fileID: 0}
+  spiderAnimator: {fileID: 905555197}
   rayFwdMod: 1
   rayBwdMod: 1
   rayDownMod: 1
@@ -631,7 +632,7 @@ MonoBehaviour:
   rayBwdModDown5: 0.063
   rayBwdMod6: 0.1
   rayBwdModDown6: 0.038
-  raycastReach: 0.06
+  raycastReach: 0.05
   rayDownOriginOffset: 0
   raysBackOriginOffset: 0
   raycastReachEdge: 0.1
@@ -648,6 +649,7 @@ MonoBehaviour:
   jumpFwdStrength: 50
   playerToGroundRange: 0.3
   turnSmoothTime: 0.1
+  turnSpeed: 90
   isGrounded: 1
   drawRayGizmos: 1
   fwdRayNoHit: 0
@@ -656,7 +658,9 @@ MonoBehaviour:
   mainDownRayNormalDirection: {x: 0, y: 0, z: 0}
   averageNormalDirection: {x: 0, y: 0, z: 0}
   averageNormalDirections: []
-  spiderAnimator: {fileID: 905555197}
+  fwdRayHitNormalDebug: {x: 0, y: 0, z: 0}
+  fwdRaycastWeightMultiplier: 9
+  backRaycastWeightMultiplier: 2
 --- !u!114 &5734397690749995814
 MonoBehaviour:
   m_ObjectHideFlags: 0
