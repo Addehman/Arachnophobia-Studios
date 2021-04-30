@@ -63,6 +63,7 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private float jumpFwdStrength = 50f;
 	[SerializeField] private float playerToGroundRange = 0.3f;
 	[SerializeField] private float turnSmoothTime = 0.1f;
+	[SerializeField] private float turnSpeed = 90f;
 	[Space(5f)]
 
 	[Header("Debug")]
@@ -353,7 +354,7 @@ public class SpiderMovement : MonoBehaviour
 			// transform.Translate(moveDirection.normalized * (playerSpeed + sprintMulti) * Time.deltaTime, Space.World);
 		// }
 
-		transform.Rotate(0, horizontal * 90 * Time.deltaTime, 0);
+		transform.Rotate(0, horizontal * turnSpeed * Time.deltaTime, 0);
 		// // transform.Translate(horizontal * (playerSpeed + sprintMulti) * Time.deltaTime, 0, 0);
 		transform.Translate(0, 0, vertical * (playerSpeed + sprintMulti) * Time.deltaTime);
 
