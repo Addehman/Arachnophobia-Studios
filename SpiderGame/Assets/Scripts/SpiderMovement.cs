@@ -47,7 +47,7 @@ public class SpiderMovement : MonoBehaviour
 	[Space(5f)]
 
 	[Header("Raycast Settings")]
-	[SerializeField] private float raycastReach = 0.06f;
+	[SerializeField] private float raycastReach = 0.05f;
 	[SerializeField] private float rayDownOriginOffset = 0f;
 	[SerializeField] private float raysBackOriginOffset = 0f;
 	[SerializeField] private float raycastReachEdge = 0.1f;
@@ -57,7 +57,7 @@ public class SpiderMovement : MonoBehaviour
 
 	[Header("Player Settings")]
 	[SerializeField] private float playerSpeed = 0.2f;
-	[SerializeField] private float slowPlayerSpeed = 0.05f;
+	[SerializeField] private float slowPlayerSpeed = 0.1f;
 	[SerializeField] private float normalPlayerSpeed = 0.2f;
 	[SerializeField] private float sprintMultiAmount = 0.2f;
 	[SerializeField] private float jumpUpStrength = 100f;
@@ -78,7 +78,8 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private List<Vector3> averageNormalDirections = new List<Vector3>();
 	[SerializeField] private Vector3 fwdRayHitNormalDebug;
 	[SerializeField] private int fwdRaycastWeightMultiplier = 9;
-	[SerializeField] private int backRaycastWeightMultiplier = 2;
+	[SerializeField] private int backRaycastWeightMultiplier = 9;
+	[SerializeField] private int edgeRaycastWeightMultiplier = 3;
 
 	private Vector3 myNormal;
 	private float turnSmoothVelocity;
@@ -159,20 +160,22 @@ public class SpiderMovement : MonoBehaviour
 		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod5 + transform.TransformDirection(Vector3.down) * rayBwdModDown5, raysBackOriginOffset, RaycastTypes.Backwards);
 		RaycastHelper(transform.TransformDirection(Vector3.back) * rayBwdMod6 + transform.TransformDirection(Vector3.down) * rayBwdModDown6, raysBackOriginOffset, RaycastTypes.Backwards);
 		// Edge Raycasts:
-		if (fwdRayNoHit == true)
+		if (fwdRayNoHit == true && Input.GetKey(KeyCode.W))
 		{
 			playerSpeed = slowPlayerSpeed;
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), edgeRayOriginOffset);
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), edgeRayOriginOffset1);
 		}
+		else if (backRayNoHit == true && Input.GetKey(KeyCode.S))
+		{
+			playerSpeed = slowPlayerSpeed;
+			EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -edgeRayOriginOffset);
+			EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -edgeRayOriginOffset1);
+		}
 		else 
 		{
 			playerSpeed = normalPlayerSpeed;
 		}
-		// else if (backRayNoHit == true)
-		// {
-		// 	EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -edgeRayOriginOffset);
-		// }
 	}
 	// Special "Hook"- or Edge-Raycasts, used to look over edges to find footing where the other rays won't reach.
 	private void EdgeRaycastHelper(Vector3 direction, float originOffsetValue)
@@ -185,7 +188,7 @@ public class SpiderMovement : MonoBehaviour
 			{
 				Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReachEdge);
 			}
-			averageNormalDirections.Add(hit.normal);
+			RaycastWeightMulti(averageNormalDirections, edgeRaycastWeightMultiplier, hit.normal);
 		}
 	}
 	// Main Raycasts function, that casts the rays that balances the player's rotation according to all the normals that these rays find.
@@ -197,7 +200,7 @@ public class SpiderMovement : MonoBehaviour
 		switch (inRaycastType)
 		{
 			case RaycastTypes.MainForwards:
-				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask) && Input.GetKey(KeyCode.W))
 				{
 					if (drawRayGizmos == true)
 					{
@@ -241,7 +244,7 @@ public class SpiderMovement : MonoBehaviour
 				}
 				break;
 			case RaycastTypes.MainBackwards:
-				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask) && Input.GetKey(KeyCode.S))
 				{
 					if (drawRayGizmos == true)
 					{
@@ -265,21 +268,21 @@ public class SpiderMovement : MonoBehaviour
 					fwdRayNoHit = true;
 				}
 				break;
-			// case RaycastTypes.Backwards:
-			// 	if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach))
-			// 	{
-			// 		if (drawRayGizmos == true)
-			// 		{
-			// 			Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
-			// 		}
-			// 		averageNormalDirections.Add(hit.normal);
-			// 		backRayNoHit = false;
-			// 	}
-			// 	else
-			// 	{
-			// 		backRayNoHit = true;
-			// 	}
-			// 	break;
+			case RaycastTypes.Backwards:
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach))
+				{
+					if (drawRayGizmos == true)
+					{
+						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastReach);
+					}
+					averageNormalDirections.Add(hit.normal);
+					backRayNoHit = false;
+				}
+				else
+				{
+					backRayNoHit = true;
+				}
+				break;
 			default:
 				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastReach, layerMask))
 				{
