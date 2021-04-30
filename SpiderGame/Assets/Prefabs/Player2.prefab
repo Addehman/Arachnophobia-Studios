@@ -635,14 +635,14 @@ MonoBehaviour:
   raycastReach: 0.05
   rayDownOriginOffset: 0
   raysBackOriginOffset: 0
-  raycastReachEdge: 0.1
+  raycastReachEdge: 0.2
   edgeRayOriginOffset: 0.03
   edgeRayOriginOffset1: 0.04
   layerMask:
     serializedVersion: 2
     m_Bits: 307
   playerSpeed: 0.2
-  slowPlayerSpeed: 0.05
+  slowPlayerSpeed: 0.1
   normalPlayerSpeed: 0.2
   sprintMultiAmount: 0.2
   jumpUpStrength: 100
@@ -660,7 +660,8 @@ MonoBehaviour:
   averageNormalDirections: []
   fwdRayHitNormalDebug: {x: 0, y: 0, z: 0}
   fwdRaycastWeightMultiplier: 9
-  backRaycastWeightMultiplier: 2
+  backRaycastWeightMultiplier: 9
+  edgeRaycastWeightMultiplier: 3
 --- !u!114 &5734397690749995814
 MonoBehaviour:
   m_ObjectHideFlags: 0
