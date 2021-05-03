@@ -31,7 +31,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
         else
         {
             spriteImage.color = Color.clear;
-            print("Works");
+        //    print("Works");
         }
     }
 

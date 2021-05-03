@@ -15,7 +15,7 @@ public class VacuumWallHitbox : MonoBehaviour
     {
         if (!other.CompareTag("Floor") && !other.CompareTag("WebQuest"))
         {
-            print(other);
+         //   print(other);
             if (!vacuumMove.randomizeDirectionInProgress)
             {
                 StartCoroutine(vacuumMove.RandomizeDirection());

@@ -125,7 +125,7 @@ public class EricAlert : MonoBehaviour
                 animatorDoor2.SetTrigger("IdleDoor");
             }
             
-            Debug.Log(raycastToggler.ericSpawnPosition);
+          //  Debug.Log(raycastToggler.ericSpawnPosition);
 
             currentTime = 0f;
             currentState = State.EricInc;

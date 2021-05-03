@@ -27,7 +27,5 @@ public class Quest
         isAccepted = true;
         finished = questRequirements;
         isCompleted = false;
-        Debug.Log($"QuestRequirements{questRequirements.questType}");
     }
-
 }
