@@ -10,24 +10,25 @@ public class UIAppear : MonoBehaviour
     [SerializeField] private GameObject window;
 
     public Player player;
+    public QuestFinished questFinished;
+   // public GameObject check;
     public bool isFinished = false;
 
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && player.quest.isCompleted == false && player.quest.isAccepted == false)
+        if (other.CompareTag("Player") && player.quest.isCompleted == false)
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
             Debug.Log("In");
+        //    check.SetActive(true);
             window.SetActive(true);
         }
 
-        if (other.CompareTag("Player") && player.quest.isCompleted == true && isFinished == false)
+        else
         {
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Confined;
-            window.SetActive(true);
+            Debug.Log("Quest is not completed, current amount is: " + questFinished.currentAmount);
         }
     }
 

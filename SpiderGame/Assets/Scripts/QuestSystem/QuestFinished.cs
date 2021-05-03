@@ -22,6 +22,7 @@ public class QuestFinished
         if (questType == QuestGoals.GatherFood)
         {
             currentAmount++;
+            Debug.Log(currentAmount);
             Debug.Log("Collected");
         }
         // Make sure this is hooked up to collecatles and player - easy to expand to other quests aswell. 

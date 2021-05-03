@@ -58,8 +58,6 @@ public class Player : MonoBehaviour
                 currentHealth -= 10f;
 
                 spiderAudio.Burn();
-
-                Debug.Log(currentHealth);
             }
 
             if(currentHealth <= 0f)
