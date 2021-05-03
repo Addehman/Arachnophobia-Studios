@@ -5,7 +5,7 @@ using UnityEngine;
 public static class Winstate 
 {
     private static int numberOfQuestCompleted = 0;
-    private static int questToComplete = 2;
+    private static int questToComplete = 1;
 
     public static void AddCompletedQuest()
     {
