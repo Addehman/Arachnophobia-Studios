@@ -12,6 +12,7 @@ public class QuestNPC : MonoBehaviour
     public Inventory inventory;
     public UIInventory uiInventory;
     public ItemInfo itemInfo;
+    public UIAppear uiAppear;
 
     public GameObject questWindow;
     public GameObject deliverWindow;
@@ -42,6 +43,7 @@ public class QuestNPC : MonoBehaviour
         player.quest = quest;
         gameObject.SetActive(false);
         ClearInventory();
+        uiAppear.isFinished = true;
     }
 
     // Resets color on Images for Inventory and clear UiItems list so its refresh for new quest.

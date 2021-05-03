@@ -195,6 +195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   window: {fileID: 9044835338816169713}
   player: {fileID: 1474483963838458598}
+  isFinished: 0
 --- !u!65 &53232001
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16270,17 +16271,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   quest:
-    isAccepted: 0
+    isAccepted: 1
     isCompleted: 0
     title: 
     description: 
     finished:
       questType: 0
-      requiredAmount: 4
+      requiredAmount: 1
       currentAmount: 0
   player: {fileID: 1474483963838458598}
   inventory: {fileID: 1639247673}
   uiInventory: {fileID: 602705488300919748}
+  uiAppear: {fileID: 2096563049}
   questWindow: {fileID: 9044835339762098706}
   deliverWindow: {fileID: 72338508}
   titleText: {fileID: 9044835340116234193}
@@ -17774,8 +17776,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096563047}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -909.24316, y: -444.9698, z: 24.576}
-  m_LocalScale: {x: 0.22903, y: 0.22903, z: 0.22903}
+  m_LocalPosition: {x: -908.775, y: -444.113, z: 22.162}
+  m_LocalScale: {x: 0.32364228, y: 0.32364228, z: 0.32364228}
   m_Children: []
   m_Father: {fileID: 159518577}
   m_RootOrder: 6
@@ -17794,6 +17796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   window: {fileID: 72338508}
   player: {fileID: 1474483963838458598}
+  isFinished: 0
 --- !u!65 &2096563050
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17814,7 +17817,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096563047}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
