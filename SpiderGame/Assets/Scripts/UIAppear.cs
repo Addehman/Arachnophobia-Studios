@@ -10,6 +10,7 @@ public class UIAppear : MonoBehaviour
     [SerializeField] private GameObject window;
 
     public Player player;
+    public bool isFinished = false;
 
 
     void OnTriggerEnter(Collider other)
@@ -22,7 +23,7 @@ public class UIAppear : MonoBehaviour
             window.SetActive(true);
         }
 
-        if (other.CompareTag("Player") && player.quest.isCompleted == true)
+        if (other.CompareTag("Player") && player.quest.isCompleted == true && isFinished == false)
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;

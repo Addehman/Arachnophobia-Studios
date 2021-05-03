@@ -17,6 +17,7 @@ public class Quest
     {
         isAccepted = false;
         isCompleted = true;
+        Winstate.AddCompletedQuest();
         Debug.Log(title + " was completed!");
     }
     // Add here if we want more things for our quest.
@@ -28,4 +29,5 @@ public class Quest
         isCompleted = false;
         Debug.Log($"QuestRequirements{questRequirements.questType}");
     }
+
 }
