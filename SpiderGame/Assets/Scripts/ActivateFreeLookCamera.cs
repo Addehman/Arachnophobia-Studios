@@ -1,13 +1,9 @@
-﻿using UnityEngine;
-using System;
+using UnityEngine;
 
-public class ActivateOnKeypress : MonoBehaviour
+public class ActivateFreeLookCamera : MonoBehaviour
 {
-	public event Action<bool> ActivationFPSCam;
-
-	public KeyCode ActivationKey = KeyCode.LeftControl;
+	public KeyCode ActivationKey = KeyCode.LeftAlt;
 	public int PriorityBoostAmount = 10;
-	public GameObject Reticle;
 
 	Cinemachine.CinemachineVirtualCameraBase vcam;
 	bool boosted = false;
@@ -27,23 +23,13 @@ public class ActivateOnKeypress : MonoBehaviour
 				{
 					vcam.Priority += PriorityBoostAmount;
 					boosted = true;
-					if (ActivationFPSCam != null)
-					{
-						ActivationFPSCam(true);
-					}
 				}
 			}
 			else if (boosted)
 			{
 				vcam.Priority -= PriorityBoostAmount;
 				boosted = false;
-				if (ActivationFPSCam != null)
-					{
-						ActivationFPSCam(false);
-					}
 			}
 		}
-		if (Reticle != null)
-			Reticle.SetActive(boosted);
 	}
 }

@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class SpiderMovement : MonoBehaviour
 {
 	[HideInInspector] public Rigidbody rb;
 	[HideInInspector] public Vector3 currentPosition;
 
-	[SerializeField] private Transform cam;
-	[SerializeField] private Animator spiderAnimator;
+	[SerializeField] private GameObject cmFPSCamera;
+	[SerializeField] private GameObject spiderModel;
 
 	[Header("Main Raycasts Adjustment")]
 	[SerializeField] private float rayFwdMod	= 1f;
@@ -81,25 +82,33 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private int backRaycastWeightMultiplier = 9;
 	[SerializeField] private int edgeRaycastWeightMultiplier = 3;
 
+
+	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any}
+	private RaycastTypes raycastType;
+	private Animator spiderAnimator;
+	private Transform cam;
 	private Vector3 myNormal;
 	private float turnSmoothVelocity;
 	private float gravityValue = -9.82f;
 	private float sprintMulti;
-	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any}
-	private RaycastTypes raycastType;
+	private CinemachineVirtualCamera cmvCamera;
+	private ActivateOnKeypress activateOnKeypress;
+	public bool isFpsEnabled = false;
 
 
 	void Start()
 	{
 		rb = GetComponent<Rigidbody>();
-		if (GameObject.Find("Main Camera") != null)
-		{
-			cam = GameObject.Find("Main Camera").transform;
-		}
-		else 
-		{
-			Debug.LogWarning("Couldn't find 'Main Camera'-gamObject. Assign the main camera object Manually.");
-		}
+		cam = GameObject.Find("Main Camera").transform;
+		spiderAnimator = GetComponentInChildren<Animator>();
+		cmvCamera = cmFPSCamera.GetComponent<CinemachineVirtualCamera>();
+		activateOnKeypress = cmFPSCamera.GetComponent<ActivateOnKeypress>();
+		activateOnKeypress.ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
+	}
+
+	private void activateOnKeypress_ActivationFPSCam(bool isActive)
+	{
+		isFpsEnabled = isActive;
 	}
 
 	// Update is called once per frame
@@ -134,7 +143,7 @@ public class SpiderMovement : MonoBehaviour
 		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
 		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 		//try and make tha camera rotate with the player. Doesn't work as of now.
-		cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 	}
 
 	private void RaycastsToCast()
@@ -367,36 +376,17 @@ public class SpiderMovement : MonoBehaviour
 			
 			// transform.Translate(moveDirection.normalized * (playerSpeed + sprintMulti) * Time.deltaTime, Space.World);
 		// }
-
-		transform.Rotate(0, horizontal * turnSpeed * Time.deltaTime, 0);
-		// // transform.Translate(horizontal * (playerSpeed + sprintMulti) * Time.deltaTime, 0, 0);
+		if (isFpsEnabled == true)
+		{
+			spiderModel.SetActive(false);
+		}
+		else
+		{
+			spiderModel.SetActive(true);
+		}
+		transform.Rotate(0f, horizontal * turnSpeed * Time.deltaTime, 0f);
+		// transform.Translate(horizontal * (playerSpeed + sprintMulti) * Time.deltaTime, 0, 0);
 		transform.Translate(0, 0, vertical * (playerSpeed + sprintMulti) * Time.deltaTime);
-
-
-
-
-		// if (vertical > 0.01f)
-		// {
-		// 	rb.AddForce(transform.forward * vertical * Time.deltaTime * playerSpeed);
-		// }
-		// else if (vertical < -0.01f)
-		// {
-		// 	rb.AddForce(-transform.forward * vertical * Time.deltaTime * playerSpeed);
-		// }
-
-		// if (horizontal > 0.01f)
-		// {
-		// 	rb.AddForce(transform.right * horizontal * Time.deltaTime * playerSpeed);
-		// }
-		// else if (horizontal < -0.01f)
-		// {
-		// 	rb.AddForce(-transform.right * horizontal * Time.deltaTime * playerSpeed);
-		// }
-
-		// if (vertical == 0 || horizontal == 0)
-		// {
-		// 	rb.velocity = Vector3.zero;
-		// }
 	}
 
 	private bool isClimbing()
