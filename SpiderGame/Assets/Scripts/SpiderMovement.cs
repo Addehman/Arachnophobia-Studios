@@ -9,6 +9,7 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public Vector3 currentPosition;
 
 	[SerializeField] private GameObject cmFPSCamera;
+	[SerializeField] private GameObject cmTPCamera;
 	[SerializeField] private GameObject spiderModel;
 
 	[Header("Main Raycasts Adjustment")]
@@ -125,7 +126,9 @@ public class SpiderMovement : MonoBehaviour
 		SpiderJump();
 
 		for (int i = 0; i < averageNormalDirections.Count; i++)
+		{
 			averageNormalDirection += averageNormalDirections[i];
+		}
 
 		averageNormalDirection /= averageNormalDirections.Count;
 
@@ -379,6 +382,9 @@ public class SpiderMovement : MonoBehaviour
 		if (isFpsEnabled == true)
 		{
 			spiderModel.SetActive(false);
+
+			// Here I am trying to set one camera's direction to the other, so that the transition when going between the two cameras will feel better - So they have the same look-direction always.
+			// cmTPCamera.GetComponent<CinemachineFreeLook>().m_XAxis = cmFPSCamera.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineComposer>().m_ScreenX.;
 		}
 		else
 		{
