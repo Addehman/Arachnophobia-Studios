@@ -23,7 +23,7 @@ public class EricAlert : MonoBehaviour
     float currentRaycastTimer = 0f;
 
     float ericSpawnTimer;
-    float ericWarningTimer = 10f;
+    float ericWarningTimer = 30f;
     float ericHmmTimer = 10f;
     float ericOpenDoorTimer = 5f;
     float ericBeginRaycastTimer = 2f;

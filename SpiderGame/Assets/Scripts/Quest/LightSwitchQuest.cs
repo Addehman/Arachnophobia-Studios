@@ -8,19 +8,29 @@ public class LightSwitchQuest : MonoBehaviour
     public GameObject lightSource2;
     public GameObject check;
     bool isFinished = false;
+    bool canSwitchLight = false;
 
-    private void OnTriggerStay(Collider other)
+    private void Update()
     {
-        if (other.gameObject.tag == "Player")
+        if (Input.GetKeyDown(KeyCode.E) && isFinished == false && canSwitchLight == true)
         {
-            if (Input.GetKeyDown(KeyCode.E) && isFinished == false)
-            {
-                Winstate.AddCompletedQuest();
-                lightSource1.SetActive(false);
-                lightSource2.SetActive(false);
-                check.SetActive(true);
-                isFinished = true;
-            }
+            Winstate.AddCompletedQuest();
+            lightSource1.SetActive(false);
+            lightSource2.SetActive(false);
+            check.SetActive(true);
+            isFinished = true;
         }
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.CompareTag("Player"))
+        {
+            canSwitchLight = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        canSwitchLight = false;
     }
 }

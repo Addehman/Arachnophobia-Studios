@@ -7,18 +7,28 @@ public class RadioQuest : MonoBehaviour
     public GameObject song;
     public GameObject check;
     bool isFinished = false;
+    bool canPlayRadio = false;
 
-    private void OnTriggerStay(Collider other)
+    private void Update()
     {
-        if (other.gameObject.tag == "Player")
+        if (Input.GetKeyDown(KeyCode.E) && isFinished == false && canPlayRadio == true)
         {
-            if (Input.GetKeyDown(KeyCode.E) && isFinished == false)
-            {
-                Winstate.AddCompletedQuest();
-                song.SetActive(true);
-                check.SetActive(true);
-                isFinished = true;
-            }
+            Winstate.AddCompletedQuest();
+            song.SetActive(true);
+            check.SetActive(true);
+            isFinished = true;
         }
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.CompareTag("Player"))
+        {
+            canPlayRadio = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        canPlayRadio = false;
     }
 }
