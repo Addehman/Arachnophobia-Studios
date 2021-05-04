@@ -603,8 +603,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 2147525893710105599}
   currentPosition: {x: 1.6893911, y: 1.8894316, z: 0.2269907}
-  cam: {fileID: 0}
-  spiderAnimator: {fileID: 905555197}
+  cmFPSCamera: {fileID: 0}
+  cmTPCamera: {fileID: 0}
+  spiderModel: {fileID: 6279054559707016931}
   rayFwdMod: 1
   rayBwdMod: 1
   rayDownMod: 1
@@ -662,6 +663,7 @@ MonoBehaviour:
   fwdRaycastWeightMultiplier: 9
   backRaycastWeightMultiplier: 9
   edgeRaycastWeightMultiplier: 3
+  isFpsEnabled: 0
 --- !u!114 &5734397690749995814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1291,7 +1293,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: 0.01
   far clip plane: 5000
   field of view: 60
   orthographic: 0
