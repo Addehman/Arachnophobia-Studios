@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class UIAppear : MonoBehaviour
 {
-    [SerializeField] private GameObject window;
+/*    [SerializeField] private GameObject window;
 
     public Player player;
     public QuestFinished questFinished;
@@ -22,13 +22,7 @@ public class UIAppear : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
             Debug.Log("In");
-        //    check.SetActive(true);
             window.SetActive(true);
-        }
-
-        else
-        {
-            Debug.Log("Quest is not completed, current amount is: " + questFinished.currentAmount);
         }
     }
 
@@ -40,5 +34,5 @@ public class UIAppear : MonoBehaviour
             Debug.Log("Out");
             window.SetActive(false);
         }
-    }
+    }*/
 }

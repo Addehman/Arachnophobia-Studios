@@ -19,8 +19,8 @@ public class Player : MonoBehaviour
     private void Start()
     {
         spiderAudio = GetComponent<SpiderAudio>();
-        pickUpObject = GetComponent<PickUpObject>();
-        pickUpObject.pickedUpItem += PickUpObject_pickedUpItem;
+/*        pickUpObject = GetComponent<PickUpObject>();
+        pickUpObject.pickedUpItem += PickUpObject_pickedUpItem;*/
         currentHealth = maxHealth;
     }
 
@@ -29,12 +29,12 @@ public class Player : MonoBehaviour
         healthBar.fillAmount = currentHealth / maxHealth;
     }
 
-    private void PickUpObject_pickedUpItem()
+/*    private void PickUpObject_pickedUpItem()
     {
         GoDoQuest();
-    }
+    }*/
 
-    public void GoDoQuest() //This function hold the quest that is needed to be done right now. At the moment, fruitcollected.
+/*    public void GoDoQuest() //This function hold the quest that is needed to be done right now. At the moment, fruitcollected.
     {
         if (quest.isAccepted)
         {
@@ -44,7 +44,7 @@ public class Player : MonoBehaviour
                 quest.Complete();
             }
         }
-    }
+    }*/
 
     private void OnTriggerStay (Collider other)
     {

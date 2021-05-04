@@ -5,13 +5,15 @@ using UnityEngine;
 public static class Winstate 
 {
     private static int numberOfQuestCompleted = 0;
-    private static int questToComplete = 3;
+    private static int questToComplete = 4;  //Update this if a new quest is added
+    public static bool isVictory = false;
 
     public static void AddCompletedQuest()
     {
         numberOfQuestCompleted++;
         if (numberOfQuestCompleted >= questToComplete)
         {
+            isVictory = true;
             Debug.Log("Victory"); 
         }
     }

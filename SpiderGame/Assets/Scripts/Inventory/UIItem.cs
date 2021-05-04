@@ -26,7 +26,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
         {
             spriteImage.color = Color.white;
             spriteImage.sprite = this.item.picture;
-            print("DoesNotWork");
+        //    print("DoesNotWork");
         }
         else
         {

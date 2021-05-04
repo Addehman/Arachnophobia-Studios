@@ -14,7 +14,7 @@ public class RaycastToggler : MonoBehaviour
     public void RandomEricPosition()
     {
         ericSpawnPosition = Random.Range(0, 2);
-        Debug.Log("RandomPositionIs: " + ericSpawnPosition);
+     //   Debug.Log("RandomPositionIs: " + ericSpawnPosition);
 
         if (ericSpawnPosition == 0)
         {

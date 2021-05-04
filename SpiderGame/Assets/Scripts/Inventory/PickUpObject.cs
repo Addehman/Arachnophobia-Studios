@@ -8,7 +8,12 @@ using System;
 public class PickUpObject : MonoBehaviour
 {
     bool canPickUp = false;
+    public bool isAllItemsCollected = false;
+
     public int itemID;
+    [SerializeField]
+    int numberOfItemsPickedUp;
+
     private Inventory inventoryOnPlayer;
     private GameObject thisObjectThatWeStandOn;
 
@@ -20,10 +25,12 @@ public class PickUpObject : MonoBehaviour
     }
     private void Update()
     {
-        if (canPickUp && Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && canPickUp == true)
         {
+            numberOfItemsPickedUp++;
+            Debug.Log("number of items picked up: " + numberOfItemsPickedUp);
+
             inventoryOnPlayer.GiveItem(itemID);
-            print("Picked Up Object");
 
             if (pickedUpItem != null)
             {
@@ -33,9 +40,15 @@ public class PickUpObject : MonoBehaviour
             if (thisObjectThatWeStandOn != null)
             {
                 Destroy(thisObjectThatWeStandOn);
-                canPickUp = false;
                 thisObjectThatWeStandOn = null;
             }
+
+            canPickUp = false;
+        }
+
+        if(numberOfItemsPickedUp >= 1)
+        {
+            isAllItemsCollected = true;
         }
     }
 
