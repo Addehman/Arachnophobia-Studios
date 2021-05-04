@@ -7,7 +7,7 @@ using TMPro;
 
 public class QuestNPC : MonoBehaviour
 {
-    public Quest quest;
+/*    public Quest quest;
     public Player player;
     public Inventory inventory;
     public UIInventory uiInventory;
@@ -18,10 +18,10 @@ public class QuestNPC : MonoBehaviour
     public GameObject deliverWindow;
 
     public TextMeshProUGUI titleText;
-    public TextMeshProUGUI descriptionText;
+    public TextMeshProUGUI descriptionText;*/
 
     // No reference in script - used in Inspector for UI-buttons.
-    public void OpenQuestWindow()
+/*    public void OpenQuestWindow()
     {
         questWindow.SetActive(true);
         titleText.text = quest.title;
@@ -45,14 +45,14 @@ public class QuestNPC : MonoBehaviour
         ClearInventory();
         uiAppear.isFinished = true;
     }
-
+*/
     // Resets color on Images for Inventory and clear UiItems list so its refresh for new quest.
-    public void ClearInventory()
+/*    public void ClearInventory()
     {
         for (int i = 0; i < uiInventory.uIItems.Count; i++)
         {
             uiInventory.uIItems[i].item = null;
             uiInventory.uIItems[i].spriteImage.color = Color.clear;
         }
-    }
+    }*/
 }

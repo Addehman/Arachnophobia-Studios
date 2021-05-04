@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Quest
 {
-    public bool isAccepted;
+/*    public bool isAccepted;
     public bool isCompleted;
 
     public string title;
@@ -27,5 +27,5 @@ public class Quest
         isAccepted = true;
         finished = questRequirements;
         isCompleted = false;
-    }
+    }*/
 }

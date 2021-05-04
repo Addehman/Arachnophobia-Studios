@@ -7,7 +7,7 @@ using UnityEngine;
 [System.Serializable]
 public class QuestFinished
 {
-    public QuestGoals questType;
+/*    public QuestGoals questType;
     public int requiredAmount;
     public int currentAmount;
 
@@ -39,5 +39,5 @@ public class QuestFinished
         GordonRamsey
 
         // Several different quest we want to achieve in the game
-    }
+    }*/
 }
