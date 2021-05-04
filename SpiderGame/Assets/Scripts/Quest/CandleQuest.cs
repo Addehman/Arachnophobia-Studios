@@ -7,18 +7,28 @@ public class CandleQuest : MonoBehaviour
     public GameObject light;
     public GameObject check;
     bool isFinished = false;
+    bool canLightCandle = false;
 
-    private void OnTriggerStay(Collider other)
+    private void Update()
     {
-        if (other.gameObject.tag == "Player")
+        if (Input.GetKeyDown(KeyCode.E) && isFinished == false && canLightCandle == true)
         {
-            if (Input.GetKeyDown(KeyCode.E) && isFinished == false)
-            {
-                Winstate.AddCompletedQuest();
-                light.SetActive(true);
-                check.SetActive(true);
-                isFinished = true;
-            }
+            Winstate.AddCompletedQuest();
+            light.SetActive(true);
+            check.SetActive(true);
+            isFinished = true;
         }
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.CompareTag("Player"))
+        {
+            canLightCandle = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        canLightCandle = false;
     }
 }
