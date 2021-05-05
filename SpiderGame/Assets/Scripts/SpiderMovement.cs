@@ -100,7 +100,6 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public Rigidbody rb;
 	[HideInInspector] public Vector3 currentPosition;
 
-	[SerializeField] private GameObject cmFPSCamera;
 	[SerializeField] private GameObject cmTPCamera;
 	[SerializeField] private GameObject spiderModel;
 
@@ -119,8 +118,6 @@ public class SpiderMovement : MonoBehaviour
 	private float turnSmoothVelocity;
 	private float gravityValue = -9.82f;
 	private float sprintMulti;
-	private CinemachineVirtualCamera cmvCamera;
-	private ActivateOnKeypress activateOnKeypress;
 
 
 	void Start()
@@ -128,9 +125,7 @@ public class SpiderMovement : MonoBehaviour
 		rb = GetComponent<Rigidbody>();
 		cam = GameObject.Find("Main Camera").transform;
 		spiderAnimator = GetComponentInChildren<Animator>();
-		cmvCamera = cmFPSCamera.GetComponent<CinemachineVirtualCamera>();
-		activateOnKeypress = cmFPSCamera.GetComponent<ActivateOnKeypress>();
-		activateOnKeypress.ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
+		Camera.main.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
 	}
 
 	private void activateOnKeypress_ActivationFPSCam(bool isActive)
@@ -148,7 +143,6 @@ public class SpiderMovement : MonoBehaviour
 		RaycastsToCast();
 		Movement();
 		Sprint();
-		// isClimbing();
 		SpiderJump();
 
 		for (int i = 0; i < debugSettings.averageNormalDirections.Count; i++)
@@ -177,6 +171,7 @@ public class SpiderMovement : MonoBehaviour
 
 	private void RaycastsToCast()
 	{
+		// Consider making these into For-Loops instead!
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * mainRaycastAdjustments.rayFwdMod, 0f, RaycastTypes.MainForwards);
 		RaycastHelper(transform.TransformDirection(Vector3.back) * mainRaycastAdjustments.rayBwdMod, 0f, RaycastTypes.MainBackwards);
 		RaycastHelper(transform.TransformDirection(Vector3.down) * mainRaycastAdjustments.rayDownMod, mainRaycastAdjustments.rayDownOriginOffset, RaycastTypes.MainDown);
@@ -411,26 +406,6 @@ public class SpiderMovement : MonoBehaviour
 		transform.Rotate(0f, horizontal * playerSettings.turnSpeed * Time.deltaTime, 0f);
 		// transform.Translate(horizontal * (playerSpeed + sprintMulti) * Time.deltaTime, 0, 0);
 		transform.Translate(0, 0, vertical * (playerSettings.playerSpeed + sprintMulti) * Time.deltaTime);
-	}
-
-	private bool isClimbing()
-	{
-		if (transform.rotation.x > 20f)
-		{
-			return true;
-		}
-		else if (transform.rotation.y > 20f)
-		{
-			return true;
-		}
-		else if (transform.rotation.z > 20f)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
 	}
 
 	private void SpiderJump()
