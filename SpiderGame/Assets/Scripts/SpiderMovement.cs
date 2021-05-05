@@ -80,6 +80,8 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private int fwdRaycastWeightMultiplier = 9;
 	[SerializeField] private int backRaycastWeightMultiplier = 9;
 	[SerializeField] private int edgeRaycastWeightMultiplier = 3;
+	bool isWalking = false;
+
 
 	private Vector3 myNormal;
 	private float turnSmoothVelocity;
@@ -135,6 +137,16 @@ public class SpiderMovement : MonoBehaviour
 		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 		//try and make tha camera rotate with the player. Doesn't work as of now.
 		cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+
+		if (((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) && spiderAnimator.GetBool("Walk") == false) && isGrounded == true)
+		{
+			spiderAnimator.SetBool("Walk", true);
+		}
+
+		else if (((Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.W)) && spiderAnimator.GetBool("Walk") == true))
+        {
+			spiderAnimator.SetBool("Walk", false);
+		}
 	}
 
 	private void RaycastsToCast()
@@ -233,8 +245,6 @@ public class SpiderMovement : MonoBehaviour
 					if (hit.distance < playerToGroundRange && rbVelocity < 0f)
 					{
 						isGrounded = true;
-						//adam titta på denna
-						spiderAnimator.SetBool("Jump", false);
 					}
 				}
 				else
@@ -374,6 +384,18 @@ public class SpiderMovement : MonoBehaviour
 
 
 
+/*		if((vertical >= 0.1f || vertical <= -0.1f) && spiderAnimator.GetBool("Walk") == false)
+        {
+			spiderAnimator.SetBool("Walk", true);
+		}*/
+/*
+		else if(vertical == 0f)
+        {
+			spiderAnimator.SetBool("Walk", false);
+		}*/
+
+
+
 
 		// if (vertical > 0.01f)
 		// {
@@ -384,19 +406,19 @@ public class SpiderMovement : MonoBehaviour
 		// 	rb.AddForce(-transform.forward * vertical * Time.deltaTime * playerSpeed);
 		// }
 
-		// if (horizontal > 0.01f)
-		// {
-		// 	rb.AddForce(transform.right * horizontal * Time.deltaTime * playerSpeed);
-		// }
-		// else if (horizontal < -0.01f)
-		// {
-		// 	rb.AddForce(-transform.right * horizontal * Time.deltaTime * playerSpeed);
-		// }
+			// if (horizontal > 0.01f)
+			// {
+			// 	rb.AddForce(transform.right * horizontal * Time.deltaTime * playerSpeed);
+			// }
+			// else if (horizontal < -0.01f)
+			// {
+			// 	rb.AddForce(-transform.right * horizontal * Time.deltaTime * playerSpeed);
+			// }
 
-		// if (vertical == 0 || horizontal == 0)
-		// {
-		// 	rb.velocity = Vector3.zero;
-		// }
+			// if (vertical == 0 || horizontal == 0)
+			// {
+			// 	rb.velocity = Vector3.zero;
+			// }
 	}
 
 	private bool isClimbing()
@@ -433,6 +455,12 @@ public class SpiderMovement : MonoBehaviour
 			rb.AddForce((transform.up + transform.forward) * jumpFwdStrength);
 			isGrounded = false;
 		}
+
+		if (Input.GetButtonUp("Jump"))
+		{
+			spiderAnimator.SetBool("Jump", false);
+		}
+
 	}
 	// Binds key for player to use to increase move speed.
 	private void Sprint()
