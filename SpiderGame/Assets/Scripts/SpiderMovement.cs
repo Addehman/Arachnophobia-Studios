@@ -241,8 +241,8 @@ public class SpiderMovement : MonoBehaviour
 					averageNormalDirections.Add(hit.normal);
 					mainDownRayNormalDirection = hit.normal;
 
-					float rbVelocity = rb.velocity.y;
-					if (hit.distance < playerToGroundRange && rbVelocity < 0f)
+					float rbVelocityY = rb.velocity.y;
+					if (hit.distance < playerToGroundRange && rbVelocityY < 0f)
 					{
 						isGrounded = true;
 						//adam titta på denna
