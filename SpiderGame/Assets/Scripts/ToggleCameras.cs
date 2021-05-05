@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
-public class ActivateOnKeypress : MonoBehaviour
+
+public class ToggleCameras : MonoBehaviour
 {
 	public event Action<bool> ActivationFPSCam;
 
@@ -8,7 +9,6 @@ public class ActivateOnKeypress : MonoBehaviour
 	public int PriorityBoostAmount = 10;
 	public GameObject crosshair;
 	public Cinemachine.CinemachineVirtualCamera fpsCamera;
-	public SpiderMovement playerMovement;
 
 	public bool boosted = false;
 
