@@ -12,6 +12,8 @@ public class EricAlert : MonoBehaviour
 
     public Animator animatorDoor1;
     public Animator animatorDoor2;
+    public Animator ericWalking1;
+    public Animator ericWalking2;
     public Animator spiderAnimator;
     public Animator flySwatterAnimator;
 
@@ -26,19 +28,24 @@ public class EricAlert : MonoBehaviour
     float currentTime = 0f;
     float currentRaycastTimer = 0f;
     float deadAnimationTimer = 0f;
+    float footStepAnimationTimer = 0f;
 
     float ericSpawnTimer;
-    float ericWarningTimer = 30f;
+    float ericWarningTimer = 5f;
     float ericHmmTimer = 10f;
-    float ericOpenDoorTimer = 5f;
+    float ericOpenDoorTimer = 10f;
     float ericBeginRaycastTimer = 2f;
     float ericExitTimer = 5f;
     float detectionTimer;
+    float footStepCounter;
 
     public bool playerDetected = false;
     bool isRaycasting = false;
     bool showedGameOver = false;
     bool animationSwatterPlayed = false;
+    bool ericExitRoomFirstTime = false;
+
+    Coroutine currentCoroutine;
 
     public Text timer;
 
@@ -135,7 +142,14 @@ public class EricAlert : MonoBehaviour
         if (currentTime >= ericSpawnTimer && currentState == State.EricNotInRoom)
         {
             Debug.Log("Eric is not in room/respawning");
-            //  ericSpawnPosition = Random.Range(0, 2);
+
+            ericWalking1.SetBool("Inc", false);
+            ericWalking2.SetBool("Inc", false);
+
+            if (ericExitRoomFirstTime == true)
+            {
+                StopCoroutine(currentCoroutine);
+            }
 
             raycastToggler.RandomEricPosition();
             
@@ -147,8 +161,6 @@ public class EricAlert : MonoBehaviour
             {
                 animatorDoor2.SetTrigger("IdleDoor");
             }
-            
-          //  Debug.Log(raycastToggler.ericSpawnPosition);
 
             currentTime = 0f;
             currentState = State.EricInc;
@@ -159,9 +171,17 @@ public class EricAlert : MonoBehaviour
         {
             Debug.Log("Eric inc");
 
-            audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricFootStep");
-            audioSourceEric.loop = true;
-            audioSourceEric.Play();
+            StartCoroutine(FootStep());
+            currentCoroutine = StartCoroutine(FootStep());
+            if (raycastToggler.ericSpawnPosition == 0)
+            {
+                ericWalking1.SetBool("Inc", true);
+            }
+            else if (raycastToggler.ericSpawnPosition == 1)
+            {
+                ericWalking2.SetBool("Inc", true);
+            }
+
 
             currentTime = 0f;
             currentState = State.EricOpenDoor; 
@@ -171,7 +191,8 @@ public class EricAlert : MonoBehaviour
         if(currentTime >= ericOpenDoorTimer && currentState == State.EricOpenDoor)
         {
             Debug.Log("Eric Open door");
-            
+
+            StopCoroutine(currentCoroutine);
             audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricDoor");
             audioSourceEric.loop = false;
             audioSourceEric.Play();
@@ -192,6 +213,7 @@ public class EricAlert : MonoBehaviour
         //Eric is entering room and starting raycasting
         if (currentTime >= ericBeginRaycastTimer && currentState == State.EricRaycast)
         {
+            StopAllCoroutines();
             Debug.Log("Eric enter, doing Raycast");
             isRaycasting = true;
 
@@ -219,9 +241,10 @@ public class EricAlert : MonoBehaviour
         {
             Debug.Log("Eric exit room");
 
-            audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricCloseDoor");
-            audioSourceEric.Play();
-            
+            StartCoroutine(CloseDoor());
+            currentCoroutine = StartCoroutine(CloseDoor());
+            ericExitRoomFirstTime = true;
+
             if (raycastToggler.ericSpawnPosition == 0)
             {
                 animatorDoor1.SetTrigger("CloseDoor");
@@ -238,5 +261,26 @@ public class EricAlert : MonoBehaviour
         }
 
         timer.text = currentTime.ToString();
+    }
+
+    IEnumerator FootStep()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(0.6f);
+
+            audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricFootStep");
+            audioSourceEric.Play();
+        }
+    }
+
+    IEnumerator CloseDoor()
+    {
+        {
+            yield return new WaitForSeconds(0.8f);
+
+            audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricCloseDoor");
+            audioSourceEric.Play();
+        }
     }
 }
