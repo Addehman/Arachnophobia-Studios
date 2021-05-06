@@ -112,16 +112,20 @@ public class SpiderMovement : MonoBehaviour
 
 	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any}
 	private RaycastTypes raycastType;
-	private Animator spiderAnimator;
+	public Animator spiderAnimator;
 	private Transform cam;
 	private Vector3 myNormal;
 	private float turnSmoothVelocity;
 	private float gravityValue = -9.82f;
 	private float sprintMulti;
 
+	int randomIdle;
+	float randomIdleTimer = 0f;
+
 
 	void Start()
 	{
+		spiderAnimator.SetTrigger("Idle");
 		rb = GetComponent<Rigidbody>();
 		cam = GameObject.Find("Main Camera").transform;
 		spiderAnimator = GetComponentInChildren<Animator>();
@@ -145,6 +149,7 @@ public class SpiderMovement : MonoBehaviour
 		Sprint();
 		SpiderJump();
 
+
 		for (int i = 0; i < debugSettings.averageNormalDirections.Count; i++)
 		{
 			debugSettings.averageNormalDirection += debugSettings.averageNormalDirections[i];
@@ -167,6 +172,33 @@ public class SpiderMovement : MonoBehaviour
 		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 		//try and make tha camera rotate with the player. Doesn't work as of now.
 		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+
+		if (((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true))
+		{
+			spiderAnimator.SetBool("Walk", true);
+		}
+
+		else if (((Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.W)) && spiderAnimator.GetBool("Walk") == true))
+		{
+			spiderAnimator.SetBool("Walk", false);
+		}
+
+		randomIdleTimer += Time.deltaTime;
+		if (randomIdleTimer >= 10f)
+        {
+			randomIdle = Random.Range(0, 2);
+
+			if(randomIdle == 0)
+            {
+				spiderAnimator.SetTrigger("Idle_Shake");
+            }
+			else if(randomIdle == 1)
+            {
+				spiderAnimator.SetTrigger("Idle_LookAround");
+			}
+
+			randomIdleTimer = 0f;
+		}
 	}
 
 	private void RaycastsToCast()

@@ -12,6 +12,7 @@ public class EricAlert : MonoBehaviour
 
     public Animator animatorDoor1;
     public Animator animatorDoor2;
+    public Animator spiderAnimator;
 
     AudioSource audioSourceEric;
 
@@ -96,6 +97,7 @@ public class EricAlert : MonoBehaviour
                 if(showedGameOver == false)
                 {
                     audioSourceEric.clip = Resources.Load<AudioClip>("Audio/Detected");
+                    spiderAnimator.SetBool("Dead", true);
                     audioSourceEric.Play();
 
                     gameOver.GameOverScreen();
