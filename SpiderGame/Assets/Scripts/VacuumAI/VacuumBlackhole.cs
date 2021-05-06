@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class VacuumBlackhole : MonoBehaviour
@@ -8,8 +9,11 @@ public class VacuumBlackhole : MonoBehaviour
     Transform playerTransform;
     Rigidbody playerRb;
 
-    public float pullAmount;
-    public float pullUpAmount;
+    public event Action<bool> PullingPlayer;
+
+    public Vector3 playerDistance;
+    public float pullAmount = 14f; //Alternative numbers 7.1 //14 works good with velocity movement
+    public float pullUpAmount = 2f; //Alternative numbers 4 //2 works good with velocity movement
 
     private void Start()
     {
@@ -20,8 +24,6 @@ public class VacuumBlackhole : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            print("Suger in playern");
-
             playerTransform = other.gameObject.GetComponent<Transform>();
             playerRb = other.gameObject.GetComponent<Rigidbody>();
         }
@@ -31,8 +33,11 @@ public class VacuumBlackhole : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            if (PullingPlayer != null)
+            {
+                PullingPlayer(true);
+            }
             BlackHole();
-            Debug.Log("Suger in playern");
         }
     }
 
@@ -40,13 +45,22 @@ public class VacuumBlackhole : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Slutade suga in playern");
+            if (PullingPlayer != null)
+            {
+                PullingPlayer(false);
+            }
         }
     }
 
     private void BlackHole()
     {
-        playerRb.AddForce((vacuumTransform.position - playerTransform.position).normalized * pullAmount);
+        Vector3 force = (vacuumTransform.position - playerTransform.position).normalized * pullAmount;
+        Debug.Log($"Force: {force}");
+        playerRb.AddForce(force);
         playerRb.AddForce(Vector3.up * pullUpAmount);
+
+        //Alternative way of BlackHole effect, using sphere collider instead.
+        //float gravityIntensity = Vector3.Distance(transform.position, playerTransform.position) / sphereCol.radius;
+        //playerRb.AddForce((transform.position - playerTransform.position) * gravityIntensity * playerRb.mass * pullAmount * Time.smoothDeltaTime);
     }
 }
