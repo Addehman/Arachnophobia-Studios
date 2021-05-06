@@ -45,6 +45,7 @@ public class VacuumBlackhole : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            playerRb.velocity = Vector3.zero;
             if (PullingPlayer != null)
             {
                 PullingPlayer(false);

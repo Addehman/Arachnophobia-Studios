@@ -331,6 +331,7 @@ MonoBehaviour:
   currentPosition: {x: 1.6893911, y: 1.8894316, z: 0.2269907}
   cmTPCamera: {fileID: 0}
   spiderModel: {fileID: 919132148019054603}
+  spiderAnimator: {fileID: 1159706110}
   mainRaycastAdjustments:
     rayFwdMod: 1
     rayBwdMod: 1
@@ -375,10 +376,13 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 275
   playerSettings:
-    playerSpeed: 0.2
-    slowPlayerSpeed: 0.1
-    normalPlayerSpeed: 0.2
-    sprintMultiAmount: 0.2
+    translatePlayerSpeed: 0.2
+    translateSlowPlayerSpeed: 0.1
+    translateNormalPlayerSpeed: 0.2
+    translateSprintMultiAmount: 0.2
+    velocityPlayerSpeed: 27
+    velocityNormalPlayerSpeed: 27
+    velocitySprintMultiAmount: 10
     jumpUpStrength: 100
     jumpFwdStrength: 50
     playerToGroundRange: 0.3
@@ -395,7 +399,7 @@ MonoBehaviour:
     averageNormalDirections: []
     fwdRayHitNormalDebug: {x: 0, y: 0, z: 0}
     isFpsEnabled: 0
-  spiderAnimator: {fileID: 1159706110}
+    isPlayerBeingVacuumed: 0
 --- !u!114 &4801097130878541006
 MonoBehaviour:
   m_ObjectHideFlags: 0

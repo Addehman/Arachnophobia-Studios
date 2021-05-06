@@ -68,10 +68,13 @@ public class RaycastGeneralSettings
 public class PlayerSettings
 {
 	// [Header("Player Settings")]
-	public float playerSpeed = 0.2f;
-	public float slowPlayerSpeed = 0.1f;
-	public float normalPlayerSpeed = 0.2f;
-	public float sprintMultiAmount = 0.2f;
+	public float translatePlayerSpeed = 0.2f;
+	public float translateSlowPlayerSpeed = 0.1f;
+	public float translateNormalPlayerSpeed = 0.2f;
+	public float translateSprintMultiAmount = 0.2f;
+	public float velocityPlayerSpeed = 30f;
+	public float velocityNormalPlayerSpeed = 30f;
+	public float velocitySprintMultiAmount = 60f;
 	public float jumpUpStrength = 100f;
 	public float jumpFwdStrength = 50f;
 	public float playerToGroundRange = 0.3f;
@@ -103,6 +106,7 @@ public class SpiderMovement : MonoBehaviour
 
 	[SerializeField] private GameObject cmTPCamera;
 	[SerializeField] private GameObject spiderModel;
+	public Animator spiderAnimator;
 
 	public MainRaycastsAdjustment mainRaycastAdjustments;
 	public ForwardsRaycastsAdjustment forwardsRaycastAdjustment;
@@ -113,13 +117,14 @@ public class SpiderMovement : MonoBehaviour
 
 	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any}
 	private RaycastTypes raycastType;
-	public Animator spiderAnimator;
 	private Transform cam;
 	private Vector3 myNormal;
 	private float turnSmoothVelocity;
 	private float gravityValue = -9.82f;
 	private float sprintMulti;
 	private VacuumBlackhole vacuumBlackhole;
+	private float vertical;
+	private float horizontal;
 
 	int randomIdle;
 	float randomIdleTimer = 0f;
@@ -132,7 +137,8 @@ public class SpiderMovement : MonoBehaviour
 		cam = GameObject.Find("Main Camera").transform;
 		spiderAnimator = GetComponentInChildren<Animator>();
 		Camera.main.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
-		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>().PullingPlayer += vacuumBlackhole_PullingPlayer;
+		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>();
+		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
 	}
 
 	private void activateOnKeypress_ActivationFPSCam(bool isActive)
@@ -149,11 +155,13 @@ public class SpiderMovement : MonoBehaviour
 	void Update()
 	{
 		debugSettings.averageNormalDirections.Clear();
-
 		currentPosition = transform.position;
 
+		vertical = Input.GetAxisRaw("Vertical");
+		horizontal = Input.GetAxisRaw("Horizontal");
+
 		RaycastsToCast();
-		Movement();
+		PlayerRotation();		
 		Sprint();
 		SpiderJump();
 
@@ -207,6 +215,37 @@ public class SpiderMovement : MonoBehaviour
 
 			randomIdleTimer = 0f;
 		}
+
+		if (debugSettings.isFpsEnabled == true)
+		{
+			spiderModel.SetActive(false);
+		}
+		else
+		{
+			spiderModel.SetActive(true);
+		}
+	}
+
+	private void FixedUpdate()
+	{
+		// apply constant weight force according to character normal:
+		if (debugSettings.isGrounded == true)
+		{
+			rb.AddForce(gravityValue * rb.mass * transform.up);
+		}
+		else
+		{
+			rb.AddForce(gravityValue * rb.mass * Vector3.up);
+		}
+
+		if (debugSettings.isPlayerBeingVacuumed == true)
+		{
+			VelocityMovement();
+		}
+		else
+		{
+			TranslateMovement();
+		}
 	}
 
 	private void RaycastsToCast()
@@ -235,19 +274,19 @@ public class SpiderMovement : MonoBehaviour
 		// Edge Raycasts:
 		if (debugSettings.fwdRayNoHit == true && Input.GetKey(KeyCode.W))
 		{
-			playerSettings.playerSpeed = playerSettings.slowPlayerSpeed;
+			playerSettings.translatePlayerSpeed = playerSettings.translateSlowPlayerSpeed;
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset);
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset1);
 		}
 		else if (debugSettings.backRayNoHit == true && Input.GetKey(KeyCode.S))
 		{
-			playerSettings.playerSpeed = playerSettings.slowPlayerSpeed;
+			playerSettings.translatePlayerSpeed = playerSettings.translateSlowPlayerSpeed;
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset);
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset1);
 		}
 		else 
 		{
-			playerSettings.playerSpeed = playerSettings.normalPlayerSpeed;
+			playerSettings.translatePlayerSpeed = playerSettings.translateNormalPlayerSpeed;
 		}
 	}
 	// Special "Hook"- or Edge-Raycasts, used to look over edges to find footing where the other rays won't reach.
@@ -377,84 +416,18 @@ public class SpiderMovement : MonoBehaviour
 		}
 	}
 
-	private void FixedUpdate()
+	private void TranslateMovement()
 	{
-		// apply constant weight force according to character normal:
-		if (debugSettings.isGrounded == true)
-		{
-			rb.AddForce(gravityValue * rb.mass * transform.up);
-		}
-		else
-		{
-			rb.AddForce(gravityValue * rb.mass * Vector3.up);
-		}
+		transform.Translate(0, 0, vertical * (playerSettings.translatePlayerSpeed + sprintMulti) * Time.deltaTime);
 	}
 
-	private void Movement()
+	private void VelocityMovement()
 	{
-		float vertical = Input.GetAxisRaw("Vertical");
-		float horizontal = Input.GetAxisRaw("Horizontal");
+		rb.velocity = (transform.forward * vertical) * (playerSettings.velocityPlayerSpeed + sprintMulti) * Time.deltaTime;
+	}
 
-		// Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-
-		// if (direction.magnitude >= 0.1f)
-		// {
-		// 	float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-		// 	float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-
-			// Here we are determining what direction that the camera should apply it's direction to on the player.
-			// NOTES: This doesn't do the trick.. Doesn't seem to make any difference
-
-			// float directX = Mathf.Round(mainDownRayNormalDirection.x);
-			// float directX = Mathf.Abs(averageNormalDirection.x);
-			// float directY = Mathf.Abs(averageNormalDirection.y);
-			// float directZ = Mathf.Abs(averageNormalDirection.z);
-			// Vector3 moveDirection;
-
-			// if (directX > directY && directX > directZ)
-			// {
-			// 	print ("setting to direction to X");
-			// 	transform.rotation = Quaternion.Euler(angle, 0f, 0f);
-			// 	moveDirection = Quaternion.Euler(targetAngle, 0f, 0f) * Vector3.forward; // should it really be forward? maybe transform.forward? I've tried Vector3.up..
-			// }
-			// else if (directZ > directX && directZ > directY)
-			// {
-			// 	print ("setting to direction to Z");
-			// 	transform.rotation = Quaternion.Euler(0f, 0f, angle);
-			// 	moveDirection = Quaternion.Euler(0f, 0f, targetAngle) * Vector3.forward;
-			// }
-			// else
-			// {
-			// 	print ("setting to direction to Y");
-			// 	transform.rotation = Quaternion.Euler(0f, angle, 0f);
-			// 	moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-			// }
-
-			// // transform.rotation = Quaternion.Euler(0f, angle, 0f);
-			// // Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-			
-			// transform.Translate(moveDirection.normalized * (playerSpeed + sprintMulti) * Time.deltaTime, Space.World);
-		// }
-		if (debugSettings.isFpsEnabled == true)
-		{
-			spiderModel.SetActive(false);
-		}
-		else
-		{
-			spiderModel.SetActive(true);
-		}
-
-		if (debugSettings.isPlayerBeingVacuumed == true)
-		{
-			rb.velocity = (transform.forward * vertical) * playerSettings.playerSpeed * Time.deltaTime;
-		}
-		else
-		{
-			transform.Translate(0, 0, vertical * (playerSettings.playerSpeed + sprintMulti) * Time.deltaTime);
-		}
-
-		// transform.Translate(horizontal * (playerSpeed + sprintMulti) * Time.deltaTime, 0, 0);
-
+	private void PlayerRotation()
+	{
 		transform.Rotate(0f, horizontal * playerSettings.turnSpeed * Time.deltaTime, 0f);
 	}
 
@@ -478,7 +451,14 @@ public class SpiderMovement : MonoBehaviour
 	{
 		if (Input.GetKey(KeyCode.LeftShift))
 		{
-			sprintMulti = playerSettings.sprintMultiAmount;
+			if (debugSettings.isPlayerBeingVacuumed == true)
+			{
+				sprintMulti = playerSettings.velocitySprintMultiAmount;
+			}
+			else
+			{
+				sprintMulti = playerSettings.translateSprintMultiAmount;
+			}
 		}
 		
 		if (Input.GetKeyUp(KeyCode.LeftShift))
