@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
 
 [System.Serializable]
 public class MainRaycastsAdjustment
@@ -201,15 +199,15 @@ public class SpiderMovement : MonoBehaviour
 
 		randomIdleTimer += Time.deltaTime;
 		if (randomIdleTimer >= 10f)
-        {
+		{
 			randomIdle = Random.Range(0, 2);
 
 			if(randomIdle == 0)
-            {
+			{
 				spiderAnimator.SetTrigger("Idle_Shake");
-            }
+			}
 			else if(randomIdle == 1)
-            {
+			{
 				spiderAnimator.SetTrigger("Idle_LookAround");
 			}
 
