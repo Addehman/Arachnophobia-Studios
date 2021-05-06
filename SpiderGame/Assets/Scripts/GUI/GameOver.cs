@@ -19,7 +19,6 @@ public class GameOver : MonoBehaviour
         gameOverScreen.SetActive(true);
         spiderMovement.rb.isKinematic = true;
         spiderMovement.enabled = false;
-        spiderAnimator.SetBool("Dead", true);
     }
 
     public void RestartButton()
