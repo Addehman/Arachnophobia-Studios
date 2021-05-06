@@ -10,8 +10,8 @@ public class SpringJointWeb : MonoBehaviour
     SpiderAudio spiderAudio;
     LineRenderer lineRenderer;
     State currentState = State.IsGrounded;
-    public ChangeCamera changeCamera;
 
+    private ToggleCameras toggleCameras;
     public Animator spiderAnimator;
 
     public GameObject thirdPersonCamera;
@@ -34,11 +34,12 @@ public class SpringJointWeb : MonoBehaviour
     private void Start()
     {
         spiderAudio = GetComponent<SpiderAudio>();
+        toggleCameras = Camera.main.GetComponent<ToggleCameras>();
     }
 
     private void Update()
     {
-        if(changeCamera.camMode == 1)
+        if(toggleCameras.boosted == true)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -73,9 +74,7 @@ public class SpringJointWeb : MonoBehaviour
             spiderAudio.WebShoot();
 
             spiderAnimator.SetBool("Web", true);
-            thirdPersonCamera.SetActive(true);
-            firstPersonCamera.SetActive(false);
-            changeCamera.camMode = 0;
+            toggleCameras.DisableFPSCamera();
             currentState = State.IsSwinging;
             GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);
             joint = gameObject.AddComponent<SpringJoint>();
@@ -98,8 +97,6 @@ public class SpringJointWeb : MonoBehaviour
             spiderAudio.WebShoot();
 
             spiderAnimator.SetBool("Web", true);
-            thirdPersonCamera.SetActive(true);
-            firstPersonCamera.SetActive(false);
             currentState = State.IsSwinging;
             GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);
             joint = gameObject.AddComponent<SpringJoint>();
@@ -129,8 +126,6 @@ public class SpringJointWeb : MonoBehaviour
         {
             return;
         }
-
-        changeCamera.crosshair.SetActive(false);
 
         lineRenderer.SetPosition(0, gameObject.transform.position);
         lineRenderer.SetPosition(1, GameObject.Find("TargetPoint(Clone)").transform.position);
