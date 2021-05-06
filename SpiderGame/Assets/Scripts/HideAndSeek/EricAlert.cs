@@ -13,15 +13,19 @@ public class EricAlert : MonoBehaviour
     public Animator animatorDoor1;
     public Animator animatorDoor2;
     public Animator spiderAnimator;
+    public Animator flySwatterAnimator;
 
     AudioSource audioSourceEric;
+    public AudioSource audioSourceFlySwatter;
 
     public GameObject ericsVision;
+    public GameObject flySwatter;
 
     public int ericSpawnPosition;
 
     float currentTime = 0f;
     float currentRaycastTimer = 0f;
+    float deadAnimationTimer = 0f;
 
     float ericSpawnTimer;
     float ericWarningTimer = 30f;
@@ -34,6 +38,7 @@ public class EricAlert : MonoBehaviour
     public bool playerDetected = false;
     bool isRaycasting = false;
     bool showedGameOver = false;
+    bool animationSwatterPlayed = false;
 
     public Text timer;
 
@@ -91,22 +96,38 @@ public class EricAlert : MonoBehaviour
         if(playerDetected == true)
         {
             detectionTimer += Time.deltaTime;
+            deadAnimationTimer += Time.deltaTime;
 
             if (detectionTimer >= 3f)
             {
                 if(showedGameOver == false)
                 {
                     audioSourceEric.clip = Resources.Load<AudioClip>("Audio/Detected");
-                    spiderAnimator.SetBool("Dead", true);
-                    audioSourceEric.Play();
-
+                    audioSourceEric.PlayOneShot(Resources.Load<AudioClip>("Audio/Detected"));
+                    flySwatter.SetActive(true);
+                    flySwatterAnimator.SetTrigger("Kill");
                     gameOver.GameOverScreen();
                     showedGameOver = true;
+                    audioSourceFlySwatter.mute = true;
+                }
+            }
+
+            if (deadAnimationTimer >= 3.6f)
+            {
+                {
+                    if(animationSwatterPlayed == false)
+                    {
+                        audioSourceFlySwatter.mute = false;
+                        animationSwatterPlayed = true;
+                        spiderAnimator.SetBool("Dead", true);
+                        audioSourceFlySwatter.Play();
+                    }
                 }
             }
         }
         else if(playerDetected == false)
         {
+            deadAnimationTimer = 0f;
             detectionTimer = 0f;
         }
 
