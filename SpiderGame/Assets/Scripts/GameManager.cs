@@ -4,17 +4,24 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    static GameManager instance;
-    private void Awake()
-    {
-        if(instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
-        DontDestroyOnLoad(this);
-    }
+	private static GameManager gameManager;
+	public static GameManager Instance {
+		get
+		{
+			if (gameManager == null)
+			{
+				Debug.LogError("GameManager is Null.");
+			}
+			return gameManager;
+		}
+	}
+	// private void Awake()
+	// {
+	// 	DontDestroyOnLoad(this);
+	// }
+
+	private void Start()
+	{
+		Cursor.lockState = CursorLockMode.Locked;
+	}
 }
