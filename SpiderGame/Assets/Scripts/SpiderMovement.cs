@@ -93,6 +93,7 @@ public class DebugSettings
 	public List<Vector3> averageNormalDirections = new List<Vector3>();
 	public Vector3 fwdRayHitNormalDebug;
 	public bool isFpsEnabled = false;
+	public bool isPlayerBeingVacuumed;
 }
 
 public class SpiderMovement : MonoBehaviour
@@ -118,6 +119,7 @@ public class SpiderMovement : MonoBehaviour
 	private float turnSmoothVelocity;
 	private float gravityValue = -9.82f;
 	private float sprintMulti;
+	private VacuumBlackhole vacuumBlackhole;
 
 	int randomIdle;
 	float randomIdleTimer = 0f;
@@ -130,11 +132,17 @@ public class SpiderMovement : MonoBehaviour
 		cam = GameObject.Find("Main Camera").transform;
 		spiderAnimator = GetComponentInChildren<Animator>();
 		Camera.main.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
+		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>().PullingPlayer += vacuumBlackhole_PullingPlayer;
 	}
 
 	private void activateOnKeypress_ActivationFPSCam(bool isActive)
 	{
 		debugSettings.isFpsEnabled = isActive;
+	}
+
+	private void vacuumBlackhole_PullingPlayer(bool isPlayerPulled)
+	{
+		debugSettings.isPlayerBeingVacuumed = isPlayerPulled;
 	}
 
 	// Update is called once per frame
@@ -435,9 +443,19 @@ public class SpiderMovement : MonoBehaviour
 		{
 			spiderModel.SetActive(true);
 		}
-		transform.Rotate(0f, horizontal * playerSettings.turnSpeed * Time.deltaTime, 0f);
+
+		if (debugSettings.isPlayerBeingVacuumed == true)
+		{
+			rb.velocity = (transform.forward * vertical) * playerSettings.playerSpeed * Time.deltaTime;
+		}
+		else
+		{
+			transform.Translate(0, 0, vertical * (playerSettings.playerSpeed + sprintMulti) * Time.deltaTime);
+		}
+
 		// transform.Translate(horizontal * (playerSpeed + sprintMulti) * Time.deltaTime, 0, 0);
-		transform.Translate(0, 0, vertical * (playerSettings.playerSpeed + sprintMulti) * Time.deltaTime);
+
+		transform.Rotate(0f, horizontal * playerSettings.turnSpeed * Time.deltaTime, 0f);
 	}
 
 	private void SpiderJump()
