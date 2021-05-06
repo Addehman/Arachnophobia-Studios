@@ -6,6 +6,7 @@ public class LightSwitchQuest : MonoBehaviour
 {
     public GameObject lightSource1;
     public GameObject lightSource2;
+    public GameObject lightSource3;
     public GameObject check;
     bool isFinished = false;
     bool canSwitchLight = false;
@@ -17,6 +18,7 @@ public class LightSwitchQuest : MonoBehaviour
             Winstate.AddCompletedQuest();
             lightSource1.SetActive(false);
             lightSource2.SetActive(false);
+            lightSource3.SetActive(false);
             check.SetActive(true);
             isFinished = true;
         }
