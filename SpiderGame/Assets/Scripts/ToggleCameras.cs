@@ -41,6 +41,8 @@ public class ToggleCameras : MonoBehaviour
 	{
 		fpsCamera.Priority += PriorityBoostAmount;
 		boosted = true;
+		Cursor.lockState = CursorLockMode.Locked;
+		Cursor.visible = false;
 		if (ActivationFPSCam != null)
 		{
 			ActivationFPSCam(true);
