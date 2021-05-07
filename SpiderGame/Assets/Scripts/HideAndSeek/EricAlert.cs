@@ -31,7 +31,7 @@ public class EricAlert : MonoBehaviour
     float footStepAnimationTimer = 0f;
 
     float ericSpawnTimer;
-    float ericWarningTimer = 30f;
+    float ericWarningTimer = 20f;
     float ericHmmTimer = 10f;
     float ericOpenDoorTimer = 10f;
     float ericBeginRaycastTimer = 2f;
