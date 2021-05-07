@@ -25,15 +25,6 @@ public class VacuumMovement : MonoBehaviour
         eulerAngleVelocity = new Vector3(0, -50, 0);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            print("Tryck");
-            StopCoroutine(RandomizeDirection());
-        }
-    }
-
     void FixedUpdate()
     {
         if (playerInSight)

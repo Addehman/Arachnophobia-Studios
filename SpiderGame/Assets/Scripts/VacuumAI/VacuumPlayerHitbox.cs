@@ -15,9 +15,7 @@ public class VacuumPlayerHitbox : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            print("Ser playern");
             vacuumMove.playerInSight = true;
-
             vacuumMove.playerTransform = other.gameObject.GetComponent<Transform>();
         }
     }

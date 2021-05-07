@@ -56,10 +56,10 @@ public class VacuumBlackhole : MonoBehaviour
     private void BlackHole()
     {
         Vector3 force = (vacuumTransform.position - playerTransform.position).normalized * pullAmount;
-        Debug.Log($"Force: {force}");
         playerRb.AddForce(force);
         playerRb.AddForce(Vector3.up * pullUpAmount);
 
+        //Debug force: Debug.Log($"Force: {force}");
         //Alternative way of BlackHole effect, using sphere collider instead.
         //float gravityIntensity = Vector3.Distance(transform.position, playerTransform.position) / sphereCol.radius;
         //playerRb.AddForce((transform.position - playerTransform.position) * gravityIntensity * playerRb.mass * pullAmount * Time.smoothDeltaTime);
