@@ -121,6 +121,7 @@ public class SpiderMovement : MonoBehaviour
 	private float gravityValue = -9.82f;
 	private float sprintMulti;
 	private VacuumBlackhole vacuumBlackhole;
+	private SpringJointWeb springJointWeb;
 	private float vertical;
 	private float horizontal;
 
@@ -137,6 +138,7 @@ public class SpiderMovement : MonoBehaviour
 		Camera.main.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
 		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>();
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
+		springJointWeb = FindObjectOfType<SpringJointWeb>();
 	}
 
 	private void activateOnKeypress_ActivationFPSCam(bool isActive)
@@ -159,9 +161,19 @@ public class SpiderMovement : MonoBehaviour
 		horizontal = Input.GetAxisRaw("Horizontal");
 
 		RaycastsToCast();
-		PlayerRotation();		
+		PlayerRotation();
 		Sprint();
 		SpiderJump();
+
+		if (springJointWeb.isSwingingWeb == true)
+        {
+			spiderAnimator.SetBool("Web", true);
+        }
+
+		else if (springJointWeb.isSwingingWeb == false)
+		{
+			spiderAnimator.SetBool("Web", false);
+		}
 
 
 		for (int i = 0; i < debugSettings.averageNormalDirections.Count; i++)
@@ -338,7 +350,6 @@ public class SpiderMovement : MonoBehaviour
 					if (hit.distance < playerSettings.playerToGroundRange && rbVelocity < 0f)
 					{
 						debugSettings.isGrounded = true;
-						//adam titta på denna
 						spiderAnimator.SetBool("Jump", false);
 					}
 				}

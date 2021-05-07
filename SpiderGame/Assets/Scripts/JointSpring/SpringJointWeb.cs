@@ -12,11 +12,14 @@ public class SpringJointWeb : MonoBehaviour
     State currentState = State.IsGrounded;
 
     private ToggleCameras toggleCameras;
+    public DebugSettings debugSetting;
     public Animator spiderAnimator;
 
     public GameObject thirdPersonCamera;
     public GameObject firstPersonCamera;
     public GameObject targetPointPrefab;
+
+    public bool isSwingingWeb = false;
 
     enum State
     {
@@ -73,7 +76,8 @@ public class SpringJointWeb : MonoBehaviour
         {
             spiderAudio.WebShoot();
 
-            spiderAnimator.SetBool("Web", true);
+            isSwingingWeb = true;
+  //          spiderAnimator.SetBool("Web", true);
             toggleCameras.DisableFPSCamera();
             currentState = State.IsSwinging;
             GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);
@@ -96,7 +100,8 @@ public class SpringJointWeb : MonoBehaviour
         {
             spiderAudio.WebShoot();
 
-            spiderAnimator.SetBool("Web", true);
+            isSwingingWeb = true;
+  //          spiderAnimator.SetBool("Web", true);
             currentState = State.IsSwinging;
             GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);
             joint = gameObject.AddComponent<SpringJoint>();
@@ -113,7 +118,9 @@ public class SpringJointWeb : MonoBehaviour
 
     void StopWeb()
     {
-        spiderAnimator.SetBool("Web", false);
+        // spiderAnimator.SetBool("Web", false);
+        debugSetting.isGrounded = true;
+        isSwingingWeb = false;
         GameObject currentPoint = GameObject.Find("TargetPoint(Clone)");
         Destroy(currentPoint);
         Destroy(joint);
