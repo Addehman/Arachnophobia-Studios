@@ -12,6 +12,7 @@ public class ProjectionTimer : MonoBehaviour
     private void Awake()
     {
         proj = GetComponent<Projector>();
+        myColor = new Color(0, 0, 0, 1);
     }
 
     void Update()
@@ -29,6 +30,6 @@ public class ProjectionTimer : MonoBehaviour
     private void OnDisable()
     {
         proj.orthographicSize = 0.01f;
-        myColor = new Color(0, 0, 0, 1);
+        proj.material.color = new Color(0, 0, 0, 1);
     }
 }
