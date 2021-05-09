@@ -122,8 +122,8 @@ public class SpiderMovement : MonoBehaviour
 	private float sprintMulti;
 	private VacuumBlackhole vacuumBlackhole;
 	private SpringJointWeb springJointWeb;
-	private float vertical;
-	private float horizontal;
+	// private float vertical;
+	// private float horizontal;
 
 	int randomIdle;
 	float randomIdleTimer = 0f;
@@ -133,7 +133,7 @@ public class SpiderMovement : MonoBehaviour
 	{
 		spiderAnimator.SetTrigger("Idle");
 		rb = GetComponent<Rigidbody>();
-		cam = GameObject.Find("Main Camera").transform;
+		cam = Camera.main.transform;
 		spiderAnimator = GetComponentInChildren<Animator>();
 		Camera.main.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
 		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>();
@@ -157,8 +157,8 @@ public class SpiderMovement : MonoBehaviour
 		debugSettings.averageNormalDirections.Clear();
 		currentPosition = transform.position;
 
-		vertical = Input.GetAxisRaw("Vertical");
-		horizontal = Input.GetAxisRaw("Horizontal");
+		// vertical = Input.GetAxisRaw("Vertical");
+		// horizsaontal = Input.GetAxisRaw("Horizontal");
 
 		RaycastsToCast();
 		// PlayerRotation();
@@ -381,34 +381,66 @@ public class SpiderMovement : MonoBehaviour
 		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 	}
 
-	private void NormalMovement()
+	private void DefaultMovement()
 	{
+		float vertical = Input.GetAxisRaw("Vertical");
+		float horizontal = Input.GetAxisRaw("Horizontal");
+
 		Vector3 movement = new Vector3(horizontal * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime, 0f, vertical * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
 		transform.Translate(movement);
 	}
 
+	/// <summary>
+	/// Sets the forward-direction of the player according to the camera's forward direction.
+	/// </summary>
 	private void CameraDirectionMovement()
 	{
+		float vertical = Input.GetAxisRaw("Vertical");
+		float horizontal = Input.GetAxisRaw("Horizontal");
+		// Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+		// if (direction.magnitude >= 0.1f)
+		// {
+		// 	float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
+		// 	float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, playerSettings.turnSmoothTime);
+		// 	transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+
+		// 	Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * transform.forward;
+		// 	transform.Translate(moveDir.normalized * playerSettings.normalPlayerSpeed * Time.deltaTime);
+		// }
+
 		Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
 		if (direction.magnitude >= 0.1f)
 		{
-			float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
+			float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
 			float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, playerSettings.turnSmoothTime);
-			transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
 
-			Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * transform.forward;
-			transform.Translate(moveDir.normalized * playerSettings.normalPlayerSpeed * Time.deltaTime);
+			// transform.rotation = Quaternion.Euler(0f, angle, 0f);
+			Vector3 moveDirection = cam.TransformDirection(direction);
+
+			transform.rotation = Quaternion.Euler(transform.eulerAngles.x, 0f, transform.eulerAngles.z);
+			
+			transform.Translate(moveDirection * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+			// transform.Translate(moveDirection * 1 * Time.deltaTime);
+
+			transform.rotation = Quaternion.Euler(transform.eulerAngles.x, angle, transform.eulerAngles.z);
 		}
 	}
 
 	private void VacuumPullingMovement() // The Rigidbody-based movement used only for when the player is in range of being pulled with rb.AddForce towards the Robot Vacuum Cleaner - becomes most smooth this way.
 	{
+		float vertical = Input.GetAxisRaw("Vertical");
+		float horizontal = Input.GetAxisRaw("Horizontal");
+
 		rb.velocity = (transform.forward * vertical) * (playerSettings.velocityPlayerSpeed + sprintMulti) * Time.deltaTime;
 	}
 
 	private void PlayerRotation()
 	{
+		float vertical = Input.GetAxisRaw("Vertical");
+		float horizontal = Input.GetAxisRaw("Horizontal");
+
 		float horizontalMouse = Input.GetAxis("Mouse X");
 		transform.Rotate(0f, horizontal * playerSettings.turnSpeed * Time.deltaTime, 0f);
 	}
