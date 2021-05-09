@@ -66,10 +66,10 @@ public class RaycastGeneralSettings
 public class PlayerSettings
 {
 	// [Header("Player Settings")]
-	public float translatePlayerSpeed = 0.2f;
-	public float translateSlowPlayerSpeed = 0.1f;
-	public float translateNormalPlayerSpeed = 0.2f;
-	public float translateSprintMultiAmount = 0.2f;
+	public float normalPlayerSpeed = 0.2f;
+	public float normalSlowPlayerSpeed = 0.1f;
+	public float normalDefaultPlayerSpeed = 0.2f;
+	public float normalSprintMultiAmount = 0.2f;
 	public float velocityPlayerSpeed = 30f;
 	public float velocityNormalPlayerSpeed = 30f;
 	public float velocitySprintMultiAmount = 60f;
@@ -161,79 +161,13 @@ public class SpiderMovement : MonoBehaviour
 		horizontal = Input.GetAxisRaw("Horizontal");
 
 		RaycastsToCast();
-		PlayerRotation();
+		// PlayerRotation();
 		Sprint();
 		SpiderJump();
 
-		if (springJointWeb.isSwingingWeb == true)
-        {
-			spiderAnimator.SetBool("Web", true);
-        }
+		SetPlayerLocalUpDirection();
 
-		else if (springJointWeb.isSwingingWeb == false)
-		{
-			spiderAnimator.SetBool("Web", false);
-		}
-
-
-		for (int i = 0; i < debugSettings.averageNormalDirections.Count; i++)
-		{
-			debugSettings.averageNormalDirection += debugSettings.averageNormalDirections[i];
-		}
-		
-		debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
-
-		if (debugSettings.averageNormalDirections.Count == 0)
-		{
-			debugSettings.averageNormalDirection = Vector3.up;
-		}
-
-		var lerpSpeed = 10f;
-
-		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
-		// find forward direction with new myNormal:
-		Vector3 myForward = Vector3.Cross(transform.right, myNormal);
-		// align character to the new myNormal while keeping the forward direction:
-		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
-		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
-		//try and make tha camera rotate with the player. Doesn't work as of now.
-		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
-
-		if (((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true))
-		{
-			spiderAnimator.SetBool("Walk", true);
-		}
-
-		else if (((Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.W)) && spiderAnimator.GetBool("Walk") == true))
-		{
-			spiderAnimator.SetBool("Walk", false);
-		}
-
-		randomIdleTimer += Time.deltaTime;
-		if (randomIdleTimer >= 10f)
-		{
-			randomIdle = Random.Range(0, 2);
-
-			if(randomIdle == 0)
-			{
-				spiderAnimator.SetTrigger("Idle_Shake");
-			}
-			else if(randomIdle == 1)
-			{
-				spiderAnimator.SetTrigger("Idle_LookAround");
-			}
-
-			randomIdleTimer = 0f;
-		}
-
-		if (debugSettings.isFpsEnabled == true)
-		{
-			spiderModel.SetActive(false);
-		}
-		else
-		{
-			spiderModel.SetActive(true);
-		}
+		PlayerAnimation();
 	}
 
 	private void FixedUpdate()
@@ -250,11 +184,12 @@ public class SpiderMovement : MonoBehaviour
 
 		if (debugSettings.isPlayerBeingVacuumed == true)
 		{
-			VelocityMovement();
+			VacuumPullingMovement();
 		}
 		else
 		{
-			TranslateMovement();
+			// NormalMovement();
+			CameraDirectionMovement();
 		}
 	}
 
@@ -284,19 +219,19 @@ public class SpiderMovement : MonoBehaviour
 		// Edge Raycasts:
 		if (debugSettings.fwdRayNoHit == true && Input.GetKey(KeyCode.W))
 		{
-			playerSettings.translatePlayerSpeed = playerSettings.translateSlowPlayerSpeed;
+			playerSettings.normalPlayerSpeed = playerSettings.normalSlowPlayerSpeed;
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset);
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset1);
 		}
 		else if (debugSettings.backRayNoHit == true && Input.GetKey(KeyCode.S))
 		{
-			playerSettings.translatePlayerSpeed = playerSettings.translateSlowPlayerSpeed;
+			playerSettings.normalPlayerSpeed = playerSettings.normalSlowPlayerSpeed;
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset);
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset1);
 		}
 		else 
 		{
-			playerSettings.translatePlayerSpeed = playerSettings.translateNormalPlayerSpeed;
+			playerSettings.normalPlayerSpeed = playerSettings.normalDefaultPlayerSpeed;
 		}
 	}
 	// Special "Hook"- or Edge-Raycasts, used to look over edges to find footing where the other rays won't reach.
@@ -409,11 +344,6 @@ public class SpiderMovement : MonoBehaviour
 					debugSettings.averageNormalDirections.Add(hit.normal);
 				}
 				break;
-		// else if (isBackRay == true)
-		// {
-		// 	RaycastHit hit;
-		// 	
-		// }
 		}
 	}
 
@@ -425,18 +355,61 @@ public class SpiderMovement : MonoBehaviour
 		}
 	}
 
-	private void TranslateMovement()
+	private void SetPlayerLocalUpDirection()
 	{
-		transform.Translate(0, 0, vertical * (playerSettings.translatePlayerSpeed + sprintMulti) * Time.deltaTime);
+		for (int i = 0; i < debugSettings.averageNormalDirections.Count; i++)
+		{
+			debugSettings.averageNormalDirection += debugSettings.averageNormalDirections[i];
+		}
+		
+		debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
+
+		if (debugSettings.averageNormalDirections.Count == 0)
+		{
+			debugSettings.averageNormalDirection = Vector3.up;
+		}
+
+		var lerpSpeed = 10f;
+
+		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
+		// find forward direction with new myNormal:
+		Vector3 myForward = Vector3.Cross(transform.right, myNormal);
+		// align character to the new myNormal while keeping the forward direction:
+		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
+		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+		//try and make tha camera rotate with the player. Doesn't work as of now.
+		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 	}
 
-	private void VelocityMovement()
+	private void NormalMovement()
+	{
+		Vector3 movement = new Vector3(horizontal * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime, 0f, vertical * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+		transform.Translate(movement);
+	}
+
+	private void CameraDirectionMovement()
+	{
+		Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+		if (direction.magnitude >= 0.1f)
+		{
+			float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
+			float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, playerSettings.turnSmoothTime);
+			transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+
+			Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * transform.forward;
+			transform.Translate(moveDir.normalized * playerSettings.normalPlayerSpeed * Time.deltaTime);
+		}
+	}
+
+	private void VacuumPullingMovement() // The Rigidbody-based movement used only for when the player is in range of being pulled with rb.AddForce towards the Robot Vacuum Cleaner - becomes most smooth this way.
 	{
 		rb.velocity = (transform.forward * vertical) * (playerSettings.velocityPlayerSpeed + sprintMulti) * Time.deltaTime;
 	}
 
 	private void PlayerRotation()
 	{
+		float horizontalMouse = Input.GetAxis("Mouse X");
 		transform.Rotate(0f, horizontal * playerSettings.turnSpeed * Time.deltaTime, 0f);
 	}
 
@@ -466,13 +439,63 @@ public class SpiderMovement : MonoBehaviour
 			}
 			else
 			{
-				sprintMulti = playerSettings.translateSprintMultiAmount;
+				sprintMulti = playerSettings.normalSprintMultiAmount;
 			}
 		}
 		
 		if (Input.GetKeyUp(KeyCode.LeftShift))
 		{
 			sprintMulti = 0f;
+		}
+	}
+
+	private void PlayerAnimation()
+	{
+		if (springJointWeb.isSwingingWeb == true)
+        {
+			spiderAnimator.SetBool("Web", true);
+        }
+
+		else if (springJointWeb.isSwingingWeb == false)
+		{
+			spiderAnimator.SetBool("Web", false);
+		}
+
+
+		if (((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true))
+		{
+			spiderAnimator.SetBool("Walk", true);
+		}
+
+		else if (((Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.W)) && spiderAnimator.GetBool("Walk") == true))
+		{
+			spiderAnimator.SetBool("Walk", false);
+		}
+
+		randomIdleTimer += Time.deltaTime;
+		if (randomIdleTimer >= 10f)
+		{
+			randomIdle = Random.Range(0, 2);
+
+			if(randomIdle == 0)
+			{
+				spiderAnimator.SetTrigger("Idle_Shake");
+			}
+			else if(randomIdle == 1)
+			{
+				spiderAnimator.SetTrigger("Idle_LookAround");
+			}
+
+			randomIdleTimer = 0f;
+		}
+
+		if (debugSettings.isFpsEnabled == true)
+		{
+			spiderModel.SetActive(false);
+		}
+		else
+		{
+			spiderModel.SetActive(true);
 		}
 	}
 }
