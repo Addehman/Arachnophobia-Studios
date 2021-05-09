@@ -12,6 +12,8 @@ public class EricAlert : MonoBehaviour
 
     public Animator animatorDoor1;
     public Animator animatorDoor2;
+    public Animator ericAnimator1;
+    public Animator ericAnimator2;
     public Animator ericWalking1;
     public Animator ericWalking2;
     public Animator spiderAnimator;
@@ -20,6 +22,8 @@ public class EricAlert : MonoBehaviour
     AudioSource audioSourceEric;
     public AudioSource audioSourceFlySwatter;
 
+    public GameObject eric1;
+    public GameObject eric2;
     public GameObject ericsVision;
     public GameObject flySwatter;
 
@@ -31,9 +35,9 @@ public class EricAlert : MonoBehaviour
     float footStepAnimationTimer = 0f;
 
     float ericSpawnTimer;
-    float ericWarningTimer = 20f;
+    float ericWarningTimer = 30f;
     float ericHmmTimer = 10f;
-    float ericOpenDoorTimer = 10f;
+    float ericOpenDoorTimer = 15f;
     float ericBeginRaycastTimer = 2f;
     float ericExitTimer = 5f;
     float detectionTimer;
@@ -111,11 +115,15 @@ public class EricAlert : MonoBehaviour
                 {
                     audioSourceEric.clip = Resources.Load<AudioClip>("Audio/Detected");
                     audioSourceEric.PlayOneShot(Resources.Load<AudioClip>("Audio/Detected"));
+
                     flySwatter.SetActive(true);
                     flySwatterAnimator.SetTrigger("Kill");
                     gameOver.GameOverScreen();
                     showedGameOver = true;
                     audioSourceFlySwatter.mute = true;
+
+                    ericAnimator1.SetTrigger("Detected");
+                    ericAnimator2.SetTrigger("Detected");
                 }
             }
 
@@ -171,8 +179,16 @@ public class EricAlert : MonoBehaviour
         {
             Debug.Log("Eric inc");
 
-            StartCoroutine(FootStep());
-            currentCoroutine = StartCoroutine(FootStep());
+            eric1.SetActive(false);
+            eric2.SetActive(false);
+
+            audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricIncStep2");
+            audioSourceEric.loop = true;
+            audioSourceEric.Play();
+
+            /*            StartCoroutine(FootStep());
+                        currentCoroutine = StartCoroutine(FootStep());*/
+
             if (raycastToggler.ericSpawnPosition == 0)
             {
                 ericWalking1.SetBool("Inc", true);
@@ -181,7 +197,6 @@ public class EricAlert : MonoBehaviour
             {
                 ericWalking2.SetBool("Inc", true);
             }
-
 
             currentTime = 0f;
             currentState = State.EricOpenDoor; 
@@ -192,19 +207,25 @@ public class EricAlert : MonoBehaviour
         {
             Debug.Log("Eric Open door");
 
-            StopCoroutine(currentCoroutine);
-            audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricDoor");
+/*            StopCoroutine(currentCoroutine);*/
+            audioSourceEric.clip = Resources.Load<AudioClip>("Audio/KickDoor");
             audioSourceEric.loop = false;
             audioSourceEric.Play();
+
 
             if (raycastToggler.ericSpawnPosition == 0)
             {
                 animatorDoor1.SetTrigger("OpenDoor");
+                eric1.SetActive(true);
             }
             else if (raycastToggler.ericSpawnPosition == 1)
             {
                 animatorDoor2.SetTrigger("OpenDoor");
+                eric2.SetActive(true);
             }
+
+            ericAnimator1.SetBool("OpenDoor", true);
+            ericAnimator2.SetBool("OpenDoor", true);
 
             currentTime = 0f;
             currentState = State.EricRaycast;
@@ -213,8 +234,15 @@ public class EricAlert : MonoBehaviour
         //Eric is entering room and starting raycasting
         if (currentTime >= ericBeginRaycastTimer && currentState == State.EricRaycast)
         {
-            StopAllCoroutines();
             Debug.Log("Eric enter, doing Raycast");
+
+            StopAllCoroutines();
+
+            ericAnimator1.SetBool("OpenDoor", false);
+            ericAnimator1.SetBool("LookAround", true);
+            ericAnimator2.SetBool("OpenDoor", false);
+            ericAnimator2.SetBool("LookAround", true);
+
             isRaycasting = true;
 
             currentTime = 0f;
@@ -225,6 +253,12 @@ public class EricAlert : MonoBehaviour
         if (currentTime >= ericHmmTimer && currentState == State.EricHmm)
         {
             Debug.Log("Eric no detection");
+
+            ericAnimator1.SetBool("LookAround", false);
+            ericAnimator1.SetBool("Hmm", true);
+            ericAnimator2.SetBool("LookAround", false);
+            ericAnimator2.SetBool("Hmm", true);
+
             ericsVision.SetActive(false);
             playerDetected = false;
             isRaycasting = false;
@@ -240,6 +274,9 @@ public class EricAlert : MonoBehaviour
         if(currentTime >= ericExitTimer && currentState == State.EricExit)
         {
             Debug.Log("Eric exit room");
+
+            ericAnimator1.SetBool("false", true);
+            ericAnimator2.SetBool("false", true);
 
             StartCoroutine(CloseDoor());
             currentCoroutine = StartCoroutine(CloseDoor());
@@ -263,7 +300,7 @@ public class EricAlert : MonoBehaviour
         timer.text = currentTime.ToString();
     }
 
-    IEnumerator FootStep()
+/*    IEnumerator FootStep()
     {
         while(true)
         {
@@ -272,7 +309,7 @@ public class EricAlert : MonoBehaviour
             audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricFootStep");
             audioSourceEric.Play();
         }
-    }
+    }*/
 
     IEnumerator CloseDoor()
     {
