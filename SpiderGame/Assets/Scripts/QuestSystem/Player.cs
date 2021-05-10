@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     public SoundManager soundManager;
     SpiderAudio spiderAudio;
+    public Animator spiderAnimator;
     public GameOver gameOver;
     public Quest quest;
     float currentHealth;
@@ -62,6 +63,7 @@ public class Player : MonoBehaviour
 
             if(currentHealth <= 0f)
             {
+                spiderAnimator.SetBool("Dead", true);
                 gameOver.GameOverScreen();
             }
         }
