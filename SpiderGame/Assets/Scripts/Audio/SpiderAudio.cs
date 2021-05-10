@@ -22,4 +22,10 @@ public class SpiderAudio : MonoBehaviour
         audioSourceSpider.clip = Resources.Load<AudioClip>("Audio/WebShoot");
         audioSourceSpider.Play();
     }
+
+    public void VacuumSuck()
+    {
+        audioSourceSpider.clip = Resources.Load<AudioClip>("Audio/VacuumPlayer");
+        audioSourceSpider.Play();
+    }
 }
