@@ -17,6 +17,11 @@ public static class Winstate
             Debug.Log("Victory"); 
         }
     }
+
+    public static void RemoveCompletedQuests()
+    {
+        numberOfQuestCompleted = 0;
+    }
 /*
     public static void Init(int questToComplete)
     {
