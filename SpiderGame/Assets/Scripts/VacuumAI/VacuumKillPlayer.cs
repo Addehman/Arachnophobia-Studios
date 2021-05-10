@@ -5,6 +5,7 @@ using UnityEngine;
 public class VacuumKillPlayer : MonoBehaviour
 {
     public GameOver gameOverScript;
+    public bool diedByVacuum = false;
 
     void Start()
     {
@@ -16,6 +17,7 @@ public class VacuumKillPlayer : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             gameOverScript.GameOverScreen();
+            diedByVacuum = true;
         }
     }
 }
