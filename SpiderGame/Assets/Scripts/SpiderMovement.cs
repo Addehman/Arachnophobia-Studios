@@ -78,6 +78,7 @@ public class PlayerSettings
 	public float playerToGroundRange = 0.3f;
 	public float turnSmoothTime = 0.1f;
 	public float turnSpeed = 90f;
+	public float moveToSpeed = 1f;
 }
 
 [System.Serializable]
@@ -122,6 +123,7 @@ public class SpiderMovement : MonoBehaviour
 	private float sprintMulti;
 	private VacuumBlackhole vacuumBlackhole;
 	private SpringJointWeb springJointWeb;
+	private Transform moveToTarget;
 	// private float vertical;
 	// private float horizontal;
 
@@ -139,6 +141,7 @@ public class SpiderMovement : MonoBehaviour
 		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>();
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
+		moveToTarget = FindObjectOfType<MoveToTargetController>().transform;
 	}
 
 	private void activateOnKeypress_ActivationFPSCam(bool isActive)
@@ -156,6 +159,9 @@ public class SpiderMovement : MonoBehaviour
 	{
 		debugSettings.averageNormalDirections.Clear();
 		currentPosition = transform.position;
+
+		// cam.Rotate(transform.up, Space.Self);
+
 
 		// vertical = Input.GetAxisRaw("Vertical");
 		// horizsaontal = Input.GetAxisRaw("Horizontal");
@@ -188,8 +194,9 @@ public class SpiderMovement : MonoBehaviour
 		}
 		else
 		{
-			// NormalMovement();
-			CameraDirectionMovement();
+			// DefaultMovement();
+			// CameraDirectionMovement();
+			MoveToPointMovement();
 		}
 	}
 
@@ -390,6 +397,12 @@ public class SpiderMovement : MonoBehaviour
 		transform.Translate(movement);
 	}
 
+	private void MoveToPointMovement()
+	{
+		transform.position = Vector3.Lerp(transform.position, moveToTarget.position, playerSettings.moveToSpeed * Time.deltaTime);
+		transform.LookAt(moveToTarget, moveToTarget.up);
+	}
+	
 	/// <summary>
 	/// Sets the forward-direction of the player according to the camera's forward direction.
 	/// </summary>
@@ -397,18 +410,8 @@ public class SpiderMovement : MonoBehaviour
 	{
 		float vertical = Input.GetAxisRaw("Vertical");
 		float horizontal = Input.GetAxisRaw("Horizontal");
-		// Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-		// if (direction.magnitude >= 0.1f)
-		// {
-		// 	float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
-		// 	float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, playerSettings.turnSmoothTime);
-		// 	transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
-
-		// 	Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * transform.forward;
-		// 	transform.Translate(moveDir.normalized * playerSettings.normalPlayerSpeed * Time.deltaTime);
-		// }
-
+		float mouseHorizontal = Input.GetAxis("Mouse X");
 		Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
 		if (direction.magnitude >= 0.1f)
@@ -416,16 +419,34 @@ public class SpiderMovement : MonoBehaviour
 			float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
 			float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, playerSettings.turnSmoothTime);
 
-			// transform.rotation = Quaternion.Euler(0f, angle, 0f);
-			Vector3 moveDirection = cam.TransformDirection(direction);
+			Vector3 moveDirection = cam.TransformDirection(direction); // trying to identify a rounded direction to set as the player's move direction.. not a longterm solution.
+			// Mathf.Abs(moveDirection.x);
+			// Mathf.Abs(moveDirection.y);
+			// Mathf.Abs(moveDirection.z);
 
-			transform.rotation = Quaternion.Euler(transform.eulerAngles.x, 0f, transform.eulerAngles.z);
+			// if (moveDirection.x > moveDirection.y && moveDirection.x > moveDirection.z)
+			// {
+			// 	moveDirection = Vector3.right;
+			// }
+			// else if (moveDirection.y > moveDirection.x && moveDirection.y > moveDirection.z)
+			// {
+			// 	moveDirection = Vector3.up;
+			// }
+			// else if (moveDirection.z > moveDirection.x && moveDirection.z > moveDirection.y)
+			// {
+			// 	moveDirection = Vector3.forward;
+			// }
+
+			// transform.rotation = Quaternion.Euler(0f, angle, 0f);
+			// transform.rotation = Quaternion.Euler(transform.eulerAngles.x, 0f, transform.eulerAngles.z); // Reset the Y-axis, without changing the other ones
 			
 			transform.Translate(moveDirection * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
 			// transform.Translate(moveDirection * 1 * Time.deltaTime);
 
+			// transform.rotation = Quaternion.Euler(transform.eulerAngles.x, angle, transform.eulerAngles.z);
 			transform.rotation = Quaternion.Euler(transform.eulerAngles.x, angle, transform.eulerAngles.z);
 		}
+		// transform.Rotate(0f, horizontal * playerSettings.turnSpeed * Time.deltaTime, 0f);
 	}
 
 	private void VacuumPullingMovement() // The Rigidbody-based movement used only for when the player is in range of being pulled with rb.AddForce towards the Robot Vacuum Cleaner - becomes most smooth this way.
@@ -441,7 +462,7 @@ public class SpiderMovement : MonoBehaviour
 		float vertical = Input.GetAxisRaw("Vertical");
 		float horizontal = Input.GetAxisRaw("Horizontal");
 
-		float horizontalMouse = Input.GetAxis("Mouse X");
+		// float horizontalMouse = Input.GetAxis("Mouse X");
 		transform.Rotate(0f, horizontal * playerSettings.turnSpeed * Time.deltaTime, 0f);
 	}
 
