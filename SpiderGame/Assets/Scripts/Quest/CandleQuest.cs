@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class CandleQuest : MonoBehaviour
 {
-    public GameObject light;
+    public GameObject light1;
+    public GameObject light2;
     public GameObject check;
+    public GameObject questCircle;
     bool isFinished = false;
     bool canLightCandle = false;
 
@@ -14,8 +16,10 @@ public class CandleQuest : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && isFinished == false && canLightCandle == true)
         {
             Winstate.AddCompletedQuest();
-            light.SetActive(true);
+            light1.SetActive(true);
+            light2.SetActive(true);
             check.SetActive(true);
+            questCircle.SetActive(false);
             isFinished = true;
         }
     }

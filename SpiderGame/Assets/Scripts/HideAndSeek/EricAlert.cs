@@ -26,6 +26,8 @@ public class EricAlert : MonoBehaviour
     public GameObject eric2;
     public GameObject ericsVision;
     public GameObject flySwatter;
+    public GameObject ericIncWarning;
+    public GameObject ericDetectedWarning;
 
     public int ericSpawnPosition;
 
@@ -88,12 +90,14 @@ public class EricAlert : MonoBehaviour
                 {
                     ericsVision.SetActive(true);
                     playerDetected = true;
+                    ericDetectedWarning.SetActive(true);
                     Debug.Log("Player Detected");
                 }
                 else
                 {
                     ericsVision.SetActive(false);
                     playerDetected = false;
+                    ericDetectedWarning.SetActive(false);
                     Debug.Log("No detection");
                 }
             }
@@ -186,6 +190,8 @@ public class EricAlert : MonoBehaviour
             audioSourceEric.loop = true;
             audioSourceEric.Play();
 
+            ericIncWarning.SetActive(true);
+
             /*            StartCoroutine(FootStep());
                         currentCoroutine = StartCoroutine(FootStep());*/
 
@@ -259,9 +265,12 @@ public class EricAlert : MonoBehaviour
             ericAnimator2.SetBool("LookAround", false);
             ericAnimator2.SetBool("Hmm", true);
 
+            ericDetectedWarning.SetActive(false);
             ericsVision.SetActive(false);
             playerDetected = false;
             isRaycasting = false;
+
+            ericIncWarning.SetActive(false);
 
             audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricEnterRoom");
             audioSourceEric.Play();

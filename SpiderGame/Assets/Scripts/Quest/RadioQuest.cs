@@ -6,6 +6,7 @@ public class RadioQuest : MonoBehaviour
 {
     public GameObject song;
     public GameObject check;
+    public GameObject questCircle;
     bool isFinished = false;
     bool canPlayRadio = false;
 
@@ -16,6 +17,7 @@ public class RadioQuest : MonoBehaviour
             Winstate.AddCompletedQuest();
             song.SetActive(true);
             check.SetActive(true);
+            questCircle.SetActive(false);
             isFinished = true;
         }
     }

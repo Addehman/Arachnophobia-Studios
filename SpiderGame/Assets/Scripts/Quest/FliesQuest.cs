@@ -6,6 +6,7 @@ public class FliesQuest : MonoBehaviour
 {
     public GameObject flies;
     public GameObject check;
+    public GameObject questCircle;
     bool isFinished = false;
     bool canPickUpFlies = false;
 
@@ -16,6 +17,7 @@ public class FliesQuest : MonoBehaviour
             Winstate.AddCompletedQuest(); // Winstate needs to be fixed from 4 to 5.
             flies.SetActive(false);
             check.SetActive(true);
+            questCircle.SetActive(false);
             isFinished = true;
         }
     }
