@@ -56,6 +56,27 @@ public class ItemDirectory : MonoBehaviour
                {"Flavor", 3},
                {"Vitamin D", 1},
                {"Worms",1}
+           }),
+
+            new ItemInfo(4, "Carrot", "", new Dictionary<string, int>
+           {
+               {"Flavor", 1},
+               {"Vitamin C", 1},
+               {"Dirt",-1}
+           }),
+
+             new ItemInfo(5, "Potato", "", new Dictionary<string, int>
+           {
+               {"Flavor", 3},
+               {"Vitamin D", 2},
+               {"CowPoop",10}
+           }),
+
+              new ItemInfo(6, "Cheese", "", new Dictionary<string, int>
+           {
+               {"Flavor", 3},
+               {"Vitamin C", 1},
+               {"French nails",2}
            })
         };
     }
