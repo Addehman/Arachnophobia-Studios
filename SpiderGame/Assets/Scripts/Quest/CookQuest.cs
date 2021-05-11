@@ -8,6 +8,7 @@ public class CookQuest : MonoBehaviour
     public Player player;
     public UIInventory uiInventory;
     public GameObject check;
+    public GameObject questCircle;
     public PickUpObject pickUpObject;
     public bool isFinished = false;
 
@@ -37,6 +38,7 @@ public class CookQuest : MonoBehaviour
         isFinished = true;
         check.SetActive(true);
         window.SetActive(false);
+        questCircle.SetActive(false);
         ClearInventory();
     }
 

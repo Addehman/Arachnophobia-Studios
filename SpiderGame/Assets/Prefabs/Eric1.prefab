@@ -100,13 +100,19 @@ MonoBehaviour:
   gameOver: {fileID: 0}
   animatorDoor1: {fileID: 0}
   animatorDoor2: {fileID: 0}
+  ericAnimator1: {fileID: 0}
+  ericAnimator2: {fileID: 0}
   ericWalking1: {fileID: 892601183}
   ericWalking2: {fileID: 0}
   spiderAnimator: {fileID: 0}
   flySwatterAnimator: {fileID: 0}
   audioSourceFlySwatter: {fileID: 0}
+  eric1: {fileID: 0}
+  eric2: {fileID: 0}
   ericsVision: {fileID: 0}
   flySwatter: {fileID: 0}
+  ericIncWarning: {fileID: 0}
+  ericDetectedWarning: {fileID: 0}
   ericSpawnPosition: 0
   playerDetected: 0
   timer: {fileID: 0}
@@ -130,7 +136,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 0.7679626
+  MinDistance: 1.77
   MaxDistance: 5
   Pan2D: 0
   rolloffMode: 2
@@ -141,22 +147,31 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 1.0037689
-      inSlope: -0.9029157
-      outSlope: -0.9029157
+      time: 0.584545
+      value: 1
+      inSlope: -2.0846024
+      outSlope: -2.0846024
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.08951407
+      outWeight: 0.32965404
     - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -0.35925448
-      outSlope: -0.35925448
+      time: 0.78743726
+      value: 0.6535492
+      inSlope: -1.3314167
+      outSlope: -1.3314167
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.20971864
+      inWeight: 0
+      outWeight: 0.2057815
+    - serializedVersion: 3
+      time: 0.9921875
+      value: 0.5281638
+      inSlope: -0.0127509115
+      outSlope: -0.0127509115
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.3754167
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
