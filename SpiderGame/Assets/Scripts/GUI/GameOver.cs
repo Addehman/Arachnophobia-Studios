@@ -23,6 +23,7 @@ public class GameOver : MonoBehaviour
     {
         Time.timeScale = 1f;
         AudioListener.volume = 1f;
+        Winstate.isVictory = false;
     }
 
     private void Update()
