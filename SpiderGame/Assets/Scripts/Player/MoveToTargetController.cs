@@ -51,6 +51,8 @@ public class MoveToTargetController : MonoBehaviour
 
 		// SetParentPositionToPlayer();
 
+		// RotateWithCamera();
+
 		//RaycastForward();
 		//RaycastDown();
 
@@ -66,6 +68,11 @@ public class MoveToTargetController : MonoBehaviour
 		// }
 
 		// transform.up = fwdRayNormal;
+	}
+
+	private void RotateWithCamera()
+	{
+		parentObject.transform.rotation = Quaternion.Euler(parentObject.transform.eulerAngles.x, cameraTransform.eulerAngles.y, parentObject.transform.eulerAngles.z);
 	}
 
 	private void SetParentPositionToPlayer()

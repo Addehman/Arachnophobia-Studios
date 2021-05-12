@@ -104,8 +104,7 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public Vector3 currentPosition;
 
 	[SerializeField] private GameObject cmTPCamera;
-	[SerializeField] private GameObject spiderModel;
-	public Animator spiderAnimator;
+	[SerializeField] private Transform lookAtTargetParent;
 
 	public MainRaycastsAdjustment mainRaycastAdjustments;
 	public ForwardsRaycastsAdjustment forwardsRaycastAdjustment;
@@ -116,37 +115,59 @@ public class SpiderMovement : MonoBehaviour
 
 	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any}
 	private RaycastTypes raycastType;
+	private Animator spiderAnimator;
+	private VacuumBlackhole vacuumBlackhole;
+	private SpringJointWeb springJointWeb;
+	private GameObject parentObject;
+	private GameObject[] modelChildren;
 	private Transform cam;
+	private Transform moveToTarget;
+	// private Transform rotateToTarget; // Probably to be removed
 	private Vector3 myNormal;
 	private float turnSmoothVelocity;
 	private float gravityValue = -9.82f;
 	private float sprintMulti;
-	private VacuumBlackhole vacuumBlackhole;
-	private SpringJointWeb springJointWeb;
-	private Transform moveToTarget;
-	private Transform rotateToTarget;
+	private int randomIdle;
+	private float randomIdleTimer = 0f;
 	// private float vertical;
 	// private float horizontal;
 
-	int randomIdle;
-	float randomIdleTimer = 0f;
+	Vector3 currentForward; // Temporary
+	Vector3 currentSide; // Temporary
 
-
-	Vector3 currentForward;
-	Vector3 currentSide;
 
 	void Start()
 	{
+		spiderAnimator = GetComponent<Animator>();
 		spiderAnimator.SetTrigger("Idle");
-		rb = GetComponent<Rigidbody>();
+
 		cam = Camera.main.transform;
-		spiderAnimator = GetComponentInChildren<Animator>();
 		Camera.main.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
+
 		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>();
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
+
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
+
 		moveToTarget = FindObjectOfType<MoveToTargetController>().transform;
-		rotateToTarget = FindObjectOfType<RotateToTargetController>().transform;
+		// rotateToTarget = FindObjectOfType<RotateToTargetController>().transform;
+		
+		parentObject = transform.parent.gameObject;
+		rb = parentObject.GetComponent<Rigidbody>();
+
+		// Here the reference is made for all the children of the spidermodel, used to be able to hide/show when in fpCamera-mode.
+		int amountOfModelParts = 0;
+		foreach (Transform item in transform)
+		{
+			amountOfModelParts ++;
+		}
+		modelChildren = new GameObject[amountOfModelParts];
+		for (int i = 0; i < modelChildren.Length; i++)
+		{
+			modelChildren[i] = transform.GetChild(i).gameObject;
+		}
+
+		// moveToTargetController = 
 	}
 
 	private void activateOnKeypress_ActivationFPSCam(bool isActive)
@@ -176,7 +197,6 @@ public class SpiderMovement : MonoBehaviour
 		Sprint();
 		SpiderJump();
 
-		SetPlayerLocalUpDirection();
 
 		PlayerAnimation();
 	}
@@ -201,7 +221,11 @@ public class SpiderMovement : MonoBehaviour
 		{
 			// DefaultMovement();
 			// CameraDirectionMovement();
+
+			SetPlayerLocalUpDirection();
 			MoveToPointMovement();
+
+			// RotateWithEddie();
 		}
 	}
 
@@ -374,23 +398,29 @@ public class SpiderMovement : MonoBehaviour
 			debugSettings.averageNormalDirection += debugSettings.averageNormalDirections[i];
 		}
 		
-		debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
-
 		if (debugSettings.averageNormalDirections.Count == 0)
 		{
 			debugSettings.averageNormalDirection = Vector3.up;
 		}
+		else
+		{
+			debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
+		}
 
-		var lerpSpeed = 10f;
+		// var lerpSpeed = 10f;
 
+		lookAtTargetParent.transform.up = debugSettings.averageNormalDirection; // if I want to lerp, make sure to also lerp the other rotation(transform.LookAt), especially with the same tick/time-amount(t).
+		/*
 		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
 		// find forward direction with new myNormal:
 		Vector3 myForward = Vector3.Cross(transform.right, myNormal);
 		// align character to the new myNormal while keeping the forward direction:
 		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
-		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+		print (targetRot.eulerAngles);
+		// moveToTargetController.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 		//try and make tha camera rotate with the player. Doesn't work as of now.
 		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+		*/
 	}
 
 	private void DefaultMovement() 
@@ -418,14 +448,24 @@ public class SpiderMovement : MonoBehaviour
 
 	private void MoveToPointMovement()
 	{
-		if (Vector3.Distance(transform.position, rotateToTarget.position) >= 0.05f)
+		float horizontal = Input.GetAxisRaw("Horizontal");
+		float vertical = Input.GetAxisRaw("Vertical");
+
+		if (Vector3.Distance(transform.position, moveToTarget.position) >= 0.05f)
 		{
-			transform.LookAt(rotateToTarget, rotateToTarget.up);
+			transform.LookAt(moveToTarget, moveToTarget.up);
 		}
 
-		//transform.position = Vector3.Lerp(transform.position, transform.forward*0.1f, playerSettings.moveToSpeed * Time.deltaTime);
-		transform.position = Vector3.Lerp(transform.position, moveToTarget.position, playerSettings.moveToSpeed * Time.deltaTime);
+		Vector3 movement = new Vector3(vertical, 0f, horizontal);
+		if (movement.sqrMagnitude > 0f)
+		{
+			parentObject.transform.Translate(transform.forward * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+		} 
 		
+		// parentObject.transform.Translate(movement);
+
+		// transform.position = Vector3.Lerp(transform.position, transform.forward*0.1f, playerSettings.moveToSpeed * Time.deltaTime);
+		// parentObject.transform.position = Vector3.Lerp(transform.position, moveToTarget.position, playerSettings.moveToSpeed * Time.deltaTime);
 	}
 	
 	/// <summary>
@@ -569,11 +609,49 @@ public class SpiderMovement : MonoBehaviour
 
 		if (debugSettings.isFpsEnabled == true)
 		{
-			spiderModel.SetActive(false);
+			// spiderModel.SetActive(false);
+			foreach (GameObject item in modelChildren)
+			{
+				item.SetActive(false);
+			}
 		}
 		else
 		{
-			spiderModel.SetActive(true);
+			// spiderModel.SetActive(true);
+			foreach (GameObject item in modelChildren)
+			{
+				item.SetActive(true);
+			}
 		}
+	}
+
+	private void RotateWithEddie()
+	{
+		float hor = Input.GetAxis("Horizontal");
+		float ver = Input.GetAxis("Vertical");
+
+		Vector3 input = new Vector3(hor, 0f, ver);
+
+		Vector3 moveVector = cam.TransformDirection(input);
+		moveVector.y = 0f;
+		moveVector.Normalize();
+
+		moveVector *= 0.1f * Time.deltaTime;
+		parentObject.transform.Translate(moveVector);
+
+		if (input.sqrMagnitude <= 0f)
+		{
+			return;
+		}
+
+		Vector3 velocity = new Vector3(moveVector.x, 0f, moveVector.z);
+		Quaternion targetRotation = Quaternion.LookRotation(velocity.normalized);
+		transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 270f * Time.deltaTime);
+	}
+
+	private void OnDrawGizmos()
+	{
+		Gizmos.color = Color.green;
+		Gizmos.DrawRay(transform.position, debugSettings.averageNormalDirection * 1f);
 	}
 }
