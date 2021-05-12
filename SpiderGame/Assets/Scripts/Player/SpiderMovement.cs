@@ -124,6 +124,7 @@ public class SpiderMovement : MonoBehaviour
 	private VacuumBlackhole vacuumBlackhole;
 	private SpringJointWeb springJointWeb;
 	private Transform moveToTarget;
+	private Transform rotateToTarget;
 	// private float vertical;
 	// private float horizontal;
 
@@ -142,6 +143,7 @@ public class SpiderMovement : MonoBehaviour
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		moveToTarget = FindObjectOfType<MoveToTargetController>().transform;
+		rotateToTarget = FindObjectOfType<RotateToTargetController>().transform;
 	}
 
 	private void activateOnKeypress_ActivationFPSCam(bool isActive)
@@ -400,7 +402,12 @@ public class SpiderMovement : MonoBehaviour
 	private void MoveToPointMovement()
 	{
 		transform.position = Vector3.Lerp(transform.position, moveToTarget.position, playerSettings.moveToSpeed * Time.deltaTime);
-		transform.LookAt(moveToTarget, moveToTarget.up);
+
+		if (Vector3.Distance(transform.position, moveToTarget.position) >= 0.05f)
+		{
+			transform.LookAt(rotateToTarget, rotateToTarget.up);
+		}
+		
 	}
 	
 	/// <summary>

@@ -34,14 +34,22 @@ public class MoveToTargetController : MonoBehaviour
 
 		// direction = transform.position - parentObject.transform.position;
 
-		transform.LookAt(parentObject.transform, parentObject.transform.up); // Check this one out for opimization later! <------------- OBS!
-		transform.forward = -transform.forward;
+		// transform.LookAt(parentObject.transform, parentObject.transform.up); // Check this one out for opimization later! <------------- OBS!
+		// transform.forward = -transform.forward;
+
+		if (movement.sqrMagnitude == 0)
+		{
+			return;
+		}
+		
+		// transform.forward = movement;
 
 		// transform.rotation.SetLookRotation(-parentObject.transform.position, parentObject.transform.up);
 
-		// transform.rotation = Quaternion.LookRotation(parentObject.transform.forward, parentObject.transform.up);
+		// transform.rotation = Quaternion.LookRotation(-parentObject.transform.forward, parentObject.transform.up);
 
-		SetParentPositionToPlayer();
+
+		// SetParentPositionToPlayer();
 
 		RaycastForward();
 		RaycastDown();
