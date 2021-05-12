@@ -51,19 +51,19 @@ public class MoveToTargetController : MonoBehaviour
 
 		// SetParentPositionToPlayer();
 
-		RaycastForward();
-		RaycastDown();
+		//RaycastForward();
+		//RaycastDown();
 
 		// transform.rotation = Quaternion.Euler(transform.eulerAngles.x, fwdRayNormal.y, transform.eulerAngles.z);
 
-		if (isFwdRayHitting == true) // or maybe simply check if the magnitude of the fwdRayNormal is above 0, but in that case make sure to set the fwdRayNormal to zero if no hit.
-		{
-			transform.up = fwdRayNormal;
-		}
-		else 
-		{
-			transform.up = downRayNormal;
-		}
+		// if (isFwdRayHitting == true) // or maybe simply check if the magnitude of the fwdRayNormal is above 0, but in that case make sure to set the fwdRayNormal to zero if no hit.
+		// {
+		// 	transform.up = fwdRayNormal;
+		// }
+		// else 
+		// {
+		// 	transform.up = downRayNormal;
+		// }
 
 		// transform.up = fwdRayNormal;
 	}

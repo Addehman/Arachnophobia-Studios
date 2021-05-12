@@ -53,19 +53,19 @@ public class RotateToTargetController : MonoBehaviour
 
 
 
-		RaycastForward();
-		RaycastDown();
+		//RaycastForward();
+		//RaycastDown();
 
 		// transform.rotation = Quaternion.Euler(transform.eulerAngles.x, fwdRayNormal.y, transform.eulerAngles.z);
 
-		if (isFwdRayHitting == true) // or maybe simply check if the magnitude of the fwdRayNormal is above 0, but in that case make sure to set the fwdRayNormal to zero if no hit.
-		{
-			transform.up = fwdRayNormal;
-		}
-		else 
-		{
-			transform.up = downRayNormal;
-		}
+		// if (isFwdRayHitting == true) // or maybe simply check if the magnitude of the fwdRayNormal is above 0, but in that case make sure to set the fwdRayNormal to zero if no hit.
+		// {
+		// 	transform.up = fwdRayNormal;
+		// }
+		// else 
+		// {
+		// 	transform.up = downRayNormal;
+		// }
 
 		// transform.up = fwdRayNormal;
 	}
@@ -92,7 +92,7 @@ public class RotateToTargetController : MonoBehaviour
 			isFwdRayHitting = false;
 		}
 		
-		Debug.DrawRay(transform.position, transform.forward.normalized * rayMaxDistance, Color.green, 0.5f);
+		//Debug.DrawRay(transform.position, transform.forward.normalized * rayMaxDistance, Color.green, 0.5f);
 	}
 
 	private void RaycastDown()
@@ -103,6 +103,6 @@ public class RotateToTargetController : MonoBehaviour
 			downRayNormal = hit.normal;
 		}
 
-		Debug.DrawRay(transform.position, -transform.up.normalized * rayMaxDistance, Color.blue, 0.5f);
+		//Debug.DrawRay(transform.position, -transform.up.normalized * rayMaxDistance, Color.blue, 0.5f);
 	}
 }

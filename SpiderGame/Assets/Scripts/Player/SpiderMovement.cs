@@ -132,6 +132,9 @@ public class SpiderMovement : MonoBehaviour
 	float randomIdleTimer = 0f;
 
 
+	Vector3 currentForward;
+	Vector3 currentSide;
+
 	void Start()
 	{
 		spiderAnimator.SetTrigger("Idle");
@@ -390,23 +393,38 @@ public class SpiderMovement : MonoBehaviour
 		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 	}
 
-	private void DefaultMovement()
+	private void DefaultMovement() 
 	{
 		float vertical = Input.GetAxisRaw("Vertical");
 		float horizontal = Input.GetAxisRaw("Horizontal");
 
-		Vector3 movement = new Vector3(horizontal * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime, 0f, vertical * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+		if(currentForward == Vector3.zero)
+			currentForward = transform.forward;
+		if(currentSide == Vector3.zero)
+			currentSide = -transform.right;
+
+		Vector3 forwardMotion = currentForward * vertical;
+		Vector3 sideMotion = currentSide * horizontal;
+
+		Vector3 movement = (forwardMotion + sideMotion) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime;
 		transform.Translate(movement);
+
+		if(horizontal + vertical == 0)
+		{
+			currentForward = Vector3.zero;
+			currentSide = Vector3.zero;
+		}
 	}
 
 	private void MoveToPointMovement()
 	{
-		transform.position = Vector3.Lerp(transform.position, moveToTarget.position, playerSettings.moveToSpeed * Time.deltaTime);
-
-		if (Vector3.Distance(transform.position, moveToTarget.position) >= 0.05f)
+		if (Vector3.Distance(transform.position, rotateToTarget.position) >= 0.05f)
 		{
 			transform.LookAt(rotateToTarget, rotateToTarget.up);
 		}
+
+		//transform.position = Vector3.Lerp(transform.position, transform.forward*0.1f, playerSettings.moveToSpeed * Time.deltaTime);
+		transform.position = Vector3.Lerp(transform.position, moveToTarget.position, playerSettings.moveToSpeed * Time.deltaTime);
 		
 	}
 	
