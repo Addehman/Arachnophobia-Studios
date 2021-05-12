@@ -9,6 +9,7 @@ public class LightSwitchQuest : MonoBehaviour
     public GameObject lightSource3;
     public GameObject questCircle;
     public GameObject check;
+    public GameObject helpText;
     bool isFinished = false;
     bool canSwitchLight = false;
 
@@ -21,6 +22,7 @@ public class LightSwitchQuest : MonoBehaviour
             lightSource2.SetActive(false);
             lightSource3.SetActive(false);
             questCircle.SetActive(false);
+            helpText.SetActive(false);
             check.SetActive(true);
             isFinished = true;
         }
@@ -30,11 +32,13 @@ public class LightSwitchQuest : MonoBehaviour
     {
         if (collider.gameObject.CompareTag("Player"))
         {
+            helpText.SetActive(true);
             canSwitchLight = true;
         }
     }
     private void OnTriggerExit(Collider other)
     {
+        helpText.SetActive(false);
         canSwitchLight = false;
     }
 }

@@ -8,6 +8,7 @@ public class CookQuest : MonoBehaviour
     public Player player;
     public UIInventory uiInventory;
     public GameObject check;
+    public GameObject helpText;
     public GameObject questCircle;
     public PickUpObject pickUpObject;
     public bool isFinished = false;
@@ -16,6 +17,7 @@ public class CookQuest : MonoBehaviour
     {
         if (other.CompareTag("Player") && isFinished == false && pickUpObject.isAllItemsCollected == true)
         {
+            helpText.SetActive(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
             window.SetActive(true);
@@ -26,6 +28,7 @@ public class CookQuest : MonoBehaviour
     {
         if (other.CompareTag("Player") && isFinished == false && pickUpObject.isAllItemsCollected == true)
         {
+            helpText.SetActive(false);
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             window.SetActive(false);
@@ -34,6 +37,7 @@ public class CookQuest : MonoBehaviour
 
     public void CookButton()
     {
+        helpText.SetActive(false);
         Winstate.AddCompletedQuest();
         isFinished = true;
         check.SetActive(true);

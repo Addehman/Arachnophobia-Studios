@@ -5,6 +5,7 @@ using UnityEngine;
 public class RadioQuest : MonoBehaviour
 {
     public GameObject song;
+    public GameObject helpText;
     public GameObject check;
     public GameObject questCircle;
     bool isFinished = false;
@@ -17,6 +18,7 @@ public class RadioQuest : MonoBehaviour
             Winstate.AddCompletedQuest();
             song.SetActive(true);
             check.SetActive(true);
+            helpText.SetActive(false);
             questCircle.SetActive(false);
             isFinished = true;
         }
@@ -26,11 +28,13 @@ public class RadioQuest : MonoBehaviour
     {
         if (collider.gameObject.CompareTag("Player"))
         {
+            helpText.SetActive(true);
             canPlayRadio = true;
         }
     }
     private void OnTriggerExit(Collider other)
     {
+        helpText.SetActive(false);
         canPlayRadio = false;
     }
 }

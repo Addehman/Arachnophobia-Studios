@@ -16,6 +16,7 @@ public class PickUpObject : MonoBehaviour
 
     private Inventory inventoryOnPlayer;
     private GameObject thisObjectThatWeStandOn;
+    public GameObject helpText;
 
     public event Action pickedUpItem;
 
@@ -29,6 +30,7 @@ public class PickUpObject : MonoBehaviour
         {
             numberOfItemsPickedUp++;
             Debug.Log("number of items picked up: " + numberOfItemsPickedUp);
+            helpText.SetActive(false);
 
             inventoryOnPlayer.GiveItem(itemID);
 
@@ -46,7 +48,7 @@ public class PickUpObject : MonoBehaviour
             canPickUp = false;
         }
 
-        if(numberOfItemsPickedUp >= 4)
+        if(numberOfItemsPickedUp >= 7)
         {
             isAllItemsCollected = true;
         }
@@ -56,6 +58,7 @@ public class PickUpObject : MonoBehaviour
     {
         if (collider.gameObject.CompareTag("PickUpAble"))
         {
+            helpText.SetActive(true);
             canPickUp = true;
             thisObjectThatWeStandOn = collider.gameObject;
             itemID = thisObjectThatWeStandOn.GetComponent<ItemID>().itemID;
@@ -66,6 +69,7 @@ public class PickUpObject : MonoBehaviour
     {
         if (collider.gameObject.CompareTag("PickUpAble")) // Player
         {
+            helpText.SetActive(false);
             thisObjectThatWeStandOn = null;
             canPickUp = false;
         }
