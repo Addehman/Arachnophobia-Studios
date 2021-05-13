@@ -121,7 +121,7 @@ public class SpiderMovement : MonoBehaviour
 	private GameObject parentObject;
 	private GameObject[] modelChildren;
 	private Transform cam;
-	private Transform moveToTarget;
+	private Transform lookAtTarget;
 	// private Transform rotateToTarget; // Probably to be removed
 	private Vector3 myNormal;
 	private float turnSmoothVelocity;
@@ -149,7 +149,7 @@ public class SpiderMovement : MonoBehaviour
 
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 
-		moveToTarget = FindObjectOfType<MoveToTargetController>().transform;
+		lookAtTarget = FindObjectOfType<LookAtTargetController>().transform;
 		// rotateToTarget = FindObjectOfType<RotateToTargetController>().transform;
 		
 		parentObject = transform.parent.gameObject;
@@ -416,7 +416,6 @@ public class SpiderMovement : MonoBehaviour
 		Vector3 myForward = Vector3.Cross(transform.right, myNormal);
 		// align character to the new myNormal while keeping the forward direction:
 		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
-		print (targetRot.eulerAngles);
 		// moveToTargetController.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 		//try and make tha camera rotate with the player. Doesn't work as of now.
 		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
@@ -450,10 +449,12 @@ public class SpiderMovement : MonoBehaviour
 	{
 		float horizontal = Input.GetAxisRaw("Horizontal");
 		float vertical = Input.GetAxisRaw("Vertical");
-
-		if (Vector3.Distance(transform.position, moveToTarget.position) >= 0.05f)
+		
+		if (Vector3.Distance(transform.position, lookAtTarget.position) >= 0.05f)
 		{
-			transform.LookAt(moveToTarget, moveToTarget.up);
+			// Quaternion whatToFace = Quaternion.Slerp(transform.eulerAngles, ); // I want to do a Slerp/Lerp on this and the normal/transform.up rotation - this and the on under "SetPlayerLocalUpDirection()".
+			transform.LookAt(lookAtTarget, lookAtTarget.up);
+			// transform.rotation = Quaternion.LookRotation(moveToTarget.forward);
 		}
 
 		Vector3 movement = new Vector3(vertical, 0f, horizontal);
