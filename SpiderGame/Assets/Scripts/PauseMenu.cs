@@ -21,10 +21,16 @@ public class PauseMenu : MonoBehaviour
             if(isPaused)
             {
                 ResumeGame();
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                AudioListener.volume = 1f;
             }
             else
             {
                 PauseGame();
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.Confined;
+                AudioListener.volume = 0f;
             }
         }
     }
@@ -42,6 +48,9 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        AudioListener.volume = 1f;
     }
 
     public void GoToMainMenu()
