@@ -104,7 +104,7 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public Vector3 currentPosition;
 
 	[SerializeField] private GameObject cmTPCamera;
-	[SerializeField] private Transform lookAtTargetParent;
+	[SerializeField] private Transform movementParent;
 
 	public MainRaycastsAdjustment mainRaycastAdjustments;
 	public ForwardsRaycastsAdjustment forwardsRaycastAdjustment;
@@ -122,6 +122,7 @@ public class SpiderMovement : MonoBehaviour
 	private GameObject[] modelChildren;
 	private Transform cam;
 	private Transform lookAtTarget;
+	private GameObject targetRotationObject;
 	// private Transform rotateToTarget; // Probably to be removed
 	private Vector3 myNormal;
 	private float turnSmoothVelocity;
@@ -129,6 +130,7 @@ public class SpiderMovement : MonoBehaviour
 	private float sprintMulti;
 	private int randomIdle;
 	private float randomIdleTimer = 0f;
+	private float rotationSlerpSpeed = 10f;
 	// private float vertical;
 	// private float horizontal;
 
@@ -138,7 +140,7 @@ public class SpiderMovement : MonoBehaviour
 
 	void Start()
 	{
-		spiderAnimator = GetComponent<Animator>();
+		spiderAnimator = GameObject.Find("Model_Character_Spider.4").GetComponent<Animator>();
 		spiderAnimator.SetTrigger("Idle");
 
 		cam = Camera.main.transform;
@@ -154,6 +156,8 @@ public class SpiderMovement : MonoBehaviour
 		
 		parentObject = transform.parent.gameObject;
 		rb = parentObject.GetComponent<Rigidbody>();
+
+		targetRotationObject = GameObject.Find("PlayerTargetRotation");
 
 		// Here the reference is made for all the children of the spidermodel, used to be able to hide/show when in fpCamera-mode.
 		int amountOfModelParts = 0;
@@ -407,18 +411,19 @@ public class SpiderMovement : MonoBehaviour
 			debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
 		}
 
-		// var lerpSpeed = 10f;
-
-		lookAtTargetParent.transform.up = debugSettings.averageNormalDirection; // if I want to lerp, make sure to also lerp the other rotation(transform.LookAt), especially with the same tick/time-amount(t).
+		movementParent.transform.up = debugSettings.averageNormalDirection; // if I want to lerp, make sure to also lerp the other rotation(transform.LookAt), especially with the same tick/time-amount(t).
+		
 		/*
-		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
+		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, rotationSlerpSpeed * Time.deltaTime);
+		// myNormal = debugSettings.averageNormalDirection;
 		// find forward direction with new myNormal:
 		Vector3 myForward = Vector3.Cross(transform.right, myNormal);
 		// align character to the new myNormal while keeping the forward direction:
+		// My attempt to control the direction of the player:
+		// targetRotationObject.transform.LookAt(lookAtTarget, myNormal);
+		// Vector3 myForward = targetRotationObject.transform.forward;
 		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
-		// moveToTargetController.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
-		//try and make tha camera rotate with the player. Doesn't work as of now.
-		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+		movementParent.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSlerpSpeed * Time.deltaTime);
 		*/
 	}
 
@@ -452,16 +457,25 @@ public class SpiderMovement : MonoBehaviour
 		
 		if (Vector3.Distance(transform.position, lookAtTarget.position) >= 0.05f)
 		{
-			// Quaternion whatToFace = Quaternion.Slerp(transform.eulerAngles, ); // I want to do a Slerp/Lerp on this and the normal/transform.up rotation - this and the on under "SetPlayerLocalUpDirection()".
+			// I want to do a Slerp/Lerp on this and the normal/transform.up rotation - this and the on under "SetPlayerLocalUpDirection()".
 			transform.LookAt(lookAtTarget, lookAtTarget.up);
-			// transform.rotation = Quaternion.LookRotation(moveToTarget.forward);
+			
+			/*
+			Vector3 targetDirection = lookAtTarget.position - transform.position;
+			Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, rotationSlerpSpeed * Time.deltaTime, 0f);
+			transform.rotation = Quaternion.LookRotation(newDirection);
+			*/
+
+			// targetRotationObject.transform.LookAt(lookAtTarget, lookAtTarget.up);
+			// Quaternion targetRot = targetRotationObject.transform.rotation;
+			// transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSlerpSpeed * Time.deltaTime);
 		}
 
 		Vector3 movement = new Vector3(vertical, 0f, horizontal);
 		if (movement.sqrMagnitude > 0f)
 		{
 			parentObject.transform.Translate(transform.forward * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
-		} 
+		}
 		
 		// parentObject.transform.Translate(movement);
 
