@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenu;
+    public GameObject howToPlay;
     public static bool isPaused;
 
     void Start()
@@ -62,5 +63,15 @@ public class PauseMenu : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void OpenHowToPlay()
+    {
+        howToPlay.SetActive(true);
+    }
+
+    public void CloseHowToPlay()
+    {
+        howToPlay.SetActive(false);
     }
 }
