@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 [System.Serializable]
 public class MainRaycastsAdjustment
@@ -105,6 +106,7 @@ public class SpiderMovement : MonoBehaviour
 
 	[SerializeField] private GameObject cmTPCamera;
 	[SerializeField] private Transform movementParent;
+	[SerializeField] private GameObject cameraParent;
 
 	public MainRaycastsAdjustment mainRaycastAdjustments;
 	public ForwardsRaycastsAdjustment forwardsRaycastAdjustment;
@@ -131,6 +133,9 @@ public class SpiderMovement : MonoBehaviour
 	private int randomIdle;
 	private float randomIdleTimer = 0f;
 	private float rotationSlerpSpeed = 10f;
+
+	private RotationConstraint cameraRotationConstraint;
+
 	// private float vertical;
 	// private float horizontal;
 
@@ -158,6 +163,8 @@ public class SpiderMovement : MonoBehaviour
 		rb = parentObject.GetComponent<Rigidbody>();
 
 		targetRotationObject = GameObject.Find("PlayerTargetRotation");
+
+		cameraRotationConstraint = cameraParent.GetComponent<RotationConstraint>();
 
 		// Here the reference is made for all the children of the spidermodel, used to be able to hide/show when in fpCamera-mode.
 		int amountOfModelParts = 0;
@@ -272,6 +279,15 @@ public class SpiderMovement : MonoBehaviour
 		else 
 		{
 			playerSettings.normalPlayerSpeed = playerSettings.normalDefaultPlayerSpeed;
+		}
+
+		if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), 0.3f))
+		{
+			cameraRotationConstraint.weight = 0f;
+		}
+		else
+		{
+			cameraRotationConstraint.weight = 1f;
 		}
 	}
 	// Special "Hook"- or Edge-Raycasts, used to look over edges to find footing where the other rays won't reach.
@@ -459,6 +475,10 @@ public class SpiderMovement : MonoBehaviour
 		{
 			// I want to do a Slerp/Lerp on this and the normal/transform.up rotation - this and the on under "SetPlayerLocalUpDirection()".
 			transform.LookAt(lookAtTarget, lookAtTarget.up);
+
+			// most likely the best solution, but it does not give the correct movement direction..
+			// Vector3 moveDirection = Vector3.ProjectOnPlane(cmTPCamera.transform.forward, debugSettings.averageNormalDirection).normalized;
+			// transform.rotation = Quaternion.LookRotation(moveDirection, transform.up);
 			
 			/*
 			Vector3 targetDirection = lookAtTarget.position - transform.position;
