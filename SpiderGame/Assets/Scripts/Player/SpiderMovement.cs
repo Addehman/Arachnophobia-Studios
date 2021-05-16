@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
+using System;
 
 [System.Serializable]
 public class MainRaycastsAdjustment
@@ -86,17 +87,18 @@ public class PlayerSettings
 public class DebugSettings
 {
 	// [Header("Debug")]
+	public Vector3 mainDownRayNormalDirection;
+	public Vector3 averageNormalDirection;
+	public List<Vector3> averageNormalDirections = new List<Vector3>();
+	public Vector3 fwdRayHitNormalDebug;
 	public bool isGrounded;
 	public bool doDrawRayGizmos = true;
 	public bool fwdRayNoHit = false;
 	public bool backRayNoHit = false;
 	public bool isFwdRayHitting;
-	public Vector3 mainDownRayNormalDirection;
-	public Vector3 averageNormalDirection;
-	public List<Vector3> averageNormalDirections = new List<Vector3>();
-	public Vector3 fwdRayHitNormalDebug;
 	public bool isFpsEnabled = false;
 	public bool isPlayerBeingVacuumed;
+	public bool doForwardCheckRay = true;
 }
 
 public class SpiderMovement : MonoBehaviour
@@ -107,6 +109,8 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private GameObject cmTPCamera;
 	[SerializeField] private Transform movementParent;
 	[SerializeField] private GameObject cameraParent;
+
+	public event Action<bool> cameraChangeStrategy;
 
 	public MainRaycastsAdjustment mainRaycastAdjustments;
 	public ForwardsRaycastsAdjustment forwardsRaycastAdjustment;
@@ -234,7 +238,8 @@ public class SpiderMovement : MonoBehaviour
 			// CameraDirectionMovement();
 
 			SetPlayerLocalUpDirection();
-			MoveToPointMovement();
+			SetLookDirection();
+			RigidbodyMovement();
 
 			// RotateWithEddie();
 		}
@@ -281,13 +286,24 @@ public class SpiderMovement : MonoBehaviour
 			playerSettings.normalPlayerSpeed = playerSettings.normalDefaultPlayerSpeed;
 		}
 
-		if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), 0.3f))
+		if (debugSettings.doForwardCheckRay == true)
 		{
-			cameraRotationConstraint.weight = 0f;
-		}
-		else
-		{
-			cameraRotationConstraint.weight = 1f;
+			if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), 0.3f))
+			{
+				if (cameraChangeStrategy != null)
+				{
+					cameraChangeStrategy(true);
+				}
+				// cameraRotationConstraint.weight = 0f;
+			}
+			else
+			{
+				if (cameraChangeStrategy != null)
+				{
+					cameraChangeStrategy(false);
+				}
+				// cameraRotationConstraint.weight = 1f;
+			}
 		}
 	}
 	// Special "Hook"- or Edge-Raycasts, used to look over edges to find footing where the other rays won't reach.
@@ -466,7 +482,7 @@ public class SpiderMovement : MonoBehaviour
 		}
 	}
 
-	private void MoveToPointMovement()
+	private void SetLookDirection()
 	{
 		float horizontal = Input.GetAxisRaw("Horizontal");
 		float vertical = Input.GetAxisRaw("Vertical");
@@ -490,6 +506,30 @@ public class SpiderMovement : MonoBehaviour
 			// Quaternion targetRot = targetRotationObject.transform.rotation;
 			// transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSlerpSpeed * Time.deltaTime);
 		}
+	}
+
+	private void RigidbodyMovement()
+	{
+		float horizontal = Input.GetAxisRaw("Horizontal");
+		float vertical = Input.GetAxisRaw("Vertical");
+
+		Vector3 movement = new Vector3(vertical, 0f, horizontal);
+
+		if (movement.sqrMagnitude > 0f)
+		{
+			rb.velocity = transform.forward * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime;
+		}
+		
+		// parentObject.transform.Translate(movement);
+
+		// transform.position = Vector3.Lerp(transform.position, transform.forward*0.1f, playerSettings.moveToSpeed * Time.deltaTime);
+		// parentObject.transform.position = Vector3.Lerp(transform.position, moveToTarget.position, playerSettings.moveToSpeed * Time.deltaTime);
+	}
+
+	private void TranslateMovement()
+	{
+		float horizontal = Input.GetAxisRaw("Horizontal");
+		float vertical = Input.GetAxisRaw("Vertical");
 
 		Vector3 movement = new Vector3(vertical, 0f, horizontal);
 		if (movement.sqrMagnitude > 0f)
@@ -628,7 +668,7 @@ public class SpiderMovement : MonoBehaviour
 		randomIdleTimer += Time.deltaTime;
 		if (randomIdleTimer >= 10f)
 		{
-			randomIdle = Random.Range(0, 2);
+			randomIdle = UnityEngine.Random.Range(0, 2); // Look over if this is correct - Should the "2" be included or excluded?
 
 			if(randomIdle == 0)
 			{

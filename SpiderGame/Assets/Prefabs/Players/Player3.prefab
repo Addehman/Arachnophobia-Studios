@@ -87,6 +87,8 @@ MonoBehaviour:
   rotationSpeed: 1
   cameraTarget: {fileID: 1467085948}
   targetToRotate: {fileID: 1435808823}
+  getUpFrom: {fileID: 0}
+  allowInput: 1
 --- !u!114 &34861318
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -582,6 +584,7 @@ MonoBehaviour:
   currentPosition: {x: 1.6893911, y: 1.8894316, z: 0.2269907}
   cmTPCamera: {fileID: 668208210064557246}
   movementParent: {fileID: 48586612}
+  cameraParent: {fileID: 0}
   mainRaycastAdjustments:
     rayFwdMod: 1
     rayBwdMod: 1
@@ -626,9 +629,9 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 275
   playerSettings:
-    normalPlayerSpeed: 0.2
+    normalPlayerSpeed: 25
     normalSlowPlayerSpeed: 0.1
-    normalDefaultPlayerSpeed: 0.2
+    normalDefaultPlayerSpeed: 25
     normalSprintMultiAmount: 0.2
     velocityPlayerSpeed: 27
     velocityNormalPlayerSpeed: 27
@@ -640,17 +643,18 @@ MonoBehaviour:
     turnSpeed: 90
     moveToSpeed: 1
   debugSettings:
+    mainDownRayNormalDirection: {x: 0, y: 0, z: 0}
+    averageNormalDirection: {x: 0, y: 0, z: 0}
+    averageNormalDirections: []
+    fwdRayHitNormalDebug: {x: 0, y: 0, z: 0}
     isGrounded: 0
     doDrawRayGizmos: 1
     fwdRayNoHit: 0
     backRayNoHit: 0
     isFwdRayHitting: 0
-    mainDownRayNormalDirection: {x: 0, y: 0, z: 0}
-    averageNormalDirection: {x: 0, y: 0, z: 0}
-    averageNormalDirections: []
-    fwdRayHitNormalDebug: {x: 0, y: 0, z: 0}
     isFpsEnabled: 0
     isPlayerBeingVacuumed: 0
+    doForwardCheckRay: 1
 --- !u!1 &2047520136
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,17 +914,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugSetting:
+    mainDownRayNormalDirection: {x: 0, y: 0, z: 0}
+    averageNormalDirection: {x: 0, y: 0, z: 0}
+    averageNormalDirections: []
+    fwdRayHitNormalDebug: {x: 0, y: 0, z: 0}
     isGrounded: 0
     doDrawRayGizmos: 1
     fwdRayNoHit: 0
     backRayNoHit: 0
     isFwdRayHitting: 0
-    mainDownRayNormalDirection: {x: 0, y: 0, z: 0}
-    averageNormalDirection: {x: 0, y: 0, z: 0}
-    averageNormalDirections: []
-    fwdRayHitNormalDebug: {x: 0, y: 0, z: 0}
     isFpsEnabled: 0
     isPlayerBeingVacuumed: 0
+    doForwardCheckRay: 1
   spiderAnimator: {fileID: 1159706110}
   thirdPersonCamera: {fileID: 668208210064557246}
   firstPersonCamera: {fileID: 3944242281898070516}
@@ -1132,6 +1137,7 @@ MonoBehaviour:
   currentPosition: {x: 1.6893911, y: 1.8894316, z: 0.2269907}
   cmTPCamera: {fileID: 668208210064557246}
   movementParent: {fileID: 48586612}
+  cameraParent: {fileID: 0}
   mainRaycastAdjustments:
     rayFwdMod: 1
     rayBwdMod: 1
@@ -1190,17 +1196,18 @@ MonoBehaviour:
     turnSpeed: 90
     moveToSpeed: 1
   debugSettings:
+    mainDownRayNormalDirection: {x: 0, y: 0, z: 0}
+    averageNormalDirection: {x: 0, y: 0, z: 0}
+    averageNormalDirections: []
+    fwdRayHitNormalDebug: {x: 0, y: 0, z: 0}
     isGrounded: 0
     doDrawRayGizmos: 1
     fwdRayNoHit: 0
     backRayNoHit: 0
     isFwdRayHitting: 0
-    mainDownRayNormalDirection: {x: 0, y: 0, z: 0}
-    averageNormalDirection: {x: 0, y: 0, z: 0}
-    averageNormalDirections: []
-    fwdRayHitNormalDebug: {x: 0, y: 0, z: 0}
     isFpsEnabled: 0
     isPlayerBeingVacuumed: 0
+    doForwardCheckRay: 1
 --- !u!114 &871449887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1469,6 +1476,8 @@ MonoBehaviour:
   rotationSpeed: 1
   cameraTarget: {fileID: 8761737851065990753}
   targetToRotate: {fileID: 1435808823}
+  getUpFrom: {fileID: 0}
+  allowInput: 1
 --- !u!1001 &128268819
 PrefabInstance:
   m_ObjectHideFlags: 0
