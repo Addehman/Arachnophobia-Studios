@@ -443,9 +443,6 @@ public class SpiderMovement : MonoBehaviour
 			debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
 		}
 
-		movementParent.transform.up = debugSettings.averageNormalDirection; // if I want to lerp, make sure to also lerp the other rotation(transform.LookAt), especially with the same tick/time-amount(t).
-		
-		/*
 		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, rotationSlerpSpeed * Time.deltaTime);
 		// myNormal = debugSettings.averageNormalDirection;
 		// find forward direction with new myNormal:
@@ -455,8 +452,12 @@ public class SpiderMovement : MonoBehaviour
 		// targetRotationObject.transform.LookAt(lookAtTarget, myNormal);
 		// Vector3 myForward = targetRotationObject.transform.forward;
 		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
-		movementParent.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSlerpSpeed * Time.deltaTime);
-		*/
+		// movementParent.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSlerpSpeed * Time.deltaTime);
+
+		
+		movementParent.transform.rotation = targetRot;
+
+		// movementParent.transform.up = debugSettings.averageNormalDirection; // if I want to lerp, make sure to also lerp the other rotation(transform.LookAt), especially with the same tick/time-amount(t).
 	}
 
 	private void DefaultMovement() 
