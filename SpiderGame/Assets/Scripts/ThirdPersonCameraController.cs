@@ -3,11 +3,10 @@ using UnityEngine;
 
 public class ThirdPersonCameraController : MonoBehaviour
 {
-	// [SerializeField] private Transform followTarget;
+	[SerializeField] private CinemachineVirtualCamera cameraToZoom;
 	[SerializeField] private float rotationSpeed = 1f;
 	[SerializeField] private float smoothTime = 10f;
 	
-	private CinemachineVirtualCamera cmVCamera;
 	private CinemachineComponentBase componentBase;
 	private Transform cameraParent;
 	private Vector3 currentVelocity;
@@ -19,9 +18,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private void Start()
 	{
 		cameraParent = transform.parent;
-		cmVCamera = GetComponent<CinemachineVirtualCamera>();
 
-		componentBase = cmVCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
+		componentBase = cameraToZoom.GetCinemachineComponent(CinemachineCore.Stage.Body);
 		if (componentBase is CinemachineFramingTransposer)
 		{
 			(componentBase as CinemachineFramingTransposer).m_CameraDistance = 0.3f;
@@ -49,7 +47,10 @@ public class ThirdPersonCameraController : MonoBehaviour
 
 		if (componentBase is CinemachineFramingTransposer)
 		{
-			(componentBase as CinemachineFramingTransposer).m_CameraDistance -= Input.GetAxis("Mouse ScrollWheel");
+			float cameraDistance = (componentBase as CinemachineFramingTransposer).m_CameraDistance -= Input.GetAxis("Mouse ScrollWheel");
+			float zoomValue = Mathf.Clamp(cameraDistance, 0.1f, 0.5f);
+			
+			(componentBase as CinemachineFramingTransposer).m_CameraDistance = zoomValue;
 		}
 	}
 }
