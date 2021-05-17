@@ -18,7 +18,6 @@ public class SpringJointWeb : MonoBehaviour
     public GameObject thirdPersonCamera;
     public GameObject firstPersonCamera;
     public GameObject targetPointPrefab;
-    public GameObject webStartPosition;
 
     public bool isSwingingWeb = false;
 
@@ -49,13 +48,17 @@ public class SpringJointWeb : MonoBehaviour
             {
                 StartWebGrapple();
             }
-            else if (Input.GetMouseButtonUp(0))
+            else if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
             {
                 StopWeb();
             }
+            else if (Input.GetMouseButtonDown(1))
+            {
+                StartSwingString();
+            }
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
         {
             StopWeb();
         }
@@ -69,11 +72,12 @@ public class SpringJointWeb : MonoBehaviour
     void StartWebGrapple()
     {
         RaycastHit hit;
-        if (Physics.Raycast(webStartPosition.transform.position, Camera.main.transform.forward, out hit, maxDistance))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, maxDistance))
         {
             spiderAudio.WebShoot();
 
             isSwingingWeb = true;
+  //          spiderAnimator.SetBool("Web", true);
             toggleCameras.DisableFPSCamera();
             currentState = State.IsSwinging;
             GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);

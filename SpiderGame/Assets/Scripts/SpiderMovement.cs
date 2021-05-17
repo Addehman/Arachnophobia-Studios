@@ -118,11 +118,11 @@ public class SpiderMovement : MonoBehaviour
 	private Transform cam;
 	private Vector3 myNormal;
 	private float turnSmoothVelocity;
-	public float gravityValue = -0f;
-	public float sprintMulti;
+	private float gravityValue = -9.82f;
+	private float sprintMulti;
 	private VacuumBlackhole vacuumBlackhole;
 	private SpringJointWeb springJointWeb;
-	public float vertical;
+	private float vertical;
 	private float horizontal;
 
 	int randomIdle;

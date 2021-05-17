@@ -21,7 +21,7 @@ public class ToggleCameras : MonoBehaviour
 	{
 		if (fpsCamera != null)
 		{
-			if (Input.GetMouseButtonDown(1))
+			if (Input.GetButtonDown("Camera"))
 			{
 				if (!boosted)
 				{
