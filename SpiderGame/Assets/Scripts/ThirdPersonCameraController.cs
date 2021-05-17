@@ -44,7 +44,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 		// cameraParent.rotation = Quaternion.Slerp(cameraParent.rotation, targetRot, lerpSpeed * Time.deltaTime);
 		// cameraParent.rotation = Quaternion.Euler(targetRot.eulerAngles.x + mouseY, targetRot.eulerAngles.y + mouseX, 0f);
 
-		cameraParent.rotation = Quaternion.Euler(mouseY, mouseX, 0f);
+		cameraParent.localRotation = Quaternion.Euler(mouseY, mouseX, 0f);
 		// cameraParent.position = Vector3.SmoothDamp(cameraParent.position, followTarget.position, ref currentVelocity, smoothTime);
 
 		if (componentBase is CinemachineFramingTransposer)
