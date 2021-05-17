@@ -13,7 +13,6 @@ public class UIInventory : MonoBehaviour
     private void Awake()
     {
         uIItems = new List<UIItem>();
-        /*        numberOfSlots = 9;*/
 
         InstantiateSlotPrefab();
     }

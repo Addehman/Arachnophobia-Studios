@@ -442,25 +442,25 @@ public class SpiderMovement : MonoBehaviour
 
 	private void SpiderJump()
 	{
-		if (Input.GetKey(KeyCode.W) == false && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 50)
+		if (Input.GetKey(KeyCode.W) == false && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.maxStamina >= 0.1f)
 		{
 			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce(transform.up * playerSettings.jumpUpStrength);
 			debugSettings.isGrounded = false;
-			StaminaBar.staminaBarInstance.UseStamina(50);
+			StaminaBar.staminaBarInstance.UseStamina(0.1f);
 		}
-		else if (Input.GetKey(KeyCode.W) && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 50)
+		else if (Input.GetKey(KeyCode.W) && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.maxStamina >= 0.1f)
 		{
 			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce((transform.up + transform.forward) * playerSettings.jumpFwdStrength);
 			debugSettings.isGrounded = false;
-			StaminaBar.staminaBarInstance.UseStamina(50);
+			StaminaBar.staminaBarInstance.UseStamina(0.1f);
 		}
 	}
 	// Binds key for player to use to increase move speed.
 	private void Sprint()
 	{
-		if (Input.GetButton("Sprint") && StaminaBar.staminaBarInstance.currentStamina >= 1)
+		if (Input.GetButton("Sprint") && StaminaBar.staminaBarInstance.maxStamina >= 0.0015f)
 		{
 			if (debugSettings.isPlayerBeingVacuumed == true)
 			{
@@ -471,7 +471,7 @@ public class SpiderMovement : MonoBehaviour
 				sprintMulti = playerSettings.translateSprintMultiAmount;
 			}
 
-			StaminaBar.staminaBarInstance.UseStamina(1);
+			StaminaBar.staminaBarInstance.UseStamina(0.0015f);
 		}
 
         else
