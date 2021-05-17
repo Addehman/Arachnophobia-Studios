@@ -77,7 +77,7 @@ public class PlayerSettings
 	public float jumpFwdStrength = 50f;
 	public float playerToGroundRange = 0.3f;
 	public float turnSmoothTime = 0.1f;
-	public float turnSpeed = 90f;
+	public float turnSpeed = 180f;
 }
 
 [System.Serializable]
