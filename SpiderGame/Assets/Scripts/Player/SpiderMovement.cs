@@ -237,8 +237,8 @@ public class SpiderMovement : MonoBehaviour
 			// DefaultMovement();
 			// CameraDirectionMovement();
 
-			SetPlayerLocalUpDirection();
 			SetLookDirection();
+			SetPlayerLocalUpDirection();
 			RigidbodyMovement();
 
 			// RotateWithEddie();
@@ -443,7 +443,9 @@ public class SpiderMovement : MonoBehaviour
 			debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
 		}
 
-		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, rotationSlerpSpeed * Time.deltaTime);
+		/*
+		// myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, rotationSlerpSpeed * Time.deltaTime);
+		myNormal = debugSettings.averageNormalDirection;
 		// myNormal = debugSettings.averageNormalDirection;
 		// find forward direction with new myNormal:
 		Vector3 myForward = Vector3.Cross(transform.right, myNormal);
@@ -455,9 +457,9 @@ public class SpiderMovement : MonoBehaviour
 		// movementParent.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSlerpSpeed * Time.deltaTime);
 
 		
-		movementParent.transform.rotation = targetRot;
+		movementParent.transform.rotation = targetRot;*/
 
-		// movementParent.transform.up = debugSettings.averageNormalDirection; // if I want to lerp, make sure to also lerp the other rotation(transform.LookAt), especially with the same tick/time-amount(t).
+		movementParent.transform.up = debugSettings.averageNormalDirection; // if I want to lerp, make sure to also lerp the other rotation(transform.LookAt), especially with the same tick/time-amount(t).
 	}
 
 	private void DefaultMovement() 
