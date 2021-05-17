@@ -53,6 +53,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 			float zoomValue = Mathf.Clamp(cameraDistance, minZoom, maxZoom);
 			
 			(componentBase as CinemachineFramingTransposer).m_CameraDistance = zoomValue;
+			// (componentBase as CinemachineFramingTransposer).m_TrackedObjectOffset = 
 		}
 	}
 }
