@@ -97,7 +97,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4310413171695492371}
   m_Layer: 2
-  m_Name: cameraTarget_1
+  m_Name: CustomRotationTPCameraCM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -214,11 +214,11 @@ MonoBehaviour:
   m_DistanceLimit: 0
   m_MinimumOcclusionTime: 0
   m_CameraRadius: 0.01
-  m_Strategy: 0
+  m_Strategy: 2
   m_MaximumEffort: 4
   m_SmoothingTime: 0
-  m_Damping: 0.6
-  m_DampingWhenOccluded: 0.6
+  m_Damping: 0
+  m_DampingWhenOccluded: 0
   m_OptimalTargetDistance: 0
 --- !u!114 &4310413171799943085
 MonoBehaviour:
@@ -233,7 +233,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 1
-  cameraTarget: {fileID: 4310413171695492371}
-  targetToRotate: {fileID: 0}
-  getUpFrom: {fileID: 0}
-  allowInput: 1
