@@ -461,13 +461,13 @@ public class SpiderMovement : MonoBehaviour
 		{
 			spiderAnimator.SetBool("Web", false);
 		}
-	
-		if ((vertical < -0.1f || vertical > 0.1f) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true)
+
+		float movementInput = Mathf.Abs(vertical + horizontal);
+		if (movementInput > 0.01f && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true)
 		{
 			spiderAnimator.SetBool("Walk", true);
 		}
-
-		else if (vertical > -0.1f && vertical < 0.1f && spiderAnimator.GetBool("Walk") == true)
+		else if (movementInput < 0.01f && spiderAnimator.GetBool("Walk") == true)
 		{
 			spiderAnimator.SetBool("Walk", false);
 		}

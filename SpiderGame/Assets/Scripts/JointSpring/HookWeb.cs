@@ -1,83 +1,89 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class HookWeb : MonoBehaviour
 {
-    [SerializeField] Transform debugHitPointTransform;
-    public GameObject webStartPosition;
-    SpiderMovement spiderMovement;
-    State currentState;
+	[SerializeField] Transform debugHitPointTransform;
+	public GameObject webStartPosition;
+	public float speed = 1f;
 
-    public float speed = 0.005f;
+	public event Action DisableFPSCamera;
 
-    Vector3 hookShotPosition;
-    Vector3 newTransformUp;
-    Vector3 previousTransformUp;
+	SpiderMovement spiderMovement;
+	State currentState;
 
-    enum State
-    {
-        Normal,
-        HookFlying,
-    }
-    void Start()
-    {
-        spiderMovement = GetComponent<SpiderMovement>();
-    }
+	Vector3 hookShotPosition;
+	Vector3 newTransformUp;
+	Vector3 previousTransformUp;
+	Vector3 oldPosition;
 
-    void Update()
-    {
-        //Debug.Log(Vector3.Distance(transform.position, hookShotPosition));
-        if (currentState == State.Normal)
-        {
-            HandleHookShotStart();
-        }
+	enum State
+	{
+		Normal,
+		HookFlying,
+	}
+	void Start()
+	{
+		spiderMovement = GetComponent<SpiderMovement>();
+	}
 
-        if (currentState == State.HookFlying)
-        {
-            HandleHookShotMovement();
-        }
-    }
+	void Update()
+	{
+		//Debug.Log(Vector3.Distance(transform.position, hookShotPosition));
+		if (currentState == State.Normal)
+		{
+			HandleHookShotStart();
+		}
 
-    void HandleHookShotStart()
-    {
-        if (Input.GetButtonDown("HookShotWeb"))
-        {
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit raycastHit))
-            {
-                previousTransformUp = transform.up;
-                newTransformUp = raycastHit.normal;
+		if (currentState == State.HookFlying)
+		{
+			HandleHookShotMovement();
+		}
+	}
 
-                Debug.Log(newTransformUp);
+	void HandleHookShotStart()
+	{
+		if (Input.GetButtonDown("HookShotWeb"))
+		{
+			if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit raycastHit))
+			{
+				previousTransformUp = transform.up;
+				newTransformUp = raycastHit.normal;
 
-                debugHitPointTransform.position = raycastHit.point;
-                hookShotPosition = raycastHit.point;
-                currentState = State.HookFlying;
-            }
-        }
-    }
+				Debug.Log(newTransformUp);
 
-    void HandleHookShotMovement()
-    {
-        //   Vector3 hookShotDirection = (hookShotPosition - transform.position).normalized;
-        Vector3 oldPosition = transform.position;
-        float hookShotSpeed = Vector3.Distance(oldPosition, hookShotPosition);
+				debugHitPointTransform.position = raycastHit.point;
+				hookShotPosition = raycastHit.point;
+				oldPosition = transform.position;
 
-        spiderMovement.gravityValue = 0f;
+				currentState = State.HookFlying;
+				if (DisableFPSCamera != null)
+				{
+					DisableFPSCamera();
+				}
+			}
+		}
+	}
 
-        transform.position = Vector3.Lerp(oldPosition, hookShotPosition, speed);
+	void HandleHookShotMovement()
+	{
+		//   Vector3 hookShotDirection = (hookShotPosition - transform.position).normalized;
+		oldPosition = transform.position;
+		float hookShotSpeed = Vector3.Distance(oldPosition, hookShotPosition);
 
-        for (int i = 0; i < 1; i++)
-        {
-            transform.up = newTransformUp;
-        }
+		spiderMovement.gravityValue = 0f;
 
-        //transform.up = Vector3.Lerp(previousTransformUp, newTransformUp, speed);
+		transform.position = Vector3.Lerp(oldPosition, hookShotPosition, speed * Time.deltaTime);
 
-        if (Vector3.Distance(transform.position, hookShotPosition) < 0.02f)
-        {
-            spiderMovement.gravityValue = -9.82f;
-            currentState = State.Normal;
-        }
-    }
+		transform.up = newTransformUp;
+
+		//transform.up = Vector3.Lerp(previousTransformUp, newTransformUp, speed);
+
+		if (Vector3.Distance(transform.position, hookShotPosition) < 0.02f || spiderMovement.debugSettings.isGrounded == true && Vector3.Distance(transform.position, hookShotPosition) < 0.1f)
+		{
+			spiderMovement.gravityValue = -9.82f;
+			currentState = State.Normal;
+		}
+	}
 }

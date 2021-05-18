@@ -2,18 +2,21 @@ using UnityEngine;
 using System;
 
 public class ToggleCameras : MonoBehaviour
-{
+{	
 	public event Action<bool> ActivationFPSCam;
 
 	public GameObject crosshair;
 	public bool boosted = false;
-	public int PriorityBoostAmount = 10;
+	public int PriorityBoostAmount = 20;
 
 	private Cinemachine.CinemachineVirtualCamera aimCamera;
+	private HookWeb hookWeb;
 
 	void Start()
 	{
 		aimCamera = GameObject.Find("cmAimCamera").GetComponent<Cinemachine.CinemachineVirtualCamera>();
+		hookWeb = FindObjectOfType<HookWeb>();
+		hookWeb.DisableFPSCamera += DisableFPSCamera;
 	}
 
 	private void Update()
@@ -38,7 +41,7 @@ public class ToggleCameras : MonoBehaviour
 
 	public void EnableFPSCamera()
 	{
-		aimCamera.Priority += PriorityBoostAmount;
+		aimCamera.Priority = PriorityBoostAmount;
 		boosted = true;
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
@@ -50,7 +53,7 @@ public class ToggleCameras : MonoBehaviour
 
 	public void DisableFPSCamera()
 	{
-		aimCamera.Priority -= PriorityBoostAmount;
+		aimCamera.Priority = PriorityBoostAmount - PriorityBoostAmount;
 		boosted = false;
 		if (ActivationFPSCam != null)
 		{
