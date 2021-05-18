@@ -77,7 +77,28 @@ public class ItemDirectory : MonoBehaviour
                {"Flavor", 3},
                {"Vitamin C", 1},
                {"French nails",2}
-           })
+           }),
+
+              new ItemInfo(7, "Tbone", "", new Dictionary<string, int>
+           {
+               {"Protein", 10},
+               {"Vitamin B12", 6},
+               {"Iron",50}
+           }),
+
+              new ItemInfo(8, "ChickenBone", "", new Dictionary<string, int>
+           {
+               {"te", 32},
+               {"de D", 21},
+               {"gre",101}
+           }),
+
+              new ItemInfo(9, "Cookie", "", new Dictionary<string, int>
+           {
+               {"Sugar", 301},
+               {"Chocolate", 10},
+               {"Diabetes",9000}
+           }),
         };
     }
 }

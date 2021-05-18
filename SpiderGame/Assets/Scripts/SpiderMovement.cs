@@ -423,7 +423,7 @@ public class SpiderMovement : MonoBehaviour
 	// Binds key for player to use to increase move speed.
 	private void Sprint()
 	{
-		if (Input.GetButton("Sprint") && StaminaBar.staminaBarInstance.currentStamina >= 0.0050f)
+		if (Input.GetButton("Sprint") && Input.GetKey(KeyCode.W) && StaminaBar.staminaBarInstance.currentStamina >= 0.0050f)
 		{
 			if (debugSettings.isPlayerBeingVacuumed == true)
 			{
