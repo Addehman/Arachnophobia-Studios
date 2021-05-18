@@ -102,7 +102,6 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public Rigidbody rb;
 	[HideInInspector] public Vector3 currentPosition;
 
-	[SerializeField] private GameObject cmTPCamera;
 	[SerializeField] private GameObject spiderModel;
 	public Animator spiderAnimator;
 
@@ -113,7 +112,7 @@ public class SpiderMovement : MonoBehaviour
 	public PlayerSettings playerSettings;
 	public DebugSettings debugSettings;
 
-	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any}
+	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any, ForwardsEdgeCheck}
 	private RaycastTypes raycastType;
 	private Transform cam;
 	private Vector3 myNormal;
@@ -269,7 +268,7 @@ public class SpiderMovement : MonoBehaviour
 		RaycastHelper(transform.TransformDirection(Vector3.left) + transform.TransformDirection(Vector3.down), 0f, RaycastTypes.Any);
 
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod1 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown1, 0f, RaycastTypes.Forwards);
-		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod2 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown2, 0f, RaycastTypes.Forwards);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod2 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown2, 0f, RaycastTypes.ForwardsEdgeCheck);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod3 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown3, 0f, RaycastTypes.Forwards);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod4 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown4, 0f, RaycastTypes.Forwards);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod5 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown5, 0f, RaycastTypes.Forwards);
@@ -369,7 +368,7 @@ public class SpiderMovement : MonoBehaviour
 					RaycastWeightMulti(debugSettings.averageNormalDirections, raycastGeneralSettings.backRaycastWeightMultiplier, hit.normal);
 				}
 				break;
-			case RaycastTypes.Forwards:
+			case RaycastTypes.ForwardsEdgeCheck:
 				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastGeneralSettings.raycastReach, raycastGeneralSettings.layerMask))
 				{
 					if (debugSettings.doDrawRayGizmos == true)
@@ -382,6 +381,16 @@ public class SpiderMovement : MonoBehaviour
 				else
 				{
 					debugSettings.fwdRayNoHit = true;
+				}
+				break;
+			case RaycastTypes.Forwards:
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastGeneralSettings.raycastReach, raycastGeneralSettings.layerMask))
+				{
+					if (debugSettings.doDrawRayGizmos == true)
+					{
+						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastGeneralSettings.raycastReach);
+					}
+					debugSettings.averageNormalDirections.Add(hit.normal);
 				}
 				break;
 			case RaycastTypes.Backwards:
@@ -409,11 +418,6 @@ public class SpiderMovement : MonoBehaviour
 					debugSettings.averageNormalDirections.Add(hit.normal);
 				}
 				break;
-		// else if (isBackRay == true)
-		// {
-		// 	RaycastHit hit;
-		// 	
-		// }
 		}
 	}
 
