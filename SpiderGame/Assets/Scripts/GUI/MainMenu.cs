@@ -15,7 +15,7 @@ public class MainMenu : MonoBehaviour
 
     public void HowToPlayButton()
     {
-        howToPlay.SetActive(true);
+        SceneManager.LoadScene("TutorialScene");
     }
 
     public void CreditsButton()
