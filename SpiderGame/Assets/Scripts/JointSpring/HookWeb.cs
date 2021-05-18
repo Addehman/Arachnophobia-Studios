@@ -27,7 +27,7 @@ public class HookWeb : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(Vector3.Distance(transform.position, hookShotPosition));
+      // Debug.Log(Vector3.Distance(transform.position, hookShotPosition));
         if (currentState == State.Normal)
         {
             HandleHookShotStart();

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StickyNote : MonoBehaviour
 {
-    bool stickyNoteActive = true;
+    public bool stickyNoteActive = true;
     public GameObject stickyNote;
     void Update()
     {

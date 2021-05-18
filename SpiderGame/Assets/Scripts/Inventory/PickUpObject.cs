@@ -7,12 +7,12 @@ using System;
 
 public class PickUpObject : MonoBehaviour
 {
-    bool canPickUp = false;
+    public bool canPickUp = false;
     public bool isAllItemsCollected = false;
 
     public int itemID;
     [SerializeField]
-    int numberOfItemsPickedUp;
+    public int numberOfItemsPickedUp;
 
     private Inventory inventoryOnPlayer;
     private GameObject thisObjectThatWeStandOn;
