@@ -214,13 +214,13 @@ public class SpiderMovement : MonoBehaviour
 		RaycastHelper(transform.TransformDirection(Vector3.back) * backwardsRaycastAdjustment.rayBwdMod5 + transform.TransformDirection(Vector3.down) * backwardsRaycastAdjustment.rayBwdModDown5, mainRaycastAdjustments.raysBackOriginOffset, RaycastTypes.Backwards);
 		RaycastHelper(transform.TransformDirection(Vector3.back) * backwardsRaycastAdjustment.rayBwdMod6 + transform.TransformDirection(Vector3.down) * backwardsRaycastAdjustment.rayBwdModDown6, mainRaycastAdjustments.raysBackOriginOffset, RaycastTypes.Backwards);
 		// Edge Raycasts:
-		if (debugSettings.fwdRayNoHit == true && Input.GetKey(KeyCode.W))
+		if (debugSettings.fwdRayNoHit == true && vertical > 0f)
 		{
 			playerSettings.translatePlayerSpeed = playerSettings.translateSlowPlayerSpeed;
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset);
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset1);
 		}
-		else if (debugSettings.backRayNoHit == true && Input.GetKey(KeyCode.S))
+		else if (debugSettings.backRayNoHit == true && vertical < 0f)
 		{
 			playerSettings.translatePlayerSpeed = playerSettings.translateSlowPlayerSpeed;
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset);
@@ -405,14 +405,16 @@ public class SpiderMovement : MonoBehaviour
 
 	private void SpiderJump()
 	{
-		if (Input.GetKey(KeyCode.W) == false && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f)
+	// Normal Up-Jump
+		if (vertical <= 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f)
 		{
 			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce(transform.up * playerSettings.jumpUpStrength);
 			debugSettings.isGrounded = false;
 			StaminaBar.staminaBarInstance.UseStamina(0.1f);
 		}
-		else if (Input.GetKey(KeyCode.W) && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f)
+	// Forward-Jump
+		else if (vertical > 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f)
 		{
 			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce((transform.up + transform.forward) * playerSettings.jumpFwdStrength);
@@ -423,7 +425,7 @@ public class SpiderMovement : MonoBehaviour
 	// Binds key for player to use to increase move speed.
 	private void Sprint()
 	{
-		if (Input.GetButton("Sprint") && Input.GetKey(KeyCode.W) && StaminaBar.staminaBarInstance.currentStamina >= 0.0050f)
+		if ((Input.GetButton("Sprint") && vertical > 0f || Input.GetAxis("Sprint") < 0f) && StaminaBar.staminaBarInstance.currentStamina >= 0.0050f)
 		{
 			if (debugSettings.isPlayerBeingVacuumed == true)
 			{
@@ -437,13 +439,12 @@ public class SpiderMovement : MonoBehaviour
 			StaminaBar.staminaBarInstance.UseStamina(0.0050f);
 		}
 
-
 		if (StaminaBar.staminaBarInstance.currentStamina < 0.0050f)
 		{
 			sprintMulti = 0f;
 		}
 
-		if (Input.GetButtonUp("Sprint"))
+		if (Input.GetButtonUp("Sprint") || vertical <= 0f || Input.GetAxis("Sprint") >= 0f)
 		{
 			sprintMulti = 0f;
 		}
@@ -461,12 +462,12 @@ public class SpiderMovement : MonoBehaviour
 			spiderAnimator.SetBool("Web", false);
 		}
 	
-		if (((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true))
+		if ((vertical < -0.1f || vertical > 0.1f) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true)
 		{
 			spiderAnimator.SetBool("Walk", true);
 		}
 
-		else if (((Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.W)) && spiderAnimator.GetBool("Walk") == true))
+		else if (vertical > -0.1f && vertical < 0.1f && spiderAnimator.GetBool("Walk") == true)
 		{
 			spiderAnimator.SetBool("Walk", false);
 		}

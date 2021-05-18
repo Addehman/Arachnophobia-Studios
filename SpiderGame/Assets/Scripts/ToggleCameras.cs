@@ -5,23 +5,22 @@ public class ToggleCameras : MonoBehaviour
 {
 	public event Action<bool> ActivationFPSCam;
 
-	// public KeyCode ActivationKey = KeyCode.LeftControl;
-	public int PriorityBoostAmount = 10;
 	public GameObject crosshair;
-	public Cinemachine.CinemachineVirtualCamera fpsCamera;
-
 	public bool boosted = false;
+	public int PriorityBoostAmount = 10;
 
-	// void Start()
-	// {
-	// 	fpsCamera = GetComponent<Cinemachine.CinemachineVirtualCameraBase>();
-	// }
+	private Cinemachine.CinemachineVirtualCamera aimCamera;
+
+	void Start()
+	{
+		aimCamera = GameObject.Find("cmAimCamera").GetComponent<Cinemachine.CinemachineVirtualCamera>();
+	}
 
 	private void Update()
 	{
-		if (fpsCamera != null)
+		if (aimCamera != null)
 		{
-			if (Input.GetMouseButtonUp(1))
+			if (Input.GetButtonDown("Aim"))
 			{
 				if (!boosted)
 				{
@@ -39,7 +38,7 @@ public class ToggleCameras : MonoBehaviour
 
 	public void EnableFPSCamera()
 	{
-		fpsCamera.Priority += PriorityBoostAmount;
+		aimCamera.Priority += PriorityBoostAmount;
 		boosted = true;
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
@@ -51,7 +50,7 @@ public class ToggleCameras : MonoBehaviour
 
 	public void DisableFPSCamera()
 	{
-		fpsCamera.Priority -= PriorityBoostAmount;
+		aimCamera.Priority -= PriorityBoostAmount;
 		boosted = false;
 		if (ActivationFPSCam != null)
 		{

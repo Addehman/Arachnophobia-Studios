@@ -41,7 +41,7 @@ public class HookWeb : MonoBehaviour
 
     void HandleHookShotStart()
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetButtonDown("HookShotWeb"))
         {
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit raycastHit))
             {

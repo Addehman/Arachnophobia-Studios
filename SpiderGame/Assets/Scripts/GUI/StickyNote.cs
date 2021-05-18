@@ -8,7 +8,7 @@ public class StickyNote : MonoBehaviour
     public GameObject stickyNote;
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetButtonDown("Inventory"))
         {
             if (stickyNoteActive == true)
             {
