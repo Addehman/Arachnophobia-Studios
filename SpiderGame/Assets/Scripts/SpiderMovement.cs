@@ -153,86 +153,17 @@ public class SpiderMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		debugSettings.averageNormalDirections.Clear();
 		currentPosition = transform.position;
 
 		vertical = Input.GetAxisRaw("Vertical");
 		horizontal = Input.GetAxisRaw("Horizontal");
 
 		RaycastsToCast();
+		SetPlayerUpDirection();
 		PlayerRotation();
 		Sprint();
 		SpiderJump();
-
-		if (springJointWeb.isSwingingWeb == true)
-        {
-			spiderAnimator.SetBool("Web", true);
-        }
-
-		else if (springJointWeb.isSwingingWeb == false)
-		{
-			spiderAnimator.SetBool("Web", false);
-		}
-
-
-		for (int i = 0; i < debugSettings.averageNormalDirections.Count; i++)
-		{
-			debugSettings.averageNormalDirection += debugSettings.averageNormalDirections[i];
-		}
-		
-		debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
-
-		if (debugSettings.averageNormalDirections.Count == 0)
-		{
-			debugSettings.averageNormalDirection = Vector3.up;
-		}
-
-		var lerpSpeed = 10f;
-
-		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
-		// find forward direction with new myNormal:
-		Vector3 myForward = Vector3.Cross(transform.right, myNormal);
-		// align character to the new myNormal while keeping the forward direction:
-		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
-		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
-		//try and make tha camera rotate with the player. Doesn't work as of now.
-		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
-
-		if (((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true))
-		{
-			spiderAnimator.SetBool("Walk", true);
-		}
-
-		else if (((Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.W)) && spiderAnimator.GetBool("Walk") == true))
-		{
-			spiderAnimator.SetBool("Walk", false);
-		}
-
-		randomIdleTimer += Time.deltaTime;
-		if (randomIdleTimer >= 10f)
-		{
-			randomIdle = Random.Range(0, 2);
-
-			if(randomIdle == 0)
-			{
-				spiderAnimator.SetTrigger("Idle_Shake");
-			}
-			else if(randomIdle == 1)
-			{
-				spiderAnimator.SetTrigger("Idle_LookAround");
-			}
-
-			randomIdleTimer = 0f;
-		}
-
-		if (debugSettings.isFpsEnabled == true)
-		{
-			spiderModel.SetActive(false);
-		}
-		else
-		{
-			spiderModel.SetActive(true);
-		}
+		SpiderAnimation();
 	}
 
 	private void FixedUpdate()
@@ -429,6 +360,35 @@ public class SpiderMovement : MonoBehaviour
 		}
 	}
 
+	private void SetPlayerUpDirection()
+	{
+		debugSettings.averageNormalDirections.Clear();
+
+
+		for (int i = 0; i < debugSettings.averageNormalDirections.Count; i++)
+		{
+			debugSettings.averageNormalDirection += debugSettings.averageNormalDirections[i];
+		}
+		
+		debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
+
+		if (debugSettings.averageNormalDirections.Count == 0)
+		{
+			debugSettings.averageNormalDirection = Vector3.up;
+		}
+
+		var lerpSpeed = 10f;
+
+		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
+		// find forward direction with new myNormal:
+		Vector3 myForward = Vector3.Cross(transform.right, myNormal);
+		// align character to the new myNormal while keeping the forward direction:
+		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
+		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+		//try and make tha camera rotate with the player. Doesn't work as of now.
+		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+	}
+
 	private void TranslateMovement()
 	{
 		transform.Translate(0, 0, vertical * (playerSettings.translatePlayerSpeed + sprintMulti) * Time.deltaTime);
@@ -480,13 +440,62 @@ public class SpiderMovement : MonoBehaviour
 
 
 		if (StaminaBar.staminaBarInstance.currentStamina < 0.0050f)
-        {
+		{
 			sprintMulti = 0f;
-        }
+		}
 
 		if (Input.GetButtonUp("Sprint"))
 		{
 			sprintMulti = 0f;
+		}
+	}
+
+	private void SpiderAnimation()
+	{
+		if (springJointWeb.isSwingingWeb == true)
+		{
+			spiderAnimator.SetBool("Web", true);
+		}
+
+		else if (springJointWeb.isSwingingWeb == false)
+		{
+			spiderAnimator.SetBool("Web", false);
+		}
+	
+		if (((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true))
+		{
+			spiderAnimator.SetBool("Walk", true);
+		}
+
+		else if (((Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.W)) && spiderAnimator.GetBool("Walk") == true))
+		{
+			spiderAnimator.SetBool("Walk", false);
+		}
+
+		randomIdleTimer += Time.deltaTime;
+		if (randomIdleTimer >= 10f)
+		{
+			randomIdle = Random.Range(0, 2);
+
+			if (randomIdle == 0)
+			{
+				spiderAnimator.SetTrigger("Idle_Shake");
+			}
+			else if (randomIdle == 1)
+			{
+				spiderAnimator.SetTrigger("Idle_LookAround");
+			}
+
+			randomIdleTimer = 0f;
+		}
+
+		if (debugSettings.isFpsEnabled == true)
+		{
+			spiderModel.SetActive(false);
+		}
+		else
+		{
+			spiderModel.SetActive(true);
 		}
 	}
 }
