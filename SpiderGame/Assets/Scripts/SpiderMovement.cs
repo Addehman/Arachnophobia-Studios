@@ -111,13 +111,13 @@ public class SpiderMovement : MonoBehaviour
 	public RaycastGeneralSettings raycastGeneralSettings;
 	public PlayerSettings playerSettings;
 	public DebugSettings debugSettings;
+	public float gravityValue = -9.82f;
 
 	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any, ForwardsEdgeCheck}
 	private RaycastTypes raycastType;
 	private Transform cam;
 	private Vector3 myNormal;
 	private float turnSmoothVelocity;
-	private float gravityValue = -9.82f;
 	private float sprintMulti;
 	private VacuumBlackhole vacuumBlackhole;
 	private SpringJointWeb springJointWeb;
@@ -153,6 +153,8 @@ public class SpiderMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		debugSettings.averageNormalDirections.Clear();
+
 		currentPosition = transform.position;
 
 		vertical = Input.GetAxisRaw("Vertical");
@@ -362,9 +364,6 @@ public class SpiderMovement : MonoBehaviour
 
 	private void SetPlayerUpDirection()
 	{
-		debugSettings.averageNormalDirections.Clear();
-
-
 		for (int i = 0; i < debugSettings.averageNormalDirections.Count; i++)
 		{
 			debugSettings.averageNormalDirection += debugSettings.averageNormalDirections[i];
