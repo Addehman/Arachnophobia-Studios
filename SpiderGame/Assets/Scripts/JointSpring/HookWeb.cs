@@ -27,7 +27,7 @@ public class HookWeb : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(Vector3.Distance(transform.position, hookShotPosition));
+        //Debug.Log(Vector3.Distance(transform.position, hookShotPosition));
         if (currentState == State.Normal)
         {
             HandleHookShotStart();
@@ -48,6 +48,8 @@ public class HookWeb : MonoBehaviour
                 previousTransformUp = transform.up;
                 newTransformUp = raycastHit.normal;
 
+                Debug.Log(newTransformUp);
+
                 debugHitPointTransform.position = raycastHit.point;
                 hookShotPosition = raycastHit.point;
                 currentState = State.HookFlying;
@@ -58,15 +60,21 @@ public class HookWeb : MonoBehaviour
     void HandleHookShotMovement()
     {
         //   Vector3 hookShotDirection = (hookShotPosition - transform.position).normalized;
-        Vector3 currentPosition = transform.position;
-        float hookShotSpeed = Vector3.Distance(currentPosition, hookShotPosition);
+        Vector3 oldPosition = transform.position;
+        float hookShotSpeed = Vector3.Distance(oldPosition, hookShotPosition);
 
         spiderMovement.gravityValue = 0f;
 
-        transform.position = Vector3.Lerp(currentPosition, hookShotPosition, speed);
-        transform.up = Vector3.Lerp(previousTransformUp, newTransformUp, speed);
+        transform.position = Vector3.Lerp(oldPosition, hookShotPosition, speed);
 
-        if (Vector3.Distance(transform.position, hookShotPosition) < 0.05f)
+        for (int i = 0; i < 1; i++)
+        {
+            transform.up = newTransformUp;
+        }
+
+        //transform.up = Vector3.Lerp(previousTransformUp, newTransformUp, speed);
+
+        if (Vector3.Distance(transform.position, hookShotPosition) < 0.02f)
         {
             spiderMovement.gravityValue = -9.82f;
             currentState = State.Normal;
