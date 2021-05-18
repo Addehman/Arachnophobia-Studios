@@ -10,6 +10,7 @@ public class HookWeb : MonoBehaviour
 
 	public event Action DisableFPSCamera;
 
+	ThirdPersonCameraController tpcController;
 	SpiderMovement spiderMovement;
 	State currentState;
 
@@ -26,6 +27,7 @@ public class HookWeb : MonoBehaviour
 	void Start()
 	{
 		spiderMovement = GetComponent<SpiderMovement>();
+		tpcController = FindObjectOfType<ThirdPersonCameraController>();
 	}
 
 	void Update()
@@ -77,6 +79,8 @@ public class HookWeb : MonoBehaviour
 		transform.position = Vector3.Lerp(oldPosition, hookShotPosition, speed * Time.deltaTime);
 
 		transform.up = newTransformUp;
+
+		tpcController.RecenterCamera();
 
 		//transform.up = Vector3.Lerp(previousTransformUp, newTransformUp, speed);
 

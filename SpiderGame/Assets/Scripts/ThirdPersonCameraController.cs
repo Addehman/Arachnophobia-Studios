@@ -58,9 +58,9 @@ public class ThirdPersonCameraController : MonoBehaviour
 			cameraInputX += Input.GetAxis("CameraInputX") * mouseRotationSpeed;
 			cameraInputY -= Input.GetAxis("CameraInputY") * mouseRotationSpeed;
 			if (tpCameraComponentBase is CinemachinePOV)
-		{
-			(tpCameraComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = true;
-		}
+			{
+				(tpCameraComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = true;
+			}
 		}
 		
 		cameraParent.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
@@ -73,5 +73,11 @@ public class ThirdPersonCameraController : MonoBehaviour
 			(zoomCameraComponentBase as CinemachineFramingTransposer).m_CameraDistance = zoomValue;
 			// (componentBase as CinemachineFramingTransposer).m_TrackedObjectOffset = 
 		}
+	}
+
+	public void RecenterCamera()
+	{
+		cameraInputX = 0f;
+		cameraInputY = 0f;
 	}
 }
