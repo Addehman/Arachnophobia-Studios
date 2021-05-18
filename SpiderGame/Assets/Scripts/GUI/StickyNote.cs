@@ -4,17 +4,28 @@ using UnityEngine;
 
 public class StickyNote : MonoBehaviour
 {
+    public bool stickyNoteActive = true;
     public GameObject stickyNote;
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            stickyNote.SetActive(true);
-        }
+            if (stickyNoteActive == true)
+            {
+                stickyNote.SetActive(true);
+                stickyNoteActive = false;
+            }
 
-        else if(Input.GetKeyUp(KeyCode.Tab))
-        {
-            stickyNote.SetActive(false);
+            else
+            {
+                stickyNote.SetActive(false);
+                stickyNoteActive = true;
+            }
         }
+        /*
+                else if(Input.GetKeyUp(KeyCode.Tab))
+                {
+                    stickyNote.SetActive(false);
+                }*/
     }
 }

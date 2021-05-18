@@ -18,7 +18,7 @@ public class ItemInfo
         this.id = id;
         this.headline = headline;
         this.description = description;
-        this.picture = Resources.Load<Sprite>("Sprites/Refrigerator/" + headline);
+        this.picture = Resources.Load<Sprite>("Sprites/PickupsForInventory/" + headline);
         this.stats = stats;
     }
 
@@ -28,7 +28,7 @@ public class ItemInfo
         this.id = ItemInfo.id;
         this.headline = ItemInfo.headline;
         this.description = ItemInfo.description;
-        this.picture = Resources.Load<Sprite>("Sprites/Refrigerator/" + ItemInfo.headline);
+        this.picture = Resources.Load<Sprite>("Sprites/PickupsForInventory/" + ItemInfo.headline);
         this.stats = ItemInfo.stats;
     }
 

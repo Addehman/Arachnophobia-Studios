@@ -77,7 +77,7 @@ public class PlayerSettings
 	public float jumpFwdStrength = 50f;
 	public float playerToGroundRange = 0.3f;
 	public float turnSmoothTime = 0.1f;
-	public float turnSpeed = 90f;
+	public float turnSpeed = 180f;
 }
 
 [System.Serializable]
@@ -102,7 +102,6 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public Rigidbody rb;
 	[HideInInspector] public Vector3 currentPosition;
 
-	[SerializeField] private GameObject cmTPCamera;
 	[SerializeField] private GameObject spiderModel;
 	public Animator spiderAnimator;
 
@@ -112,13 +111,13 @@ public class SpiderMovement : MonoBehaviour
 	public RaycastGeneralSettings raycastGeneralSettings;
 	public PlayerSettings playerSettings;
 	public DebugSettings debugSettings;
+	public float gravityValue = -9.82f;
 
-	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any}
+	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any, ForwardsEdgeCheck}
 	private RaycastTypes raycastType;
 	private Transform cam;
 	private Vector3 myNormal;
 	private float turnSmoothVelocity;
-	private float gravityValue = -9.82f;
 	private float sprintMulti;
 	private VacuumBlackhole vacuumBlackhole;
 	private SpringJointWeb springJointWeb;
@@ -155,85 +154,18 @@ public class SpiderMovement : MonoBehaviour
 	void Update()
 	{
 		debugSettings.averageNormalDirections.Clear();
+
 		currentPosition = transform.position;
 
 		vertical = Input.GetAxisRaw("Vertical");
 		horizontal = Input.GetAxisRaw("Horizontal");
 
 		RaycastsToCast();
+		SetPlayerUpDirection();
 		PlayerRotation();
 		Sprint();
 		SpiderJump();
-
-		if (springJointWeb.isSwingingWeb == true)
-        {
-			spiderAnimator.SetBool("Web", true);
-        }
-
-		else if (springJointWeb.isSwingingWeb == false)
-		{
-			spiderAnimator.SetBool("Web", false);
-		}
-
-
-		for (int i = 0; i < debugSettings.averageNormalDirections.Count; i++)
-		{
-			debugSettings.averageNormalDirection += debugSettings.averageNormalDirections[i];
-		}
-		
-		debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
-
-		if (debugSettings.averageNormalDirections.Count == 0)
-		{
-			debugSettings.averageNormalDirection = Vector3.up;
-		}
-
-		var lerpSpeed = 10f;
-
-		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
-		// find forward direction with new myNormal:
-		Vector3 myForward = Vector3.Cross(transform.right, myNormal);
-		// align character to the new myNormal while keeping the forward direction:
-		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
-		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
-		//try and make tha camera rotate with the player. Doesn't work as of now.
-		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
-
-		if (((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true))
-		{
-			spiderAnimator.SetBool("Walk", true);
-		}
-
-		else if (((Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.W)) && spiderAnimator.GetBool("Walk") == true))
-		{
-			spiderAnimator.SetBool("Walk", false);
-		}
-
-		randomIdleTimer += Time.deltaTime;
-		if (randomIdleTimer >= 10f)
-		{
-			randomIdle = Random.Range(0, 2);
-
-			if(randomIdle == 0)
-			{
-				spiderAnimator.SetTrigger("Idle_Shake");
-			}
-			else if(randomIdle == 1)
-			{
-				spiderAnimator.SetTrigger("Idle_LookAround");
-			}
-
-			randomIdleTimer = 0f;
-		}
-
-		if (debugSettings.isFpsEnabled == true)
-		{
-			spiderModel.SetActive(false);
-		}
-		else
-		{
-			spiderModel.SetActive(true);
-		}
+		SpiderAnimation();
 	}
 
 	private void FixedUpdate()
@@ -269,7 +201,7 @@ public class SpiderMovement : MonoBehaviour
 		RaycastHelper(transform.TransformDirection(Vector3.left) + transform.TransformDirection(Vector3.down), 0f, RaycastTypes.Any);
 
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod1 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown1, 0f, RaycastTypes.Forwards);
-		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod2 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown2, 0f, RaycastTypes.Forwards);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod2 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown2, 0f, RaycastTypes.ForwardsEdgeCheck);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod3 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown3, 0f, RaycastTypes.Forwards);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod4 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown4, 0f, RaycastTypes.Forwards);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod5 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown5, 0f, RaycastTypes.Forwards);
@@ -369,7 +301,7 @@ public class SpiderMovement : MonoBehaviour
 					RaycastWeightMulti(debugSettings.averageNormalDirections, raycastGeneralSettings.backRaycastWeightMultiplier, hit.normal);
 				}
 				break;
-			case RaycastTypes.Forwards:
+			case RaycastTypes.ForwardsEdgeCheck:
 				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastGeneralSettings.raycastReach, raycastGeneralSettings.layerMask))
 				{
 					if (debugSettings.doDrawRayGizmos == true)
@@ -382,6 +314,16 @@ public class SpiderMovement : MonoBehaviour
 				else
 				{
 					debugSettings.fwdRayNoHit = true;
+				}
+				break;
+			case RaycastTypes.Forwards:
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastGeneralSettings.raycastReach, raycastGeneralSettings.layerMask))
+				{
+					if (debugSettings.doDrawRayGizmos == true)
+					{
+						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastGeneralSettings.raycastReach);
+					}
+					debugSettings.averageNormalDirections.Add(hit.normal);
 				}
 				break;
 			case RaycastTypes.Backwards:
@@ -409,11 +351,6 @@ public class SpiderMovement : MonoBehaviour
 					debugSettings.averageNormalDirections.Add(hit.normal);
 				}
 				break;
-		// else if (isBackRay == true)
-		// {
-		// 	RaycastHit hit;
-		// 	
-		// }
 		}
 	}
 
@@ -423,6 +360,32 @@ public class SpiderMovement : MonoBehaviour
 		{
 			listToAddTo.Add(normalToAdd);
 		}
+	}
+
+	private void SetPlayerUpDirection()
+	{
+		for (int i = 0; i < debugSettings.averageNormalDirections.Count; i++)
+		{
+			debugSettings.averageNormalDirection += debugSettings.averageNormalDirections[i];
+		}
+		
+		debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
+
+		if (debugSettings.averageNormalDirections.Count == 0)
+		{
+			debugSettings.averageNormalDirection = Vector3.up;
+		}
+
+		var lerpSpeed = 10f;
+
+		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
+		// find forward direction with new myNormal:
+		Vector3 myForward = Vector3.Cross(transform.right, myNormal);
+		// align character to the new myNormal while keeping the forward direction:
+		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
+		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+		//try and make tha camera rotate with the player. Doesn't work as of now.
+		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 	}
 
 	private void TranslateMovement()
@@ -442,25 +405,25 @@ public class SpiderMovement : MonoBehaviour
 
 	private void SpiderJump()
 	{
-		if (Input.GetKey(KeyCode.W) == false && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 50)
+		if (Input.GetKey(KeyCode.W) == false && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f && PauseMenu.isPaused == false)
 		{
 			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce(transform.up * playerSettings.jumpUpStrength);
 			debugSettings.isGrounded = false;
-			StaminaBar.staminaBarInstance.UseStamina(50);
+			StaminaBar.staminaBarInstance.UseStamina(0.1f);
 		}
-		else if (Input.GetKey(KeyCode.W) && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 50)
+		else if (Input.GetKey(KeyCode.W) && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f && PauseMenu.isPaused == false)
 		{
 			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce((transform.up + transform.forward) * playerSettings.jumpFwdStrength);
 			debugSettings.isGrounded = false;
-			StaminaBar.staminaBarInstance.UseStamina(50);
+			StaminaBar.staminaBarInstance.UseStamina(0.1f);
 		}
 	}
 	// Binds key for player to use to increase move speed.
 	private void Sprint()
 	{
-		if (Input.GetButton("Sprint") && StaminaBar.staminaBarInstance.currentStamina >= 1)
+		if (Input.GetButton("Sprint") && Input.GetKey(KeyCode.W) && StaminaBar.staminaBarInstance.currentStamina >= 0.0050f && PauseMenu.isPaused == false)
 		{
 			if (debugSettings.isPlayerBeingVacuumed == true)
 			{
@@ -471,17 +434,67 @@ public class SpiderMovement : MonoBehaviour
 				sprintMulti = playerSettings.translateSprintMultiAmount;
 			}
 
-			StaminaBar.staminaBarInstance.UseStamina(1);
+			StaminaBar.staminaBarInstance.UseStamina(0.0050f);
 		}
 
-        else
-        {
+
+		if (StaminaBar.staminaBarInstance.currentStamina < 0.0050f)
+		{
 			sprintMulti = 0f;
-        }
+		}
 
 		if (Input.GetButtonUp("Sprint"))
 		{
 			sprintMulti = 0f;
+		}
+	}
+
+	private void SpiderAnimation()
+	{
+		if (springJointWeb.isSwingingWeb == true)
+		{
+			spiderAnimator.SetBool("Web", true);
+		}
+
+		else if (springJointWeb.isSwingingWeb == false)
+		{
+			spiderAnimator.SetBool("Web", false);
+		}
+	
+		if (((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true))
+		{
+			spiderAnimator.SetBool("Walk", true);
+		}
+
+		else if (((Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.W)) && spiderAnimator.GetBool("Walk") == true))
+		{
+			spiderAnimator.SetBool("Walk", false);
+		}
+
+		randomIdleTimer += Time.deltaTime;
+		if (randomIdleTimer >= 10f)
+		{
+			randomIdle = Random.Range(0, 2);
+
+			if (randomIdle == 0)
+			{
+				spiderAnimator.SetTrigger("Idle_Shake");
+			}
+			else if (randomIdle == 1)
+			{
+				spiderAnimator.SetTrigger("Idle_LookAround");
+			}
+
+			randomIdleTimer = 0f;
+		}
+
+		if (debugSettings.isFpsEnabled == true)
+		{
+			spiderModel.SetActive(false);
+		}
+		else
+		{
+			spiderModel.SetActive(true);
 		}
 	}
 }

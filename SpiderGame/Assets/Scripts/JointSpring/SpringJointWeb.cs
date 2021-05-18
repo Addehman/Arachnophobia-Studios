@@ -18,6 +18,7 @@ public class SpringJointWeb : MonoBehaviour
     public GameObject thirdPersonCamera;
     public GameObject firstPersonCamera;
     public GameObject targetPointPrefab;
+    public GameObject butt;
 
     public bool isSwingingWeb = false;
 
@@ -48,17 +49,13 @@ public class SpringJointWeb : MonoBehaviour
             {
                 StartWebGrapple();
             }
-            else if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
+            else if (Input.GetMouseButtonUp(0))
             {
                 StopWeb();
             }
-            else if (Input.GetMouseButtonDown(1))
-            {
-                StartSwingString();
-            }
         }
 
-        if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
+        if (Input.GetMouseButtonUp(0))
         {
             StopWeb();
         }
@@ -72,7 +69,7 @@ public class SpringJointWeb : MonoBehaviour
     void StartWebGrapple()
     {
         RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, maxDistance))
+        if (Physics.Raycast(butt.transform.position, Camera.main.transform.forward, out hit, maxDistance))
         {
             spiderAudio.WebShoot();
 
@@ -90,29 +87,6 @@ public class SpringJointWeb : MonoBehaviour
             joint.autoConfigureConnectedAnchor = false;
             joint.anchor = new Vector3(0f, 0f, 0f);
             joint.connectedAnchor = new Vector3(0f, 0f, 0f);
-        }
-    }
-
-    void StartSwingString()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, maxDistance))
-        {
-            spiderAudio.WebShoot();
-
-            isSwingingWeb = true;
-  //          spiderAnimator.SetBool("Web", true);
-            currentState = State.IsSwinging;
-            GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);
-            joint = gameObject.AddComponent<SpringJoint>();
-            joint.connectedBody = targetPoint.GetComponent<Rigidbody>();
-
-            joint.spring = 0f;
-            joint.damper = 150f;
-            joint.autoConfigureConnectedAnchor = false;
-            joint.anchor = new Vector3(0f, 0f, 0f);
-            joint.connectedAnchor = new Vector3(0f, 0f, 0f);
-            joint.massScale = 120f;
         }
     }
 
@@ -134,7 +108,7 @@ public class SpringJointWeb : MonoBehaviour
             return;
         }
 
-        lineRenderer.SetPosition(0, gameObject.transform.position);
+        lineRenderer.SetPosition(0, butt.transform.position);
         lineRenderer.SetPosition(1, GameObject.Find("TargetPoint(Clone)").transform.position);
         lineRenderer.enabled = true;
     }
