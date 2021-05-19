@@ -63,6 +63,7 @@ public class TutorialStates : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
+                GUISound.clickSound();
                 currentState = State.HowToJump;
             }
         }
@@ -75,6 +76,7 @@ public class TutorialStates : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
+                GUISound.clickSound();
                 currentState = State.HowToSprint;
             }
         }
@@ -101,11 +103,13 @@ public class TutorialStates : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.LeftShift))
             {
+                GUISound.clickSound();
                 staminaInfoUI.SetActive(true);
             }
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
+                GUISound.clickSound();
                 currentState = State.HowToPickUp;
             }
         }
@@ -121,6 +125,7 @@ public class TutorialStates : MonoBehaviour
 
             if (pickUpObject.numberOfItemsPickedUp == 1)
             {
+                GUISound.clickSound();
                 inventory.toggleInventory.SetActive(true);
 
                 currentState = State.HowToInventory;
@@ -135,6 +140,7 @@ public class TutorialStates : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
+                GUISound.clickSound();
                 inventory.toggleInventory.SetActive(true);
                 stickyNote.stickyNote.SetActive(true);
 
@@ -152,6 +158,7 @@ public class TutorialStates : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
+                GUISound.clickSound();
                 currentState = State.HowToQuest;
             }
         }
@@ -166,6 +173,7 @@ public class TutorialStates : MonoBehaviour
 
             if (tutorialQuest.isFinished == true)
             {
+                GUISound.clickSound();
                 inventory.toggleInventory.SetActive(true);
                 stickyNote.stickyNote.SetActive(true);
 
@@ -174,6 +182,7 @@ public class TutorialStates : MonoBehaviour
 
             if (tutorialQuest.isFinished == true && Input.GetKeyDown(KeyCode.Return))
             {
+                GUISound.clickSound();
                 completeQuestGUI.SetActive(false);
                 currentState = State.howToZoom;
             }
@@ -188,6 +197,7 @@ public class TutorialStates : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
+                GUISound.clickSound();
                 currentState = State.howToToggleCamera;
             }
         }
@@ -200,6 +210,7 @@ public class TutorialStates : MonoBehaviour
 
             if (Input.GetMouseButtonUp(1))
             {
+                GUISound.clickSound();
                 currentState = State.HowToWeb;
             }
         }
@@ -212,6 +223,7 @@ public class TutorialStates : MonoBehaviour
 
             if (springJointWeb.isSwingingWeb)
             {
+                GUISound.clickSound();
                 continueTutorialUI.SetActive(true);
                 currentState = State.TutorialCompleted;
             }
@@ -223,6 +235,7 @@ public class TutorialStates : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
+                GUISound.clickSound();
                 continueTutorialUI.SetActive(false);
             }
         }
