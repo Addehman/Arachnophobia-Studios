@@ -188,6 +188,7 @@ MonoBehaviour:
   itemDatabase: {fileID: 6465928666543500327}
   inventoryUI: {fileID: 0}
   toggleInventory: {fileID: 0}
+  inventoryIsActive: 0
 --- !u!1 &6465928665786762416
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,7 +315,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6465928666207950597}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: PickUpHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -698,6 +699,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: TBone
       objectReference: {fileID: 0}
+    - target: {fileID: 861673610914120258, guid: 62a3bfa3c7cabcf49bb4f5b9fd361c6f, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914878459880561098, guid: 62a3bfa3c7cabcf49bb4f5b9fd361c6f, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 62a3bfa3c7cabcf49bb4f5b9fd361c6f, type: 3}
 --- !u!4 &582686028211976593 stripped
@@ -715,6 +724,10 @@ PrefabInstance:
     - target: {fileID: 1456231357225519131, guid: 97657a5249f96f643b56a55724cd0178, type: 3}
       propertyPath: m_Name
       value: ChickenBone
+      objectReference: {fileID: 0}
+    - target: {fileID: 1456231357225519131, guid: 97657a5249f96f643b56a55724cd0178, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2269323935982424737, guid: 97657a5249f96f643b56a55724cd0178, type: 3}
       propertyPath: m_RootOrder
@@ -760,6 +773,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2971839370428060623, guid: 97657a5249f96f643b56a55724cd0178, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97657a5249f96f643b56a55724cd0178, type: 3}
 --- !u!4 &27660848154070764 stripped
@@ -784,7 +801,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3687188683089524485, guid: ead9f370faedf9d4c9a960e3aa3fd255, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3687188683089524485, guid: ead9f370faedf9d4c9a960e3aa3fd255, type: 3}
       propertyPath: m_IsActive
@@ -855,6 +872,14 @@ PrefabInstance:
     - target: {fileID: 3857192386913864307, guid: 39deb70242c7da443a013265276518e6, type: 3}
       propertyPath: m_Name
       value: Cookie
+      objectReference: {fileID: 0}
+    - target: {fileID: 3857192386913864307, guid: 39deb70242c7da443a013265276518e6, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4491071734852311379, guid: 39deb70242c7da443a013265276518e6, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4525080402698162377, guid: 39deb70242c7da443a013265276518e6, type: 3}
       propertyPath: m_RootOrder
@@ -976,7 +1001,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6477969529685468687, guid: 792dc9f6a032f0c40bdccc89af1404df, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 792dc9f6a032f0c40bdccc89af1404df, type: 3}
@@ -1044,6 +1069,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ingredients_Tomato
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a91bb62f7637c9549bc781e23103e593, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a91bb62f7637c9549bc781e23103e593, type: 3}
 --- !u!1001 &6465928666456516647
@@ -1100,6 +1129,10 @@ PrefabInstance:
     - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
       propertyPath: m_Name
       value: ParticleEffectForPickUps
+      objectReference: {fileID: 0}
+    - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
       propertyPath: m_IsActive
@@ -1163,6 +1196,10 @@ PrefabInstance:
       value: ParticleEffectForPickUps
       objectReference: {fileID: 0}
     - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -1181,7 +1218,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5019401604661115025, guid: d36e4269dffd4cb43bf7e8998fe68e6f, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5019401604661115025, guid: d36e4269dffd4cb43bf7e8998fe68e6f, type: 3}
       propertyPath: m_IsActive
@@ -1317,6 +1354,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Carrot
       objectReference: {fileID: 0}
+    - target: {fileID: 2148003927387823786, guid: 451e67ff76abfe74db827e733956a347, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 451e67ff76abfe74db827e733956a347, type: 3}
 --- !u!4 &5710416173318668085 stripped
@@ -1380,6 +1421,10 @@ PrefabInstance:
       value: ParticleEffectForPickUps
       objectReference: {fileID: 0}
     - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -1439,6 +1484,10 @@ PrefabInstance:
     - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
       propertyPath: m_Name
       value: ParticleEffectForPickUps
+      objectReference: {fileID: 0}
+    - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
       propertyPath: m_IsActive
@@ -1502,6 +1551,10 @@ PrefabInstance:
       value: ParticleEffectForPickUps
       objectReference: {fileID: 0}
     - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -1514,6 +1567,38 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6465928666207950597}
     m_Modifications:
+    - target: {fileID: 1724561745611118338, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: duration
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1797135117921473935, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1797135117921473935, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2259189084566127048, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2259189084566127048, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745570584810131770, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5797575565930611463, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: duration
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5907086002799763920, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7333349919671197511, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -1558,9 +1643,61 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7500055836650411819, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Range
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 7500055836650411819, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7500055836650411819, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Color.r
+      value: 0.19737864
+      objectReference: {fileID: 0}
+    - target: {fileID: 7500055836650411819, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Intensity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7500055836650411819, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754349468281583675, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Range
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754349468281583675, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754349468281583675, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Color.r
+      value: 0.19737864
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754349468281583675, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754349468281583675, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754349468281583675, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Shadows.m_Bias
+      value: 0.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754349468281583675, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 1.09
+      objectReference: {fileID: 0}
     - target: {fileID: 7966474431152539133, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
       propertyPath: m_Name
       value: Cheese
+      objectReference: {fileID: 0}
+    - target: {fileID: 7966474431152539133, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8641b8425333e2c46b9780f4c282d355, type: 3}
@@ -1625,6 +1762,10 @@ PrefabInstance:
       value: ParticleEffectForPickUps
       objectReference: {fileID: 0}
     - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6363353203313833513, guid: 05251d44b661e1d4185e04934f31adb0, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -1643,7 +1784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6321855649575305406, guid: 27ece589249780e4a94c22ca8f5210f1, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6696974259518691844, guid: 27ece589249780e4a94c22ca8f5210f1, type: 3}
       propertyPath: m_RootOrder
