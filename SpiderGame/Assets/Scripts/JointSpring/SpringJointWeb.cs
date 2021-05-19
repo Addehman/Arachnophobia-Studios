@@ -15,7 +15,6 @@ public class SpringJointWeb : MonoBehaviour
     public DebugSettings debugSetting;
     public Animator spiderAnimator;
 
-    public GameObject thirdPersonCamera;
     public GameObject firstPersonCamera;
     public GameObject targetPointPrefab;
     public GameObject butt;

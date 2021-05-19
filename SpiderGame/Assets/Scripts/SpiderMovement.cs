@@ -132,11 +132,11 @@ public class SpiderMovement : MonoBehaviour
 	void Start()
 	{
 		rb = GetComponent<Rigidbody>();
+		cam = Camera.main.transform;
+		cam.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
 		spiderModel = transform.Find("Model_Character_Spider.6").gameObject;
 		spiderAnimator = spiderModel.GetComponentInChildren<Animator>();
 		spiderAnimator.SetTrigger("Idle");
-		cam = Camera.main.transform;
-		cam.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
 		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>();
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
