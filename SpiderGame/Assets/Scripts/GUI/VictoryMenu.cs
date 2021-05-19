@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class VictoryMenu : MonoBehaviour
 {
+    public GameObject creditsUI;
     private void Start()
     {
         Cursor.visible = true;
@@ -14,5 +15,20 @@ public class VictoryMenu : MonoBehaviour
     public void MainMenuButtonVictory()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void CreditsButtonVictory()
+    {
+        creditsUI.SetActive(true);
+    }
+
+    public void xButtonVictory()
+    {
+        creditsUI.SetActive(false);
+    }
+
+    public void exiButtonVictory()
+    {
+        Application.Quit();
     }
 }
