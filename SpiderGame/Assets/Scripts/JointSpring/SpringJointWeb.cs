@@ -45,7 +45,7 @@ public class SpringJointWeb : MonoBehaviour
     {
         if(toggleCameras.boosted == true)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetButtonDown("SwingWeb") || Input.GetAxis("SwingWeb") > 0f)
             {
                 StartWebGrapple();
             }
@@ -55,7 +55,7 @@ public class SpringJointWeb : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetButtonUp("SwingWeb") || Input.GetAxis("SwingWeb") <= 0f)
         {
             StopWeb();
         }

@@ -3,17 +3,20 @@ using UnityEngine;
 
 public class ThirdPersonCameraController : MonoBehaviour
 {
-	[SerializeField] private CinemachineVirtualCamera cameraToZoom;
-	[SerializeField] private float rotationSpeed = 1f;
+	[SerializeField] private float mouseRotationSpeed = 1f;
+	[SerializeField] private float gamepadRotationSpeed = 10f;
 	[SerializeField] private float smoothTime = 10f;
 	[SerializeField] private float minZoom = 0.1f;
 	[SerializeField] private float maxZoom = 0.5f;
 	
-	private CinemachineComponentBase componentBase;
+	private CinemachineVirtualCamera aimCamera;
+	private CinemachineVirtualCamera cameraToZoom;
+	private CinemachineComponentBase zoomCameraComponentBase;
+	private CinemachineComponentBase tpCameraComponentBase;
 	private Transform cameraParent;
 	private Vector3 currentVelocity;
-	private float mouseX;
-	private float mouseY;
+	private float cameraInputX;
+	private float cameraInputY;
 	private float lerpSpeed = 10f;
 
 
@@ -21,11 +24,16 @@ public class ThirdPersonCameraController : MonoBehaviour
 	{
 		cameraParent = transform.parent;
 
-		componentBase = cameraToZoom.GetCinemachineComponent(CinemachineCore.Stage.Body);
-		if (componentBase is CinemachineFramingTransposer)
+		cameraToZoom = FindObjectOfType<MimicCamera>().GetComponent<CinemachineVirtualCamera>();
+		aimCamera = GameObject.Find("cmAimCamera").GetComponent<CinemachineVirtualCamera>();
+
+		zoomCameraComponentBase = cameraToZoom.GetCinemachineComponent(CinemachineCore.Stage.Body);
+		if (zoomCameraComponentBase is CinemachineFramingTransposer)
 		{
-			(componentBase as CinemachineFramingTransposer).m_CameraDistance = 0.3f;
+			(zoomCameraComponentBase as CinemachineFramingTransposer).m_CameraDistance = 0.3f;
 		}
+
+		tpCameraComponentBase = aimCamera.GetCinemachineComponent(CinemachineCore.Stage.Aim);
 	}
 	
 	void LateUpdate()
@@ -35,25 +43,41 @@ public class ThirdPersonCameraController : MonoBehaviour
 
 	private void CamControl()
 	{
-		mouseX += Input.GetAxis("Mouse X") * rotationSpeed;
-		mouseY -= Input.GetAxis("Mouse Y") * rotationSpeed;
-		// Possibly Clamp mouseY
-
-		// Vector3 myForward = Vector3.Cross(cameraParent.forward, followTarget.up);
-		// Quaternion targetRot = Quaternion.LookRotation(myForward, followTarget.up);
-		// cameraParent.rotation = Quaternion.Slerp(cameraParent.rotation, targetRot, lerpSpeed * Time.deltaTime);
-		// cameraParent.rotation = Quaternion.Euler(targetRot.eulerAngles.x + mouseY, targetRot.eulerAngles.y + mouseX, 0f);
-
-		cameraParent.localRotation = Quaternion.Euler(mouseY, mouseX, 0f);
-		// cameraParent.position = Vector3.SmoothDamp(cameraParent.position, followTarget.position, ref currentVelocity, smoothTime);
-
-		if (componentBase is CinemachineFramingTransposer)
+		float mouseInput = Mathf.Abs(Input.GetAxis("Mouse X") + Input.GetAxis("Mouse Y"));
+		if (mouseInput == 0f)
 		{
-			float cameraDistance = (componentBase as CinemachineFramingTransposer).m_CameraDistance -= Input.GetAxis("Mouse ScrollWheel");
+			cameraInputX += Input.GetAxis("CameraInputX") * gamepadRotationSpeed;
+			cameraInputY += Input.GetAxis("CameraInputY") * gamepadRotationSpeed;
+			if (tpCameraComponentBase is CinemachinePOV)
+			{
+				(tpCameraComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = false;
+			}
+		}
+		else
+		{
+			cameraInputX += Input.GetAxis("CameraInputX") * mouseRotationSpeed;
+			cameraInputY -= Input.GetAxis("CameraInputY") * mouseRotationSpeed;
+			if (tpCameraComponentBase is CinemachinePOV)
+			{
+				(tpCameraComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = true;
+			}
+		}
+		
+		cameraParent.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
+
+		if (zoomCameraComponentBase is CinemachineFramingTransposer)
+		{
+			float cameraDistance = (zoomCameraComponentBase as CinemachineFramingTransposer).m_CameraDistance -= Input.GetAxis("Mouse ScrollWheel") + Input.GetAxis("Zoom");
 			float zoomValue = Mathf.Clamp(cameraDistance, minZoom, maxZoom);
 			
-			(componentBase as CinemachineFramingTransposer).m_CameraDistance = zoomValue;
+			(zoomCameraComponentBase as CinemachineFramingTransposer).m_CameraDistance = zoomValue;
 			// (componentBase as CinemachineFramingTransposer).m_TrackedObjectOffset = 
 		}
+	}
+
+	public void RecenterCamera()
+	{
+		cameraInputX = 0f;
+		cameraInputY = 0f;
 	}
 }

@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class StickyNote : MonoBehaviour
 {
-    bool stickyNoteActive = true;
+    public bool stickyNoteActive = true;
     public GameObject stickyNote;
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetButtonDown("Inventory"))
         {
             if (stickyNoteActive == true)
             {

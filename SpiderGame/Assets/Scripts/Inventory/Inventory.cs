@@ -10,7 +10,7 @@ public class Inventory : MonoBehaviour
     public ItemDirectory itemDatabase;
     public UIInventory inventoryUI;
     public GameObject toggleInventory;
-    bool inventoryIsActive = false;
+    public bool inventoryIsActive = false;
 
     private void Start()
     {
@@ -18,7 +18,7 @@ public class Inventory : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetButtonDown("Inventory"))
         {
             if (inventoryIsActive == true)
             {
