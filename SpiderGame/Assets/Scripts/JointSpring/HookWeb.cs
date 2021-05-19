@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class HookWeb : MonoBehaviour
 {
-	[SerializeField] private float speedMultiplier = 1f;
+	[SerializeField] private float speedMultiplier = 0.005f;
 	[SerializeField] private bool rotateBool = false;
 
 	public event Action DisableFPSCamera;
@@ -63,7 +63,9 @@ public class HookWeb : MonoBehaviour
 				rotateBool = true;
 
 				oldPosition = transform.position;
-				lerpPercentage = 0;
+				lerpPercentage = 0.02f;
+
+				spiderMovement.debugSettings.isGrounded = false;
 
 				currentState = State.HookFlying;
 
@@ -72,30 +74,49 @@ public class HookWeb : MonoBehaviour
 					DisableFPSCamera();
 				}
 
-				if (LockTPCameraRotation != null)
-				{
-					LockTPCameraRotation(true);
-				}
+				// if (LockTPCameraRotation != null)
+				// {
+				// 	LockTPCameraRotation(true);
+				// }
 			}
 		}
 	}
 
 	void HandleHookShotMovement()
 	{
+		if(Input.GetButtonDown("Jump") || lerpPercentage > 0.999f || lerpPercentage < 0.005f)
+		{
+			currentState = State.Normal;
+			SetNormalGravityAndRotation();
+			return;
+		}
+
 		//   Vector3 hookShotDirection = (hookShotPosition - transform.position).normalized;
 		float hookShotSpeed = Vector3.Distance(oldPosition, hookShotPosition);
 
-		lerpPercentage += Time.deltaTime / hookShotSpeed * speedMultiplier;
+		// lerpPercentage += Time.deltaTime / hookShotSpeed * speedMultiplier;
 
-		if (lerpPercentage > 1f)
+		if (lerpPercentage > 0.9999f)
 		{
 			lerpPercentage = 1f;
 		}
 
 		spiderMovement.gravityValue = 0f;
 
+		// Climb Controls
+		float vertical = Input.GetAxis("Vertical");
+		if (vertical > 0f)
+		{
+			lerpPercentage += speedMultiplier;
+		}
+		else if (vertical < 0f)
+		{
+			lerpPercentage -= speedMultiplier;
+		}
+		lerpPercentage = Mathf.Clamp(lerpPercentage, 0f, 1f);
+		print (lerpPercentage);
 		transform.position = Vector3.Lerp(oldPosition, hookShotPosition, lerpPercentage);
-
+		
 		if (rotateBool)
 		{
 			transform.up = newTransformUp;
@@ -116,7 +137,7 @@ public class HookWeb : MonoBehaviour
 		if (lerpPercentage == 1f)
 		{
 			// tpcController.RecenterCamera();
-			Invoke(nameof(SetNormalGravityAndRotation), 0.2f);
+			// Invoke(nameof(SetNormalGravityAndRotation), 0.2f);
 			currentState = State.Normal;
 		}
 	}
@@ -127,9 +148,9 @@ public class HookWeb : MonoBehaviour
 		spiderMovement.gravityValue = -9.82f;
 		spiderMovement.UseHookWebNormal = false;
 
-		if (LockTPCameraRotation != null)
-		{
-			LockTPCameraRotation(false);
-		}
+		// if (LockTPCameraRotation != null)
+		// {
+		// 	LockTPCameraRotation(false);
+		// }
 	}
 }
