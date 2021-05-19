@@ -13,6 +13,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private CinemachineVirtualCamera cameraToZoom;
 	private CinemachineComponentBase zoomCameraComponentBase;
 	private CinemachineComponentBase tpCameraComponentBase;
+	private HookWeb hookWeb;
 	private Transform cameraParent;
 	private Vector3 currentVelocity;
 	private float cameraInputX;
@@ -34,6 +35,9 @@ public class ThirdPersonCameraController : MonoBehaviour
 		}
 
 		tpCameraComponentBase = aimCamera.GetCinemachineComponent(CinemachineCore.Stage.Aim);
+
+		hookWeb = FindObjectOfType<HookWeb>();
+		hookWeb.LockTPCameraRotation += RecenterCamera;
 	}
 	
 	void LateUpdate()
@@ -63,7 +67,9 @@ public class ThirdPersonCameraController : MonoBehaviour
 			}
 		}
 		
-		cameraParent.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
+		// cameraParent.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
+		transform.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
+
 
 		if (zoomCameraComponentBase is CinemachineFramingTransposer)
 		{
@@ -75,9 +81,18 @@ public class ThirdPersonCameraController : MonoBehaviour
 		}
 	}
 
-	public void RecenterCamera()
+	public void RecenterCamera(bool isActive)
 	{
 		cameraInputX = 0f;
 		cameraInputY = 0f;
 	}
+
+	// private void FollowMimicCamera(bool isActive)
+	// {
+	// 	if (isActive == false)
+	// 	{
+	// 		// cameraParent.localRotation = cameraToZoom.transform.rotation;
+	// 		transform.localRotation = cameraToZoom.transform.rotation;
+	// 	}
+	// }
 }

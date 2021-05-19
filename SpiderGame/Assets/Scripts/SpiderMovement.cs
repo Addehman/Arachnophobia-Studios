@@ -385,7 +385,7 @@ public class SpiderMovement : MonoBehaviour
 			debugSettings.averageNormalDirection = hookWeb.newTransformUp;
 		}
 
-		var lerpSpeed = 10f;
+		float lerpSpeed = 10f;
 
 		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
 		// find forward direction with new myNormal:
