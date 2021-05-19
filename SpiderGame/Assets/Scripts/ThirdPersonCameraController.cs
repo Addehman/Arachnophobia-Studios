@@ -67,7 +67,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 
 		if (zoomCameraComponentBase is CinemachineFramingTransposer)
 		{
-			float cameraDistance = (zoomCameraComponentBase as CinemachineFramingTransposer).m_CameraDistance -= Input.GetAxis("Mouse ScrollWheel");
+			float cameraDistance = (zoomCameraComponentBase as CinemachineFramingTransposer).m_CameraDistance -= Input.GetAxis("Mouse ScrollWheel") + Input.GetAxis("Zoom");
+			print (Input.GetAxis("Zoom"));
 			float zoomValue = Mathf.Clamp(cameraDistance, minZoom, maxZoom);
 			
 			(zoomCameraComponentBase as CinemachineFramingTransposer).m_CameraDistance = zoomValue;
