@@ -112,17 +112,20 @@ public class SpiderMovement : MonoBehaviour
 	public PlayerSettings playerSettings;
 	public DebugSettings debugSettings;
 	public float gravityValue = -9.82f;
+	public bool UseHookWebNormal = false;
+
 
 	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any, ForwardsEdgeCheck}
 	private RaycastTypes raycastType;
 	private Transform cam;
-	private Vector3 myNormal;
-	private float turnSmoothVelocity;
-	private float sprintMulti;
 	private VacuumBlackhole vacuumBlackhole;
 	private SpringJointWeb springJointWeb;
+	private HookWeb hookWeb;
+	private Vector3 myNormal;
 	private float vertical;
 	private float horizontal;
+	private float turnSmoothVelocity;
+	private float sprintMulti;
 
 	int randomIdle;
 	float randomIdleTimer = 0f;
@@ -138,6 +141,7 @@ public class SpiderMovement : MonoBehaviour
 		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>();
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
+		hookWeb = GetComponent<HookWeb>();
 	}
 
 	private void activateOnKeypress_ActivationFPSCam(bool isActive)
@@ -374,6 +378,11 @@ public class SpiderMovement : MonoBehaviour
 		if (debugSettings.averageNormalDirections.Count == 0)
 		{
 			debugSettings.averageNormalDirection = Vector3.up;
+		}
+
+		if (UseHookWebNormal)
+		{
+			debugSettings.averageNormalDirection = hookWeb.newTransformUp;
 		}
 
 		var lerpSpeed = 10f;

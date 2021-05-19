@@ -1,93 +1,116 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class HookWeb : MonoBehaviour
 {
-	[SerializeField] Transform debugHitPointTransform;
-	public GameObject webStartPosition;
-	public float speed = 1f;
+    [SerializeField] Transform debugHitPointTransform;
+    public GameObject webStartPosition;
+    SpiderMovement spiderMovement;
+    ThirdPersonCameraController tpcController;
+    public event Action DisableFPSCamera;
+    State currentState;
 
-	public event Action DisableFPSCamera;
+    private float lerpPercentage = 0f;
+    public float speedMultiplier = 1f;
+    public bool rotateBool = false;
+    public Vector3 newTransformUp;
 
-	ThirdPersonCameraController tpcController;
-	SpiderMovement spiderMovement;
-	State currentState;
+    Vector3 oldPosition;
+    Vector3 hookShotPosition;
+    Vector3 previousTransformUp;
 
-	Vector3 hookShotPosition;
-	Vector3 newTransformUp;
-	Vector3 previousTransformUp;
-	Vector3 oldPosition;
+    enum State
+    {
+        Normal,
+        HookFlying,
+    }
+    void Start()
+    {
+        spiderMovement = GetComponent<SpiderMovement>();
+        tpcController = FindObjectOfType<ThirdPersonCameraController>();
+    }
 
-	enum State
-	{
-		Normal,
-		HookFlying,
-	}
-	void Start()
-	{
-		spiderMovement = GetComponent<SpiderMovement>();
-		tpcController = FindObjectOfType<ThirdPersonCameraController>();
-	}
+    void Update()
+    {
+        if (currentState == State.Normal)
+        {
+            HandleHookShotStart();
+        }
 
-	void Update()
-	{
-		//Debug.Log(Vector3.Distance(transform.position, hookShotPosition));
-		if (currentState == State.Normal)
-		{
-			HandleHookShotStart();
-		}
+        if (currentState == State.HookFlying)
+        {
+            HandleHookShotMovement();
+        }
+    }
 
-		if (currentState == State.HookFlying)
-		{
-			HandleHookShotMovement();
-		}
-	}
+    void HandleHookShotStart()
+    {
+        if (Input.GetButtonDown("HookShotWeb"))
+        {
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit raycastHit))
+            {
+                previousTransformUp = transform.up;
+                newTransformUp = raycastHit.normal;
 
-	void HandleHookShotStart()
-	{
-		if (Input.GetButtonDown("HookShotWeb"))
-		{
-			if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit raycastHit))
-			{
-				previousTransformUp = transform.up;
-				newTransformUp = raycastHit.normal;
+                debugHitPointTransform.position = raycastHit.point;
+                hookShotPosition = raycastHit.point;
 
-				Debug.Log(newTransformUp);
+                spiderMovement.UseHookWebNormal = true;
+                rotateBool = true;
 
-				debugHitPointTransform.position = raycastHit.point;
-				hookShotPosition = raycastHit.point;
-				oldPosition = transform.position;
+                oldPosition = transform.position;
+                lerpPercentage = 0;
 
-				currentState = State.HookFlying;
-				if (DisableFPSCamera != null)
-				{
-					DisableFPSCamera();
-				}
-			}
-		}
-	}
+                currentState = State.HookFlying;
+                if (DisableFPSCamera != null)
+                {
+                    DisableFPSCamera();
+                }
+            }
+        }
+    }
 
-	void HandleHookShotMovement()
-	{
-		//   Vector3 hookShotDirection = (hookShotPosition - transform.position).normalized;
-		oldPosition = transform.position;
-		float hookShotSpeed = Vector3.Distance(oldPosition, hookShotPosition);
+    void HandleHookShotMovement()
+    {
+        //   Vector3 hookShotDirection = (hookShotPosition - transform.position).normalized;
+        float hookShotSpeed = Vector3.Distance(oldPosition, hookShotPosition);
 
-		spiderMovement.gravityValue = 0f;
+        lerpPercentage += Time.deltaTime / hookShotSpeed * speedMultiplier;
 
-		transform.position = Vector3.Lerp(oldPosition, hookShotPosition, speed * Time.deltaTime);
+        if (lerpPercentage > 1)
+        {
+            lerpPercentage = 1;
+        }
 
-		transform.up = newTransformUp;
+        spiderMovement.gravityValue = 0f;
 
-		tpcController.RecenterCamera();
+        transform.position = Vector3.Lerp(oldPosition, hookShotPosition, lerpPercentage);
 
-		//transform.up = Vector3.Lerp(previousTransformUp, newTransformUp, speed);
+        if (rotateBool)
+        {
+            transform.up = newTransformUp;
+            rotateBool = false;
+        }
 
-		if (Vector3.Distance(transform.position, hookShotPosition) < 0.02f || spiderMovement.debugSettings.isGrounded == true && Vector3.Distance(transform.position, hookShotPosition) < 0.1f)
-		{
-			spiderMovement.gravityValue = -9.82f;
-			currentState = State.Normal;
-		}
-	}
+        //Use below to Lerp the rotation to have a smoother transition between original rotation and 
+        //transform.up = Vector3.Lerp(previousTransformUp, newTransformUp, speed);
+
+        //Camerafix
+        tpcController.RecenterCamera();
+
+        if (lerpPercentage == 1)
+        {
+            Invoke(nameof(SetNormalGravityAndRotation), 1);
+            currentState = State.Normal;
+        }
+    }
+
+    //Tried invoking when to turn on Raycast rotation again, but it doesn't seem to help. Look further into this.
+    public void SetNormalGravityAndRotation()
+    {
+        spiderMovement.gravityValue = -9.82f;
+        spiderMovement.UseHookWebNormal = false;
+    }
 }
