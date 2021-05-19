@@ -37,7 +37,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 		tpCameraComponentBase = aimCamera.GetCinemachineComponent(CinemachineCore.Stage.Aim);
 
 		hookWeb = FindObjectOfType<HookWeb>();
-		hookWeb.LockTPCameraRotation += RecenterCamera;
+		// hookWeb.LockTPCameraRotation += RecenterCamera;
 	}
 	
 	void LateUpdate()

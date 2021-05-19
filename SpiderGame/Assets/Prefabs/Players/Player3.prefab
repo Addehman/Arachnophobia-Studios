@@ -325,8 +325,8 @@ MonoBehaviour:
     fwdRayHitNormalDebug: {x: 0, y: 0, z: 0}
     isFpsEnabled: 0
     isPlayerBeingVacuumed: 0
+    doRaycasts: 1
   spiderAnimator: {fileID: 1344089395}
-  thirdPersonCamera: {fileID: 0}
   firstPersonCamera: {fileID: 3944242281898070516}
   targetPointPrefab: {fileID: 2288128265524229465, guid: 4e4411aca44651543800b9077af1e0cf, type: 3}
   butt: {fileID: 1247032614615311147}
@@ -345,8 +345,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 1223232363083570199}
   currentPosition: {x: 1.6893911, y: 1.8894316, z: 0.2269907}
-  spiderModel: {fileID: 919132147514444500}
-  spiderAnimator: {fileID: 1344089395}
+  gravityValue: -9.82
+  UseHookWebNormal: 0
   mainRaycastAdjustments:
     rayFwdMod: 1
     rayBwdMod: 1
@@ -415,8 +415,7 @@ MonoBehaviour:
     fwdRayHitNormalDebug: {x: 0, y: 0, z: 0}
     isFpsEnabled: 0
     isPlayerBeingVacuumed: 0
-  gravityValue: -9.82
-  UseHookWebNormal: 0
+    doRaycasts: 1
 --- !u!114 &4801097130878541006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,9 +570,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4158639adfc98e846a8800fdcb3d50a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugHitPointTransform: {fileID: 0}
-  webStartPosition: {fileID: 1247032614615311147}
-  speedMultiplier: 1
+  speedMultiplier: 0.002
   rotateBool: 0
   newTransformUp: {x: 0, y: 0, z: 0}
 --- !u!95 &1344089395
