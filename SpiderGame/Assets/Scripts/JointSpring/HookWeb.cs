@@ -5,29 +5,29 @@ using UnityEngine;
 
 public class HookWeb : MonoBehaviour
 {
-	[SerializeField] Transform debugHitPointTransform;
-	public GameObject webStartPosition;
-	SpiderMovement spiderMovement;
-	ThirdPersonCameraController tpcController;
-	MimicCamera mimicCamera;
+	[SerializeField] private float speedMultiplier = 1f;
+	[SerializeField] private bool rotateBool = false;
+
 	public event Action DisableFPSCamera;
 	public event Action<bool> LockTPCameraRotation;
-	State currentState;
-
-	private float lerpPercentage = 0f;
-	public float speedMultiplier = 1f;
-	public bool rotateBool = false;
 	public Vector3 newTransformUp;
 
-	Vector3 oldPosition;
-	Vector3 hookShotPosition;
-	Vector3 previousTransformUp;
+	private SpiderMovement spiderMovement;
+	private ThirdPersonCameraController tpcController;
+	private MimicCamera mimicCamera;
+	private State currentState;
+	private Vector3 oldPosition;
+	private Vector3 hookShotPosition;
+	private Vector3 previousTransformUp;
+	private float lerpPercentage = 0f;
 
-	enum State
+	private enum State
 	{
 		Normal,
 		HookFlying,
 	}
+
+
 	void Start()
 	{
 		spiderMovement = GetComponent<SpiderMovement>();
@@ -57,7 +57,6 @@ public class HookWeb : MonoBehaviour
 				previousTransformUp = transform.up;
 				newTransformUp = raycastHit.normal;
 
-				debugHitPointTransform.position = raycastHit.point;
 				hookShotPosition = raycastHit.point;
 
 				// spiderMovement.UseHookWebNormal = true;

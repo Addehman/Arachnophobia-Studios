@@ -101,9 +101,8 @@ public class SpiderMovement : MonoBehaviour
 {
 	[HideInInspector] public Rigidbody rb;
 	[HideInInspector] public Vector3 currentPosition;
-
-	[SerializeField] private GameObject spiderModel;
-	public Animator spiderAnimator;
+	[HideInInspector] public float gravityValue = -9.82f;
+	[HideInInspector] public bool UseHookWebNormal = false;
 
 	public MainRaycastsAdjustment mainRaycastAdjustments;
 	public ForwardsRaycastsAdjustment forwardsRaycastAdjustment;
@@ -111,11 +110,10 @@ public class SpiderMovement : MonoBehaviour
 	public RaycastGeneralSettings raycastGeneralSettings;
 	public PlayerSettings playerSettings;
 	public DebugSettings debugSettings;
-	public float gravityValue = -9.82f;
-	public bool UseHookWebNormal = false;
-
 
 	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any, ForwardsEdgeCheck}
+	private GameObject spiderModel;
+	private Animator spiderAnimator;
 	private RaycastTypes raycastType;
 	private Transform cam;
 	private VacuumBlackhole vacuumBlackhole;
@@ -133,11 +131,12 @@ public class SpiderMovement : MonoBehaviour
 
 	void Start()
 	{
-		spiderAnimator.SetTrigger("Idle");
 		rb = GetComponent<Rigidbody>();
-		cam = GameObject.Find("Main Camera").transform;
-		spiderAnimator = GetComponentInChildren<Animator>();
-		Camera.main.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
+		spiderModel = transform.Find("Model_Character_Spider.6").gameObject;
+		spiderAnimator = spiderModel.GetComponentInChildren<Animator>();
+		spiderAnimator.SetTrigger("Idle");
+		cam = Camera.main.transform;
+		cam.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
 		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>();
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
