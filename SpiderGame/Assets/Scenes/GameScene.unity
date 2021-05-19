@@ -188,12 +188,28 @@ PrefabInstance:
       objectReference: {fileID: 144530681}
     - target: {fileID: 3944242281898070522, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 0.65822786
+      value: 1.7777778
       objectReference: {fileID: 0}
     - target: {fileID: 4310413172488771432, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
       propertyPath: cameraToZoom
       value: 
       objectReference: {fileID: 1620826570}
+    - target: {fileID: 4310413172488771434, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4310413172488771435, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.00000008940698
+      objectReference: {fileID: 0}
+    - target: {fileID: 4310413172488771435, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4310413172488771435, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.30000058
+      objectReference: {fileID: 0}
     - target: {fileID: 4310413172488771438, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
       value: 0.65822786
@@ -210,6 +226,10 @@ PrefabInstance:
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 291998377}
+    - target: {fileID: 5167721107753979075, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6784321718748184048, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -252,11 +272,6 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ac6cc3644e7e09d4e8fcbc45324bb601, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
---- !u!4 &21217447 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4310413172488771435, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
-  m_PrefabInstance: {fileID: 21217446}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &72338508 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6839547224939841982, guid: ab2e80a3145f1fa4e85fc34edc646c5c, type: 3}
@@ -484,6 +499,11 @@ MonoBehaviour:
 --- !u!4 &1023790919 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 328657220566939383, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
+  m_PrefabInstance: {fileID: 21217446}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1026273515 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5167721107753979075, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
   m_PrefabInstance: {fileID: 21217446}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1054580546 stripped
@@ -998,7 +1018,7 @@ PrefabInstance:
     - target: {fileID: 1205551919466345893, guid: 75fb85727e1172a4bb9ca8880a6b575e, type: 3}
       propertyPath: cameraToMimic
       value: 
-      objectReference: {fileID: 21217447}
+      objectReference: {fileID: 1026273515}
     - target: {fileID: 1205551919466345894, guid: 75fb85727e1172a4bb9ca8880a6b575e, type: 3}
       propertyPath: m_Name
       value: cmMimicCamera
