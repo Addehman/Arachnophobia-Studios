@@ -10,6 +10,8 @@ public class HookWeb : MonoBehaviour
 
 	public event Action DisableFPSCamera;
 	public event Action<bool> ActivationClimbRotation;
+	public event Action CameraStartRotation;
+	public event Action CameraEndRotation;
 	public Vector3 newTransformUp;
 
 	private SpiderMovement spiderMovement;
@@ -65,7 +67,7 @@ public class HookWeb : MonoBehaviour
 
 	private void HandleHookShotStart()
 	{
-		if (Input.GetButtonDown("HookShotWeb"))
+		if (Input.GetButtonDown("HookShotWeb") && spiderMovement.debugSettings.isGrounded == true)
 		{
 			if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit raycastHit))
 			{
@@ -92,6 +94,11 @@ public class HookWeb : MonoBehaviour
 				}
 
 				doDrawLine = true;
+
+				if (CameraStartRotation != null)
+				{
+					CameraStartRotation();
+				}
 			}
 		}
 	}
@@ -158,7 +165,11 @@ public class HookWeb : MonoBehaviour
 		SetNormalGravityAndRotation(); // This could be unpacked here later on.
 		lineRenderer.enabled = false;
 		doDrawLine = false;
-		// DisableClimbRotation();
+		DisableClimbRotation();
+		if (CameraEndRotation != null)
+		{
+			CameraEndRotation();
+		}
 	}
 
 	//Tried invoking when to turn on Raycast rotation again, but it doesn't seem to help. Look further into this.
