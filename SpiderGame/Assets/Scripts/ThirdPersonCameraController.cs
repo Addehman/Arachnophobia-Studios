@@ -14,6 +14,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private CinemachineComponentBase zoomCameraComponentBase;
 	private CinemachineComponentBase tpCameraComponentBase;
 	private HookWeb hookWeb;
+	private ClimbWeb climbWeb;
 	private Transform cameraParent;
 	private Vector3 currentVelocity;
 	private float cameraInputX;
@@ -37,7 +38,10 @@ public class ThirdPersonCameraController : MonoBehaviour
 		tpCameraComponentBase = aimCamera.GetCinemachineComponent(CinemachineCore.Stage.Aim);
 
 		hookWeb = FindObjectOfType<HookWeb>();
-		hookWeb.LockTPCameraRotation += RecenterCamera;
+		hookWeb.LockTPCameraRotation += HookWebRecenterCamera;
+		climbWeb = FindObjectOfType<ClimbWeb>();
+		climbWeb.CameraStartRotation += BeginClimbRotation;
+		climbWeb.CameraEndRotation += ClimbWebRecenterCamera;
 	}
 	
 	void LateUpdate()
@@ -81,10 +85,22 @@ public class ThirdPersonCameraController : MonoBehaviour
 		}
 	}
 
-	public void RecenterCamera(bool isActive)
+	public void HookWebRecenterCamera(bool isActive)
 	{
 		cameraInputX = 0f;
 		cameraInputY = 0f;
+	}
+
+	public void ClimbWebRecenterCamera()
+	{
+		cameraInputX = 0f;
+		cameraInputY = 0f;
+	}
+
+	private void BeginClimbRotation()
+	{
+		cameraInputX = 0f;
+		cameraInputY = climbWeb.transform.position.y + 45f;
 	}
 
 	// private void FollowMimicCamera(bool isActive)

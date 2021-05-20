@@ -11,12 +11,15 @@ public class ToggleCameras : MonoBehaviour
 
 	private Cinemachine.CinemachineVirtualCamera aimCamera;
 	private HookWeb hookWeb;
+	private ClimbWeb climbWeb;
 
 	void Start()
 	{
 		aimCamera = GameObject.Find("cmAimCamera").GetComponent<Cinemachine.CinemachineVirtualCamera>();
 		hookWeb = FindObjectOfType<HookWeb>();
 		hookWeb.DisableFPSCamera += DisableFPSCamera;
+		climbWeb = FindObjectOfType<ClimbWeb>();
+		climbWeb.DisableFPSCamera += DisableFPSCamera;
 	}
 
 	private void Update()
