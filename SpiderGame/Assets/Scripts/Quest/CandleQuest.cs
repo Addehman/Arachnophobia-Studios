@@ -14,7 +14,7 @@ public class CandleQuest : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isFinished == false && canLightCandle == true)
+        if (Input.GetButtonDown("Interact") && isFinished == false && canLightCandle == true)
         {
             Winstate.AddCompletedQuest();
             light1.SetActive(true);

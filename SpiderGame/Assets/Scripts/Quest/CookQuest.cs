@@ -28,7 +28,7 @@ public class CookQuest : MonoBehaviour
     }
     private void Update()
     {
-        if (cookButtonShow == true && Input.GetKeyDown(KeyCode.E))
+        if (cookButtonShow == true && Input.GetButtonDown("Interact"))
         {
             CookButton();
         }

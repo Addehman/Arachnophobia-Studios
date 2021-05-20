@@ -15,7 +15,7 @@ public class LightSwitchQuest : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isFinished == false && canSwitchLight == true)
+        if (Input.GetButtonDown("Interact") && isFinished == false && canSwitchLight == true)
         {
             Winstate.AddCompletedQuest();
             lightSource1.SetActive(false);
