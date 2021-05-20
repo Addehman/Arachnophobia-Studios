@@ -95,6 +95,7 @@ public class DebugSettings
 	public Vector3 fwdRayHitNormalDebug;
 	public bool isFpsEnabled = false;
 	public bool isPlayerBeingVacuumed;
+	public bool doRaycasts = true;
 }
 
 public class SpiderMovement : MonoBehaviour
@@ -103,6 +104,7 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public Vector3 currentPosition;
 	[HideInInspector] public float gravityValue = -9.82f;
 	[HideInInspector] public bool UseHookWebNormal = false;
+	[HideInInspector] public bool UseClimbWebNormal = false;
 
 	public MainRaycastsAdjustment mainRaycastAdjustments;
 	public ForwardsRaycastsAdjustment forwardsRaycastAdjustment;
@@ -119,14 +121,14 @@ public class SpiderMovement : MonoBehaviour
 	private VacuumBlackhole vacuumBlackhole;
 	private SpringJointWeb springJointWeb;
 	private HookWeb hookWeb;
+	private ClimbWeb climbWeb;
 	private Vector3 myNormal;
 	private float vertical;
 	private float horizontal;
 	private float turnSmoothVelocity;
 	private float sprintMulti;
-
-	int randomIdle;
-	float randomIdleTimer = 0f;
+	private float randomIdleTimer = 0f;
+	private int randomIdle;
 
 
 	void Start()
@@ -141,6 +143,15 @@ public class SpiderMovement : MonoBehaviour
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		hookWeb = GetComponent<HookWeb>();
+		// hookWeb.ActivationClimbRotation += ActivationOfRaycasts;
+		climbWeb = GetComponent<ClimbWeb>();
+		climbWeb.ActivationClimbRotation += ActivationOfRaycasts;
+	}
+
+	private void ActivationOfRaycasts(bool isActive)
+	{
+		debugSettings.doRaycasts = isActive;
+		debugSettings.averageNormalDirections.Clear();
 	}
 
 	private void activateOnKeypress_ActivationFPSCam(bool isActive)
@@ -195,6 +206,9 @@ public class SpiderMovement : MonoBehaviour
 
 	private void RaycastsToCast()
 	{
+		if (debugSettings.doRaycasts == false)
+		return;
+
 		// Consider making these into For-Loops instead!
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * mainRaycastAdjustments.rayFwdMod, 0f, RaycastTypes.MainForwards);
 		RaycastHelper(transform.TransformDirection(Vector3.back) * mainRaycastAdjustments.rayBwdMod, 0f, RaycastTypes.MainBackwards);
@@ -367,33 +381,40 @@ public class SpiderMovement : MonoBehaviour
 
 	private void SetPlayerUpDirection()
 	{
-		for (int i = 0; i < debugSettings.averageNormalDirections.Count; i++)
+		if (debugSettings.doRaycasts == true)
 		{
-			debugSettings.averageNormalDirection += debugSettings.averageNormalDirections[i];
+			for (int i = 0; i < debugSettings.averageNormalDirections.Count; i++)
+			{
+				debugSettings.averageNormalDirection += debugSettings.averageNormalDirections[i];
+			}
+			
+			debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
+
+			if (debugSettings.averageNormalDirections.Count == 0)
+			{
+				debugSettings.averageNormalDirection = Vector3.up;
+			}
+
+			if (UseHookWebNormal)
+			{
+				debugSettings.averageNormalDirection = hookWeb.newTransformUp;
+			}
+			else if (UseClimbWebNormal)
+			{
+				debugSettings.averageNormalDirection = climbWeb.newTransformUp;
+			}
+
+			float lerpSpeed = 10f;
+
+			myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
+			// find forward direction with new myNormal:
+			Vector3 myForward = Vector3.Cross(transform.right, myNormal);
+			// align character to the new myNormal while keeping the forward direction:
+			Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+			//try and make tha camera rotate with the player. Doesn't work as of now.
+			// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 		}
-		
-		debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
-
-		if (debugSettings.averageNormalDirections.Count == 0)
-		{
-			debugSettings.averageNormalDirection = Vector3.up;
-		}
-
-		if (UseHookWebNormal)
-		{
-			debugSettings.averageNormalDirection = hookWeb.newTransformUp;
-		}
-
-		float lerpSpeed = 10f;
-
-		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
-		// find forward direction with new myNormal:
-		Vector3 myForward = Vector3.Cross(transform.right, myNormal);
-		// align character to the new myNormal while keeping the forward direction:
-		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
-		transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
-		//try and make tha camera rotate with the player. Doesn't work as of now.
-		// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 	}
 
 	private void TranslateMovement()
