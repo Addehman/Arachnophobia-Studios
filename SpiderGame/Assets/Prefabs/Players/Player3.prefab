@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 556553134987674852}
   - component: {fileID: 7560893008458635980}
   - component: {fileID: 3760334450676262477}
+  - component: {fileID: 9052696214001742978}
   m_Layer: 3
   m_Name: Player3
   m_TagString: Player
@@ -347,6 +348,7 @@ MonoBehaviour:
   currentPosition: {x: 1.6893911, y: 1.8894316, z: 0.2269907}
   gravityValue: -9.82
   UseHookWebNormal: 0
+  UseClimbWebNormal: 0
   mainRaycastAdjustments:
     rayFwdMod: 1
     rayBwdMod: 1
@@ -573,6 +575,20 @@ MonoBehaviour:
   speedMultiplier: 0.002
   rotateBool: 0
   newTransformUp: {x: 0, y: 0, z: 0}
+--- !u!114 &9052696214001742978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328657220566939382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c36fec130c60541ba92cc6405838f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newTransformUp: {x: 0, y: 0, z: 0}
+  speedMultiplier: 0.005
 --- !u!95 &1344089395
 Animator:
   serializedVersion: 3
@@ -674,7 +690,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3944242282009029608, guid: 437d80861df5f7c4e930811b03d8af62, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.19999996
+      value: 0.19999981
       objectReference: {fileID: 0}
     - target: {fileID: 3944242282009029608, guid: 437d80861df5f7c4e930811b03d8af62, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1244,7 +1260,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 4ade29b291f40f040a24d68f5e193466, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 9c9b43bd749376940879f8d86367538a, type: 2}
+      objectReference: {fileID: 2100000, guid: bb8ed1c0f42f24348859dc417f6676b8, type: 2}
     - target: {fileID: 919132149155446097, guid: 4ade29b291f40f040a24d68f5e193466, type: 3}
       propertyPath: m_Name
       value: Spider_Tie

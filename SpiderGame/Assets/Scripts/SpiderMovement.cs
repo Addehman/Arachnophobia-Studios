@@ -104,6 +104,7 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public Vector3 currentPosition;
 	[HideInInspector] public float gravityValue = -9.82f;
 	[HideInInspector] public bool UseHookWebNormal = false;
+	[HideInInspector] public bool UseClimbWebNormal = false;
 
 	public MainRaycastsAdjustment mainRaycastAdjustments;
 	public ForwardsRaycastsAdjustment forwardsRaycastAdjustment;
@@ -120,6 +121,7 @@ public class SpiderMovement : MonoBehaviour
 	private VacuumBlackhole vacuumBlackhole;
 	private SpringJointWeb springJointWeb;
 	private HookWeb hookWeb;
+	private ClimbWeb climbWeb;
 	private Vector3 myNormal;
 	private float vertical;
 	private float horizontal;
@@ -141,7 +143,9 @@ public class SpiderMovement : MonoBehaviour
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		hookWeb = GetComponent<HookWeb>();
-		hookWeb.ActivationClimbRotation += ActivationOfRaycasts;
+		// hookWeb.ActivationClimbRotation += ActivationOfRaycasts;
+		climbWeb = GetComponent<ClimbWeb>();
+		climbWeb.ActivationClimbRotation += ActivationOfRaycasts;
 	}
 
 	private void ActivationOfRaycasts(bool isActive)
@@ -394,6 +398,10 @@ public class SpiderMovement : MonoBehaviour
 			if (UseHookWebNormal)
 			{
 				debugSettings.averageNormalDirection = hookWeb.newTransformUp;
+			}
+			else if (UseClimbWebNormal)
+			{
+				debugSettings.averageNormalDirection = climbWeb.newTransformUp;
 			}
 
 			float lerpSpeed = 10f;
