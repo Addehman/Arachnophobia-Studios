@@ -12,15 +12,25 @@ public class CookQuest : MonoBehaviour
     public GameObject questCircle;
     public PickUpObject pickUpObject;
     public bool isFinished = false;
+    private bool cookButtonShow = false;
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && isFinished == false && pickUpObject.isAllItemsCollected == true)
+        if (other.CompareTag("Player") && isFinished == false && pickUpObject.isAllItemsCollected == true )
         {
+            cookButtonShow = true;
             helpText.SetActive(true);
+            /*helpText.SetActive(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
-            window.SetActive(true);
+            window.SetActive(true);*/
+        }
+    }
+    private void Update()
+    {
+        if (cookButtonShow == true && Input.GetKeyDown(KeyCode.E))
+        {
+            CookButton();
         }
     }
 
@@ -28,10 +38,12 @@ public class CookQuest : MonoBehaviour
     {
         if (other.CompareTag("Player") && isFinished == false && pickUpObject.isAllItemsCollected == true)
         {
+            cookButtonShow = false;
             helpText.SetActive(false);
+            /*helpText.SetActive(false);
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
-            window.SetActive(false);
+            window.SetActive(false);*/
         }
     }
 
