@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 663025663}
   - component: {fileID: 1064217988}
   - component: {fileID: 2932938133675494548}
+  - component: {fileID: 7210947012708112550}
   m_Layer: 0
   m_Name: BenchLight1
   m_TagString: Untagged
@@ -110,6 +111,20 @@ MonoBehaviour:
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
 --- !u!114 &2932938133675494548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 663025661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+--- !u!114 &7210947012708112550
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -525,7 +540,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1562599124}
   m_LocalRotation: {x: 0.73279196, y: -0, z: -0, w: 0.6804528}
-  m_LocalPosition: {x: 0.309, y: 0.997, z: -1.429}
+  m_LocalPosition: {x: 0.309, y: 0.864, z: -1.577}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1307870153}
@@ -543,7 +558,7 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.01
+  m_Intensity: 1.96
   m_Range: 2.5
   m_SpotAngle: 60
   m_InnerSpotAngle: 21.80208
@@ -854,8 +869,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.9916983, b: 0.759434, a: 1}
-  m_Intensity: 0.82
-  m_Range: 0.4
+  m_Intensity: 19.6
+  m_Range: 0.2
   m_SpotAngle: 79
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
