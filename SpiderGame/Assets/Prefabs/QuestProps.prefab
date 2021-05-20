@@ -714,7 +714,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 200
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -4874,7 +4874,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5551,7 +5551,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 200
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -9711,7 +9711,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10455,7 +10455,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 200
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -14615,7 +14615,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -20067,7 +20067,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 200
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -24227,7 +24227,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -24873,7 +24873,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 200
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -29033,7 +29033,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -29905,7 +29905,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 200
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -34065,7 +34065,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -34612,8 +34612,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.6981132, g: 0.46017426, b: 0, a: 1}
-  m_Intensity: 17.32
-  m_Range: 0.2815158
+  m_Intensity: 0.14
+  m_Range: 0.49
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -35397,6 +35397,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4897732323685117858, guid: 5fa619edb9b66104ba3fcc0f17f6461f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7e7859611d9264d4795e83ebcbef2867, type: 2}
+    - target: {fileID: 650930610902465662, guid: 5fa619edb9b66104ba3fcc0f17f6461f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7e7859611d9264d4795e83ebcbef2867, type: 2}
     - target: {fileID: 919132149155446097, guid: 5fa619edb9b66104ba3fcc0f17f6461f, type: 3}
       propertyPath: m_Name
       value: Walls_LightSwitch
@@ -35505,15 +35513,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 688237684503093028, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.000116149204
+      value: 0.00017529237
       objectReference: {fileID: 0}
     - target: {fileID: 688237684503093028, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.00023903436
+      value: 0.00036075065
       objectReference: {fileID: 0}
     - target: {fileID: 688237684503093028, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.00023903436
+      value: 0.00036075065
       objectReference: {fileID: 0}
     - target: {fileID: 688237684503093028, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -35555,6 +35563,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2823434302495047799, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 4851245390426968062, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: ShapeModule.angle
       value: 10.61
@@ -35566,6 +35578,10 @@ PrefabInstance:
     - target: {fileID: 4851245390426968062, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: ColorBySpeedModule.enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4851245390426968062, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 4851245390426968062, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -35581,11 +35597,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4851245390426968062, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
-      value: 0
+      value: 0.5235849
       objectReference: {fileID: 0}
     - target: {fileID: 4851245390426968062, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: InitialModule.startColor.maxColor.g
-      value: 0.38141876
+      value: 0.8561413
       objectReference: {fileID: 0}
     - target: {fileID: 4851245390426968062, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: InitialModule.startColor.maxColor.r
@@ -35609,11 +35625,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4851245390426968062, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.key0.b
-      value: 0.504717
+      value: 0.7877358
       objectReference: {fileID: 0}
     - target: {fileID: 4851245390426968062, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.key0.g
-      value: 0.98089373
+      value: 0.99157685
       objectReference: {fileID: 0}
     - target: {fileID: 4851245390426968062, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.key0.r
@@ -35625,7 +35641,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4851245390426968062, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.key1.g
-      value: 0.6474483
+      value: 0.49694997
       objectReference: {fileID: 0}
     - target: {fileID: 4851245390426968062, guid: 5d83343592468df4dbc43d979d23049b, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.key1.r
