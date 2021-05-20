@@ -12,14 +12,17 @@ public class ToggleCameras : MonoBehaviour
 	private Cinemachine.CinemachineVirtualCamera aimCamera;
 	private HookWeb hookWeb;
 	private ClimbWeb climbWeb;
+	private SpringJointWeb springJointWeb;
 
 	void Start()
 	{
 		aimCamera = GameObject.Find("cmAimCamera").GetComponent<Cinemachine.CinemachineVirtualCamera>();
 		hookWeb = FindObjectOfType<HookWeb>();
-		hookWeb.DisableFPSCamera += DisableFPSCamera;
+		hookWeb.DisableFPSCamera += DisableFPCamera;
 		climbWeb = FindObjectOfType<ClimbWeb>();
-		climbWeb.DisableFPSCamera += DisableFPSCamera;
+		climbWeb.DisableFPSCamera += DisableFPCamera;
+		springJointWeb = FindObjectOfType<SpringJointWeb>();
+		springJointWeb.ExitFPCamera += DisableFPCamera;
 	}
 
 	private void Update()
@@ -34,7 +37,7 @@ public class ToggleCameras : MonoBehaviour
 				}
 				else if (boosted)
 				{
-					DisableFPSCamera();
+					DisableFPCamera();
 				}
 			}
 		}
@@ -54,7 +57,7 @@ public class ToggleCameras : MonoBehaviour
 		}
 	}
 
-	public void DisableFPSCamera()
+	public void DisableFPCamera()
 	{
 		aimCamera.Priority = PriorityBoostAmount - PriorityBoostAmount;
 		boosted = false;
