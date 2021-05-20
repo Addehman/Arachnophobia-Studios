@@ -18,6 +18,7 @@ public class MimicCamera : MonoBehaviour
 	{
 		cameraToMimic = FindObjectOfType<ThirdPersonCameraController>().transform;
 		hookWeb = FindObjectOfType<HookWeb>();
+		hookWeb.LockTPCameraRotation += LockRotation;
 	}
 
 	private void LateUpdate()
@@ -34,8 +35,6 @@ public class MimicCamera : MonoBehaviour
 		}
 	}
 
-	// This method and what it touches in LateUpdate() might not be necessary anymore, if we keep the climbWeb(HookWeb), 
-	// but might be necessary in other areas.
 	public void LockRotation(bool isActive)
 	{
 		if (isActive == true)
