@@ -4,6 +4,7 @@ using UnityEngine;
 public class ClimbWeb : MonoBehaviour
 {
 	[HideInInspector] public Vector3 newTransformUp;
+	[HideInInspector] public bool isClimbWebing = false;
 
 	[SerializeField] private float speedMultiplier = 0.005f;
 
@@ -97,6 +98,8 @@ public class ClimbWeb : MonoBehaviour
 				{
 					CameraStartRotation();
 				}
+
+				isClimbWebing = true;
 			}
 		}
 	}
@@ -161,6 +164,7 @@ public class ClimbWeb : MonoBehaviour
 		{
 			CameraEndRotation();
 		}
+		isClimbWebing = false;
 	}
 
 	private void EnableClimbRotation()

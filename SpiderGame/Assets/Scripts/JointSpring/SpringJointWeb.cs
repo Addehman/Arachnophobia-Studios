@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class SpringJointWeb : MonoBehaviour
 {
+	[HideInInspector] public bool isSwingingWeb = false;
+
 	public event Action ExitFPCamera;
 	public event Action RecenterCamera;
 	public event Action<bool> LockTPCameraRotation;
@@ -22,7 +24,8 @@ public class SpringJointWeb : MonoBehaviour
 	public GameObject targetPointPrefab;
 	public GameObject butt;
 
-	public bool isSwingingWeb = false;
+	public bool isReleased = true;
+	
 
 	enum State
 	{
@@ -50,16 +53,19 @@ public class SpringJointWeb : MonoBehaviour
 			if (Input.GetButtonDown("SwingWeb") || Input.GetAxis("SwingWeb") > 0f)
 			{
 				StartWebGrapple();
+				isReleased = false;
 			}
-			// else if (Input.GetButtonUp("SwingWeb") || Input.GetAxis("SwingWeb") <= 0f)
-			// {
-			// 	StopWeb();
-			// }
+			else if ((Input.GetButtonUp("SwingWeb") || Input.GetAxis("SwingWeb") <= 0f) && isReleased == false)
+			{
+				StopWeb();
+				isReleased = true;
+			}
 		}
 
-		if (Input.GetButtonUp("SwingWeb") || Input.GetAxis("SwingWeb") <= 0f)
+		if ((Input.GetButtonUp("SwingWeb") || Input.GetAxis("SwingWeb") <= 0f) && isReleased == false)
 		{
 			StopWeb();
+			isReleased = true;
 		}
 	}
 
@@ -139,4 +145,13 @@ public class SpringJointWeb : MonoBehaviour
 			currentState = State.IsGrounded;
 		}
 	}
+
+	// private bool RightTriggerButtonIsPressed()
+	// {
+	// 	if (Input.GetAxis("SwingWeb") > 0f)
+	// 	{
+	// 		return true;
+	// 	}
+	// 	else if (Input.GetAxis("SwingWeb") )
+	// }
 }
