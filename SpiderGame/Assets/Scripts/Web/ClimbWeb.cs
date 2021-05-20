@@ -27,7 +27,7 @@ public class ClimbWeb : MonoBehaviour
 	private enum State
 	{
 		Normal,
-		HookFlying,
+		Climbing,
 	}
 
 
@@ -47,12 +47,12 @@ public class ClimbWeb : MonoBehaviour
 	{
 		if (currentState == State.Normal)
 		{
-			HandleHookShotStart();
+			InitiateClimbWeb();
 		}
 
-		if (currentState == State.HookFlying)
+		if (currentState == State.Climbing)
 		{
-			HandleHookShotMovement();
+			ClimbWebMovement();
 		}
 	}
 
@@ -64,9 +64,9 @@ public class ClimbWeb : MonoBehaviour
 		}
 	}
 
-	private void HandleHookShotStart()
+	private void InitiateClimbWeb()
 	{
-		if (Input.GetButtonDown("HookShotWeb") && spiderMovement.debugSettings.isGrounded == true)
+		if (Input.GetButtonDown("ClimbWeb") && spiderMovement.debugSettings.isGrounded == true)
 		{
 			if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit raycastHit))
 			{
@@ -84,7 +84,7 @@ public class ClimbWeb : MonoBehaviour
 
 				spiderMovement.debugSettings.isGrounded = false;
 
-				currentState = State.HookFlying;
+				currentState = State.Climbing;
 
 				if (DisableFPSCamera != null)
 				{
@@ -101,11 +101,11 @@ public class ClimbWeb : MonoBehaviour
 		}
 	}
 
-	private void HandleHookShotMovement()
+	private void ClimbWebMovement()
 	{
 		if(Input.GetButtonDown("Jump") || lerpPercentage > 0.995f || lerpPercentage < 0.005f)
 		{
-			HookShotEnd();
+			ClimbWebEnd();
 			return;
 		}
 
@@ -150,7 +150,7 @@ public class ClimbWeb : MonoBehaviour
 		lineRenderer.enabled = true;
 	}
 
-	private void HookShotEnd()
+	private void ClimbWebEnd()
 	{
 		currentState = State.Normal;
 		spiderMovement.gravityValue = -9.82f;

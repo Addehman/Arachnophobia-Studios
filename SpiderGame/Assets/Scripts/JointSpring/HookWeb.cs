@@ -9,9 +9,7 @@ public class HookWeb : MonoBehaviour
 	[SerializeField] private bool rotateBool = false;
 
 	public event Action DisableFPSCamera;
-	public event Action<bool> ActivationClimbRotation;
-	public event Action CameraStartRotation;
-	public event Action CameraEndRotation;
+	public event Action<bool> LockTPCameraRotation;
 	public Vector3 newTransformUp;
 
 	private SpiderMovement spiderMovement;
@@ -67,7 +65,7 @@ public class HookWeb : MonoBehaviour
 
 	private void HandleHookShotStart()
 	{
-		if (Input.GetButtonDown("HookShotWeb") && spiderMovement.debugSettings.isGrounded == true)
+		if (Input.GetButtonDown("HookShotWeb"))
 		{
 			if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit raycastHit))
 			{
@@ -80,11 +78,11 @@ public class HookWeb : MonoBehaviour
 				rotateBool = true;
 
 				oldPosition = transform.position;
-				lerpPercentage = 0.02f;
+				// lerpPercentage = 0.02f;
 
 				spiderMovement.gravityValue = 0f;
 
-				spiderMovement.debugSettings.isGrounded = false;
+				// spiderMovement.debugSettings.isGrounded = false;
 
 				currentState = State.HookFlying;
 
@@ -93,11 +91,11 @@ public class HookWeb : MonoBehaviour
 					DisableFPSCamera();
 				}
 
-				doDrawLine = true;
+				// doDrawLine = true;
 
-				if (CameraStartRotation != null)
+				if (LockTPCameraRotation != null)
 				{
-					CameraStartRotation();
+					LockTPCameraRotation(true);
 				}
 			}
 		}
@@ -105,33 +103,23 @@ public class HookWeb : MonoBehaviour
 
 	private void HandleHookShotMovement()
 	{
-		if(Input.GetButtonDown("Jump") || lerpPercentage > 0.995f || lerpPercentage < 0.005f)
-		{
-			HookShotEnd();
-			return;
-		}
-
 		//   Vector3 hookShotDirection = (hookShotPosition - transform.position).normalized;
 		float hookShotSpeed = Vector3.Distance(oldPosition, hookShotPosition);
 
-		// Climb Controls
-		float vertical = Input.GetAxis("Vertical");
-		if (vertical > 0f)
+		lerpPercentage += Time.deltaTime / hookShotSpeed * speedMultiplier;
+
+		if (lerpPercentage > 1f)
 		{
-			lerpPercentage += speedMultiplier;
+			lerpPercentage = 1f;
 		}
-		else if (vertical < 0f)
-		{
-			lerpPercentage -= speedMultiplier;
-		}
-		lerpPercentage = Mathf.Clamp(lerpPercentage, 0f, 1f);
-		print (lerpPercentage);
+
+		spiderMovement.gravityValue = 0f;
+
 		transform.position = Vector3.Lerp(oldPosition, hookShotPosition, lerpPercentage);
 		
 		if (rotateBool)
 		{
-			// transform.up = newTransformUp;
-			EnableClimbRotation();
+			transform.up = newTransformUp;
 			rotateBool = false;
 		}
 
@@ -143,12 +131,13 @@ public class HookWeb : MonoBehaviour
 
 		if (lerpPercentage >= 0.8f)
 		{
-			DisableClimbRotation();
 			spiderMovement.UseHookWebNormal = true;
 		}
-		else 
+
+		if (lerpPercentage == 1f)
 		{
-			RotateToFaceTarget();
+			Invoke(nameof(SetNormalGravityAndRotation), 0.2f);
+			currentState = State.Normal;
 		}
 	}
 
@@ -166,10 +155,10 @@ public class HookWeb : MonoBehaviour
 		lineRenderer.enabled = false;
 		doDrawLine = false;
 		DisableClimbRotation();
-		if (CameraEndRotation != null)
-		{
-			CameraEndRotation();
-		}
+		// if (CameraEndRotation != null)
+		// {
+		// 	CameraEndRotation();
+		// }
 	}
 
 	//Tried invoking when to turn on Raycast rotation again, but it doesn't seem to help. Look further into this.
@@ -177,21 +166,26 @@ public class HookWeb : MonoBehaviour
 	{
 		spiderMovement.gravityValue = -9.82f;
 		spiderMovement.UseHookWebNormal = false;
+
+		if (LockTPCameraRotation != null)
+		{
+			LockTPCameraRotation(false);
+		}
 	}
 
 	private void EnableClimbRotation()
 	{
-		if (ActivationClimbRotation != null)
+		if (LockTPCameraRotation != null)
 		{
-			ActivationClimbRotation(false); // bool value = do raycasts?
+			LockTPCameraRotation(false); // bool value = do raycasts?
 		}
 	}
 
 	private void DisableClimbRotation()
 	{
-		if (ActivationClimbRotation != null)
+		if (LockTPCameraRotation != null)
 		{
-			ActivationClimbRotation(true); // bool value = do raycasts?
+			LockTPCameraRotation(true); // bool value = do raycasts?
 		}
 	}
 
