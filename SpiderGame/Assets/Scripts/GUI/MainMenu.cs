@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class MainMenu : MonoBehaviour
 {
     public GameObject howToPlay;
     public GameObject credits;
+    public AudioMixer audioMixer;
 
     private void Start()
     {
-        AudioListener.volume = 1f;
+        float volume = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        volume = Mathf.Log10(volume) * 20;
+        audioMixer.SetFloat("Master", volume);
     }
 
     public void PlayButton()
