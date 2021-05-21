@@ -10,6 +10,7 @@ public class CookQuest : MonoBehaviour
     public GameObject check;
     public GameObject helpText;
     public GameObject questCircle;
+    public GameObject missingIgredients;
     public PickUpObject pickUpObject;
     public bool isFinished = false;
     private bool cookButtonShow = false;
@@ -24,6 +25,11 @@ public class CookQuest : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
             window.SetActive(true);*/
+        }
+
+        else if(other.CompareTag("Player") && isFinished == false && pickUpObject.isAllItemsCollected == false)
+        {
+            missingIgredients.SetActive(true);
         }
     }
     private void Update()
@@ -44,6 +50,11 @@ public class CookQuest : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             window.SetActive(false);*/
+        }
+
+        else if (other.CompareTag("Player") && isFinished == false && pickUpObject.isAllItemsCollected == false)
+        {
+            missingIgredients.SetActive(false);
         }
     }
 
