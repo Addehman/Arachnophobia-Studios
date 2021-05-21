@@ -457,6 +457,7 @@ public class SpiderMovement : MonoBehaviour
 		if ((Input.GetButton("Sprint") && vertical > 0f || Input.GetAxis("Sprint") < 0f) && StaminaBar.staminaBarInstance.currentStamina >= 0.0050f 
 			&& PauseMenu.isPaused == false && IsUsingWeb() == false)
 		{
+			spiderAnimator.speed = 3f;
 			if (debugSettings.isPlayerBeingVacuumed == true)
 			{
 				sprintMulti = playerSettings.velocitySprintMultiAmount;
@@ -473,6 +474,7 @@ public class SpiderMovement : MonoBehaviour
 			&& Input.GetButton("Sprint") == false && IsUsingWeb() == false)
 		{
 			sprintMulti = 0f;
+			spiderAnimator.speed = 1f;
 		}
 	}
 
@@ -494,6 +496,15 @@ public class SpiderMovement : MonoBehaviour
 			spiderAnimator.SetBool("Walk", true);
 		}
 		else if (movementInput < 0.01f && spiderAnimator.GetBool("Walk") == true)
+		{
+			spiderAnimator.SetBool("Walk", false);
+		}
+
+		if(Input.GetKey(KeyCode.A) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true || Input.GetKey(KeyCode.D) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true)
+        {
+			spiderAnimator.SetBool("Walk", true);
+		}
+		else if(Input.GetKeyUp(KeyCode.A) && spiderAnimator.GetBool("Walk") == true || Input.GetKeyUp(KeyCode.D) && spiderAnimator.GetBool("Walk") == true)
 		{
 			spiderAnimator.SetBool("Walk", false);
 		}
