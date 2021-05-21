@@ -116,7 +116,7 @@ public class SpringJointWeb : MonoBehaviour
 		// spiderAnimator.SetBool("Web", false);
 		debugSetting.isGrounded = true;
 		isSwingingWeb = false;
-		GameObject currentPoint = GameObject.Find("TargetPoint(Clone)");
+		GameObject currentPoint = GameObject.Find("TargetPoint(Clone)"); // Check here. Needs fixing
 		Destroy(currentPoint);
 		Destroy(joint);
 		lineRenderer.enabled = false;

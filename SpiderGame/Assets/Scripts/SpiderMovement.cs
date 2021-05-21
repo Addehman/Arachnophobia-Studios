@@ -454,7 +454,7 @@ public class SpiderMovement : MonoBehaviour
 	// Binds key for player to use to increase move speed.
 	private void Sprint()
 	{
-		if ((Input.GetButton("Sprint") && vertical > 0f || Input.GetAxis("Sprint") < 0f) && StaminaBar.staminaBarInstance.currentStamina >= 0.0050f 
+		if ((Input.GetButton("Sprint") && vertical > 0f || Input.GetAxis("Sprint") < 0f) && StaminaBar.staminaBarInstance.currentStamina >= 0.0035f 
 			&& PauseMenu.isPaused == false && IsUsingWeb() == false)
 		{
 			spiderAnimator.speed = 3f;
@@ -467,7 +467,7 @@ public class SpiderMovement : MonoBehaviour
 				sprintMulti = playerSettings.translateSprintMultiAmount;
 			}
 
-			StaminaBar.staminaBarInstance.UseStamina(0.0050f);
+			StaminaBar.staminaBarInstance.UseStamina(0.0035f);
 		}
 
 		if (Input.GetButtonUp("Sprint") || vertical <= 0f || StaminaBar.staminaBarInstance.currentStamina < 0.0050f || Input.GetAxis("Sprint") >= 0f 

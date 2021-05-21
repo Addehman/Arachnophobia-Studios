@@ -20,32 +20,39 @@ public class MainMenu : MonoBehaviour
 
     public void PlayButton()
     {
-        GUISound.clickSound();
+        ClickSound.PlayClickSFX();
         SceneManager.LoadScene("GameScene");
     }
 
     public void HowToPlayButton()
     {
-        GUISound.clickSound();
+        ClickSound.PlayClickSFX();
         SceneManager.LoadScene("TutorialScene");
     }
 
     public void CreditsButton()
     {
-        GUISound.clickSound();
+        ClickSound.PlayClickSFX();
         credits.SetActive(true);
+    }
+    
+    public void GenericClickButton()
+    {
+        ClickSound.PlayClickSFX();
+        
     }
 
     public void QuitGameButton()
     {
-        GUISound.clickSound();
+        ClickSound.PlayClickSFX();
         Application.Quit();
     }
 
     public void Back()
     {
-        GUISound.clickSound();
+        ClickSound.PlayClickSFX();
         credits.SetActive(false);
         howToPlay.SetActive(false);
     }
+
 }

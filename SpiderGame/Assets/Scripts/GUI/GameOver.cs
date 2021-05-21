@@ -73,19 +73,19 @@ public class GameOver : MonoBehaviour
 
     public void RestartButton()
     {
-        GUISound.clickSound();
+        ClickSound.PlayClickSFX();
         SceneManager.LoadScene("GameScene");
     }
 
     public void BackToMainMenu()
     {
-        GUISound.clickSound();
+        ClickSound.PlayClickSFX();
         SceneManager.LoadScene("MainMenu");
     }
 
     public void ExitButton()
     {
-        GUISound.clickSound();
+        ClickSound.PlayClickSFX();
         Application.Quit();
     }
 }
