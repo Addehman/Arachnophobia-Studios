@@ -13,9 +13,11 @@ public class MainMenu : MonoBehaviour
 
 	private void Start()
 	{
-		float volume = PlayerPrefs.GetFloat("MusicVolume", 1f);
-		volume = Mathf.Log10(volume) * 20;
-		audioMixer.SetFloat("Master", volume);
+		// float volume = PlayerPrefs.GetFloat("MusicVolume", 1f);
+		// volume = Mathf.Log10(volume) * 20;
+		// audioMixer.SetFloat("Master", volume);
+
+		AudioListener.volume = 1f;
 	}
 
 	public void PlayButton()
