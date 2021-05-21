@@ -15,6 +15,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private CinemachineComponentBase tpCameraComponentBase;
 	private HookWeb hookWeb;
 	private ClimbWeb climbWeb;
+	private SpringJointWeb springJointWeb;
 	private Transform cameraParent;
 	private Vector3 currentVelocity;
 	private float cameraInputX;
@@ -41,7 +42,9 @@ public class ThirdPersonCameraController : MonoBehaviour
 		hookWeb.LockTPCameraRotation += HookWebRecenterCamera;
 		climbWeb = FindObjectOfType<ClimbWeb>();
 		climbWeb.CameraStartRotation += BeginClimbRotation;
-		climbWeb.CameraEndRotation += ClimbWebRecenterCamera;
+		climbWeb.CameraEndRotation += RecenterCamera;
+		springJointWeb = FindObjectOfType<SpringJointWeb>();
+		springJointWeb.RecenterCamera += RecenterCamera;
 	}
 	
 	void LateUpdate()
@@ -91,7 +94,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 		cameraInputY = 0f;
 	}
 
-	public void ClimbWebRecenterCamera()
+	public void RecenterCamera()
 	{
 		cameraInputX = 0f;
 		cameraInputY = 0f;

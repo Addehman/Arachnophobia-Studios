@@ -1,122 +1,157 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class SpringJointWeb : MonoBehaviour
 {
-    float maxDistance = 100f;
+	[HideInInspector] public bool isSwingingWeb = false;
 
-    SpringJoint joint;
-    SpiderAudio spiderAudio;
-    LineRenderer lineRenderer;
-    State currentState = State.IsGrounded;
+	public event Action ExitFPCamera;
+	public event Action RecenterCamera;
+	public event Action<bool> LockTPCameraRotation;
 
-    private ToggleCameras toggleCameras;
-    public DebugSettings debugSetting;
-    public Animator spiderAnimator;
+	float maxDistance = 100f;
 
-    public GameObject firstPersonCamera;
-    public GameObject targetPointPrefab;
-    public GameObject butt;
+	SpringJoint joint;
+	SpiderAudio spiderAudio;
+	LineRenderer lineRenderer;
+	State currentState = State.IsGrounded;
 
-    public bool isSwingingWeb = false;
+	private ToggleCameras toggleCameras;
+	public DebugSettings debugSetting;
+	public Animator spiderAnimator;
 
-    enum State
-    {
-        IsGrounded,
-        IsSwinging,
-        IsHanging,
-        IsLanding
-    }
+	public GameObject firstPersonCamera;
+	public GameObject targetPointPrefab;
+	public GameObject butt;
 
-    private void Awake()
-    {
-        lineRenderer = GetComponent<LineRenderer>();
-    }
+	public bool isReleased = true;
+	
 
-    private void Start()
-    {
-        spiderAudio = GetComponent<SpiderAudio>();
-        toggleCameras = Camera.main.GetComponent<ToggleCameras>();
-    }
+	enum State
+	{
+		IsGrounded,
+		IsSwinging,
+		IsHanging,
+		IsLanding
+	}
 
-    private void Update()
-    {
-        if(toggleCameras.boosted == true)
-        {
-            if (Input.GetButtonDown("SwingWeb") || Input.GetAxis("SwingWeb") > 0f)
-            {
-                StartWebGrapple();
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                StopWeb();
-            }
-        }
+	private void Awake()
+	{
+		lineRenderer = GetComponent<LineRenderer>();
+	}
 
-        if (Input.GetButtonUp("SwingWeb") || Input.GetAxis("SwingWeb") <= 0f)
-        {
-            StopWeb();
-        }
-    }
+	private void Start()
+	{
+		spiderAudio = GetComponent<SpiderAudio>();
+		toggleCameras = Camera.main.GetComponent<ToggleCameras>();
+	}
 
-    private void LateUpdate()
-    {
-        DrawString();
-    }
+	private void Update()
+	{
+		if(toggleCameras.boosted == true)
+		{
+			if (Input.GetButtonDown("SwingWeb") || Input.GetAxis("SwingWeb") > 0f)
+			{
+				StartWebGrapple();
+				isReleased = false;
+			}
+			else if ((Input.GetButtonUp("SwingWeb") || Input.GetAxis("SwingWeb") <= 0f) && isReleased == false)
+			{
+				StopWeb();
+				isReleased = true;
+			}
+		}
 
-    void StartWebGrapple()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(butt.transform.position, Camera.main.transform.forward, out hit, maxDistance))
-        {
-            spiderAudio.WebShoot();
+		if ((Input.GetButtonUp("SwingWeb") || Input.GetAxis("SwingWeb") <= 0f) && isReleased == false)
+		{
+			StopWeb();
+			isReleased = true;
+		}
+	}
 
-            isSwingingWeb = true;
-  //          spiderAnimator.SetBool("Web", true);
-            toggleCameras.DisableFPSCamera();
-            currentState = State.IsSwinging;
-            GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);
-            joint = gameObject.AddComponent<SpringJoint>();
-            joint.connectedBody = targetPoint.GetComponent<Rigidbody>();
+	private void LateUpdate()
+	{
+		DrawString();
+	}
 
-            joint.spring = 120f;
-            joint.damper = 75f;
-            joint.massScale = 3f;
-            joint.autoConfigureConnectedAnchor = false;
-            joint.anchor = new Vector3(0f, 0f, 0f);
-            joint.connectedAnchor = new Vector3(0f, 0f, 0f);
-        }
-    }
+	void StartWebGrapple()
+	{
+		RaycastHit hit;
+		if (Physics.Raycast(butt.transform.position, Camera.main.transform.forward, out hit, maxDistance))
+		{
+			spiderAudio.WebShoot();
 
-    void StopWeb()
-    {
-        // spiderAnimator.SetBool("Web", false);
-        debugSetting.isGrounded = true;
-        isSwingingWeb = false;
-        GameObject currentPoint = GameObject.Find("TargetPoint(Clone)");
-        Destroy(currentPoint);
-        Destroy(joint);
-        lineRenderer.enabled = false;
-    }
+			isSwingingWeb = true;
+			//spiderAnimator.SetBool("Web", true);
+			currentState = State.IsSwinging;
+			GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);
+			joint = gameObject.AddComponent<SpringJoint>();
+			joint.connectedBody = targetPoint.GetComponent<Rigidbody>();
 
-    void DrawString()
-    {
-        if (!joint)
-        {
-            return;
-        }
+			joint.spring = 120f;
+			joint.damper = 75f;
+			joint.massScale = 3f;
+			joint.autoConfigureConnectedAnchor = false;
+			joint.anchor = new Vector3(0f, 0f, 0f);
+			joint.connectedAnchor = new Vector3(0f, 0f, 0f);
 
-        lineRenderer.SetPosition(0, butt.transform.position);
-        lineRenderer.SetPosition(1, GameObject.Find("TargetPoint(Clone)").transform.position);
-        lineRenderer.enabled = true;
-    }
+			if (ExitFPCamera != null)
+			{
+				ExitFPCamera();
+			}
+			if (LockTPCameraRotation != null)
+			{
+				LockTPCameraRotation(true);
+			}
+		}
+	}
 
-    private void OnTriggerEnter(Collider collision)
-    {
-        if (collision.CompareTag("Ground"))
-        {
-            currentState = State.IsGrounded;
-        }
-    }
+	void StopWeb()
+	{
+		// spiderAnimator.SetBool("Web", false);
+		debugSetting.isGrounded = true;
+		isSwingingWeb = false;
+		GameObject currentPoint = GameObject.Find("TargetPoint(Clone)");
+		Destroy(currentPoint);
+		Destroy(joint);
+		lineRenderer.enabled = false;
+
+		if (LockTPCameraRotation != null)
+		{
+			LockTPCameraRotation(false);
+		}
+		if (RecenterCamera != null)
+		{
+			RecenterCamera();
+		}
+	}
+
+	void DrawString()
+	{
+		if (!joint)
+		{
+			return;
+		}
+
+		lineRenderer.SetPosition(0, butt.transform.position);
+		lineRenderer.SetPosition(1, GameObject.Find("TargetPoint(Clone)").transform.position);
+		lineRenderer.enabled = true;
+	}
+
+	private void OnTriggerEnter(Collider collision)
+	{
+		if (collision.CompareTag("Ground"))
+		{
+			currentState = State.IsGrounded;
+		}
+	}
+
+	// private bool RightTriggerButtonIsPressed()
+	// {
+	// 	if (Input.GetAxis("SwingWeb") > 0f)
+	// 	{
+	// 		return true;
+	// 	}
+	// 	else if (Input.GetAxis("SwingWeb") )
+	// }
 }

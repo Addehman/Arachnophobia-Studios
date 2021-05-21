@@ -13,7 +13,7 @@ public class FliesQuest : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isFinished == false && canPickUpFlies == true)
+        if (Input.GetButtonDown("Interact") && isFinished == false && canPickUpFlies == true)
         {
             Winstate.AddCompletedQuest(); // Winstate needs to be fixed from 4 to 5.
             flies.SetActive(false);

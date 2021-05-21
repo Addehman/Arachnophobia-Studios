@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class HookWeb : MonoBehaviour
 {
+	[HideInInspector] public bool isHookWebing = false;
+
 	[SerializeField] private float speedMultiplier = 1f;
 	[SerializeField] private bool rotateBool = false;
 
@@ -59,7 +61,6 @@ public class HookWeb : MonoBehaviour
 
 				hookShotPosition = raycastHit.point;
 
-				// spiderMovement.UseHookWebNormal = true;
 				rotateBool = true;
 
 				oldPosition = transform.position;
@@ -76,6 +77,8 @@ public class HookWeb : MonoBehaviour
 				{
 					LockTPCameraRotation(true);
 				}
+
+				isHookWebing = true;
 			}
 		}
 	}
@@ -87,10 +90,10 @@ public class HookWeb : MonoBehaviour
 
 		lerpPercentage += Time.deltaTime / hookShotSpeed * speedMultiplier;
 
-		if (lerpPercentage > 1f)
-		{
-			lerpPercentage = 1f;
-		}
+		// if (lerpPercentage > 1f)
+		// {
+		// 	lerpPercentage = 1f;
+		// }
 
 		spiderMovement.gravityValue = 0f;
 
@@ -113,16 +116,19 @@ public class HookWeb : MonoBehaviour
 			spiderMovement.UseHookWebNormal = true;
 		}
 
-		if (lerpPercentage == 1f)
+		// if (lerpPercentage == 1f)
+		if (Input.GetButtonDown("Jump") || lerpPercentage >= 0.99f) // this lerpPercentage check makes sure you don't travel into objects
 		{
 			// tpcController.RecenterCamera();
-			Invoke(nameof(SetNormalGravityAndRotation), 0.2f);
-			currentState = State.Normal;
+			// Invoke(nameof(SetNormalGravityAndRotation), 0.2f);
+			// currentState = State.Normal;
+			// isHookWebing = false;
+			HookWebEnd();
 		}
 	}
 
 	//Tried invoking when to turn on Raycast rotation again, but it doesn't seem to help. Look further into this.
-	public void SetNormalGravityAndRotation()
+	public void HookWebEnd()
 	{
 		spiderMovement.gravityValue = -9.82f;
 		spiderMovement.UseHookWebNormal = false;
@@ -131,5 +137,8 @@ public class HookWeb : MonoBehaviour
 		{
 			LockTPCameraRotation(false);
 		}
+
+		currentState = State.Normal;
+		isHookWebing = false;
 	}
 }

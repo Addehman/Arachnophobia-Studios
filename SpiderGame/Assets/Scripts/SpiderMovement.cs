@@ -454,7 +454,8 @@ public class SpiderMovement : MonoBehaviour
 	// Binds key for player to use to increase move speed.
 	private void Sprint()
 	{
-		if ((Input.GetButton("Sprint") && vertical > 0f || Input.GetAxis("Sprint") < 0f) && StaminaBar.staminaBarInstance.currentStamina >= 0.0050f && PauseMenu.isPaused == false)
+		if ((Input.GetButton("Sprint") && vertical > 0f || Input.GetAxis("Sprint") < 0f) && StaminaBar.staminaBarInstance.currentStamina >= 0.0050f 
+			&& PauseMenu.isPaused == false && IsUsingWeb() == false)
 		{
 			if (debugSettings.isPlayerBeingVacuumed == true)
 			{
@@ -468,7 +469,8 @@ public class SpiderMovement : MonoBehaviour
 			StaminaBar.staminaBarInstance.UseStamina(0.0050f);
 		}
 
-		if (Input.GetButtonUp("Sprint") || vertical <= 0f || StaminaBar.staminaBarInstance.currentStamina < 0.0050f || Input.GetAxis("Sprint") >= 0f && Input.GetButton("Sprint") == false)
+		if (Input.GetButtonUp("Sprint") || vertical <= 0f || StaminaBar.staminaBarInstance.currentStamina < 0.0050f || Input.GetAxis("Sprint") >= 0f 
+			&& Input.GetButton("Sprint") == false && IsUsingWeb() == false)
 		{
 			sprintMulti = 0f;
 		}
@@ -520,6 +522,26 @@ public class SpiderMovement : MonoBehaviour
 		else
 		{
 			spiderModel.SetActive(true);
+		}
+	}
+
+	private bool IsUsingWeb()
+	{
+		if (springJointWeb.isSwingingWeb == true)
+		{
+			return true;
+		}
+		else if (hookWeb.isHookWebing == true)
+		{
+			return true;
+		}
+		else if(climbWeb.isClimbWebing == true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 }

@@ -13,7 +13,7 @@ public class RadioQuest : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isFinished == false && canPlayRadio == true)
+        if (Input.GetButtonDown("Interact") && isFinished == false && canPlayRadio == true)
         {
             Winstate.AddCompletedQuest();
             song.SetActive(true);

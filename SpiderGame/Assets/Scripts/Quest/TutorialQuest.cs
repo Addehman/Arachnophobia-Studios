@@ -12,7 +12,7 @@ public class TutorialQuest : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isFinished == false && canPress == true)
+        if (Input.GetButtonDown("Interact") && isFinished == false && canPress == true)
         {
        //     Winstate.AddCompletedQuest();
             helpText.SetActive(false);

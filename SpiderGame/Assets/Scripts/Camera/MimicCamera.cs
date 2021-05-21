@@ -8,8 +8,9 @@ public class MimicCamera : MonoBehaviour
 
 	public bool doLockRotation = false;
 
-	private Transform cameraToMimic;
 	private HookWeb hookWeb;
+	private SpringJointWeb springJointWeb;
+	private Transform cameraToMimic;
 	private Vector3 currentVelocity;
 	private Quaternion lockedRotation;
 
@@ -19,6 +20,8 @@ public class MimicCamera : MonoBehaviour
 		cameraToMimic = FindObjectOfType<ThirdPersonCameraController>().transform;
 		hookWeb = FindObjectOfType<HookWeb>();
 		hookWeb.LockTPCameraRotation += LockRotation;
+		springJointWeb = FindObjectOfType<SpringJointWeb>();
+		springJointWeb.LockTPCameraRotation += LockRotation;
 	}
 
 	private void LateUpdate()
