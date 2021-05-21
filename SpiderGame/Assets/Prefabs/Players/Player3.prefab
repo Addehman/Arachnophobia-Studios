@@ -314,6 +314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7982151ba7126ff4e80af2600390d79c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isSwingingWeb: 0
   debugSetting:
     isGrounded: 0
     doDrawRayGizmos: 1
@@ -331,7 +332,7 @@ MonoBehaviour:
   firstPersonCamera: {fileID: 3944242281898070516}
   targetPointPrefab: {fileID: 2288128265524229465, guid: 4e4411aca44651543800b9077af1e0cf, type: 3}
   butt: {fileID: 1247032614615311147}
-  isSwingingWeb: 0
+  isReleased: 1
 --- !u!114 &328657220566939337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -572,6 +573,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4158639adfc98e846a8800fdcb3d50a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHookWebing: 0
   speedMultiplier: 1
   rotateBool: 0
   newTransformUp: {x: 0, y: 0, z: 0}
@@ -588,6 +590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   newTransformUp: {x: 0, y: 0, z: 0}
+  isClimbWebing: 0
   speedMultiplier: 0.005
 --- !u!95 &1344089395
 Animator:

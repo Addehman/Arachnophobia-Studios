@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class SpringJointWeb : MonoBehaviour
 {
+	[HideInInspector] public bool isSwingingWeb = false;
+
 	public event Action ExitFPCamera;
 	public event Action RecenterCamera;
 	public event Action<bool> LockTPCameraRotation;
@@ -22,7 +24,8 @@ public class SpringJointWeb : MonoBehaviour
 	public GameObject targetPointPrefab;
 	public GameObject butt;
 
-	public bool isSwingingWeb = false;
+	public bool isReleased = true;
+	
 
 	enum State
 	{
@@ -47,19 +50,22 @@ public class SpringJointWeb : MonoBehaviour
 	{
 		if(toggleCameras.boosted == true)
 		{
-			if (Input.GetButtonDown("SwingWeb") || Input.GetAxis("SwingWeb") > 0f)
+			if (Input.GetButtonDown("UseWeb") || Input.GetAxis("UseWeb") > 0f)
 			{
 				StartWebGrapple();
+				isReleased = false;
 			}
-			// else if (Input.GetButtonUp("SwingWeb") || Input.GetAxis("SwingWeb") <= 0f)
-			// {
-			// 	StopWeb();
-			// }
+			else if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
+			{
+				StopWeb();
+				isReleased = true;
+			}
 		}
 
-		if (Input.GetButtonUp("SwingWeb") || Input.GetAxis("SwingWeb") <= 0f)
+		if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
 		{
 			StopWeb();
+			isReleased = true;
 		}
 	}
 
@@ -68,7 +74,12 @@ public class SpringJointWeb : MonoBehaviour
 		DrawString();
 	}
 
-	void StartWebGrapple()
+    private void OnDisable()
+    {
+		StopWeb();
+    }
+
+    void StartWebGrapple()
 	{
 		RaycastHit hit;
 		if (Physics.Raycast(butt.transform.position, Camera.main.transform.forward, out hit, maxDistance))

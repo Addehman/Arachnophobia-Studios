@@ -5,131 +5,177 @@ using UnityEngine;
 
 public class HookWeb : MonoBehaviour
 {
-	[SerializeField] private float speedMultiplier = 1f;
-	[SerializeField] private bool rotateBool = false;
+    [HideInInspector] public bool isHookWebing = false;
 
-	public event Action DisableFPSCamera;
-	public event Action<bool> LockTPCameraRotation;
-	public Vector3 newTransformUp;
+    [SerializeField] private float speedMultiplier = 1f;
+    [SerializeField] private bool rotateBool = false;
 
-	private SpiderMovement spiderMovement;
-	private ThirdPersonCameraController tpcController;
-	private MimicCamera mimicCamera;
-	private State currentState;
-	private Vector3 oldPosition;
-	private Vector3 hookShotPosition;
-	private Vector3 previousTransformUp;
-	private float lerpPercentage = 0f;
+    public event Action DisableFPSCamera;
+    public event Action<bool> LockTPCameraRotation;
+    public Vector3 newTransformUp;
 
-	private enum State
-	{
-		Normal,
-		HookFlying,
-	}
+    private SpiderMovement spiderMovement;
+    private LineRenderer lineRenderer;
 
+    private ToggleCameras toggleCameras;
+    private ThirdPersonCameraController tpcController;
+    private MimicCamera mimicCamera;
 
-	void Start()
-	{
-		spiderMovement = GetComponent<SpiderMovement>();
-		tpcController = FindObjectOfType<ThirdPersonCameraController>();
-		mimicCamera = FindObjectOfType<MimicCamera>();
-	}
+    private State currentState;
+    private Vector3 oldPosition;
+    private Vector3 hookShotPosition;
+    private Vector3 previousTransformUp;
+    private float lerpPercentage = 0f;
+    private bool doDrawLine = false;
 
-	void Update()
-	{
-		if (currentState == State.Normal)
-		{
-			HandleHookShotStart();
-		}
+    private enum State
+    {
+        Normal,
+        HookFlying,
+    }
 
-		if (currentState == State.HookFlying)
-		{
-			HandleHookShotMovement();
-		}
-	}
+    private void Awake()
+    {
+        lineRenderer = GetComponent<LineRenderer>();
+    }
 
-	void HandleHookShotStart()
-	{
-		if (Input.GetButtonDown("HookShotWeb"))
-		{
-			if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit raycastHit))
-			{
-				previousTransformUp = transform.up;
-				newTransformUp = raycastHit.normal;
+    void Start()
+    {
+        spiderMovement = GetComponent<SpiderMovement>();
+        tpcController = FindObjectOfType<ThirdPersonCameraController>();
+        mimicCamera = FindObjectOfType<MimicCamera>();
+        toggleCameras = Camera.main.GetComponent<ToggleCameras>();
+    }
 
-				hookShotPosition = raycastHit.point;
+    void Update()
+    {
+        if (toggleCameras.boosted == true)
+        {
+            if (currentState == State.Normal)
+            {
+                HandleHookShotStart();
+            }
+        }
 
-				// spiderMovement.UseHookWebNormal = true;
-				rotateBool = true;
+        if (currentState == State.HookFlying)
+        {
+            HandleHookShotMovement();
+        }
+    }
 
-				oldPosition = transform.position;
-				lerpPercentage = 0;
+    private void LateUpdate()
+    {
+        if (doDrawLine == true)
+        {
+            DrawLine();
+        }
+    }
 
-				currentState = State.HookFlying;
+    private void OnDisable()
+    {
+        HookWebEnd();
+    }
 
-				if (DisableFPSCamera != null)
-				{
-					DisableFPSCamera();
-				}
+    void HandleHookShotStart()
+    {
+        if (Input.GetButtonDown("UseWeb"))
+        {
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit raycastHit))
+            {
+                previousTransformUp = transform.up;
+                newTransformUp = raycastHit.normal;
 
-				if (LockTPCameraRotation != null)
-				{
-					LockTPCameraRotation(true);
-				}
-			}
-		}
-	}
+                hookShotPosition = raycastHit.point;
 
-	void HandleHookShotMovement()
-	{
-		//   Vector3 hookShotDirection = (hookShotPosition - transform.position).normalized;
-		float hookShotSpeed = Vector3.Distance(oldPosition, hookShotPosition);
+                rotateBool = true;
 
-		lerpPercentage += Time.deltaTime / hookShotSpeed * speedMultiplier;
+                oldPosition = transform.position;
+                lerpPercentage = 0;
 
-		if (lerpPercentage > 1f)
-		{
-			lerpPercentage = 1f;
-		}
+                currentState = State.HookFlying;
 
-		spiderMovement.gravityValue = 0f;
+                if (DisableFPSCamera != null)
+                {
+                    DisableFPSCamera();
+                }
 
-		transform.position = Vector3.Lerp(oldPosition, hookShotPosition, lerpPercentage);
+                doDrawLine = true;
 
-		if (rotateBool)
-		{
-			transform.up = newTransformUp;
-			rotateBool = false;
-		}
+                if (LockTPCameraRotation != null)
+                {
+                    LockTPCameraRotation(true);
+                }
 
-		//Use below to Lerp the rotation to have a smoother transition between original rotation and 
-		//transform.up = Vector3.Lerp(previousTransformUp, newTransformUp, speed);
+                isHookWebing = true;
+            }
+        }
+    }
 
-		//Camerafix
-		// tpcController.RecenterCamera();
+    private void DrawLine()
+    {
+        lineRenderer.SetPosition(0, transform.position);
+        lineRenderer.SetPosition(1, hookShotPosition);
+        lineRenderer.enabled = true;
+    }
 
-		if (lerpPercentage >= 0.8f)
-		{
-			spiderMovement.UseHookWebNormal = true;
-		}
+    void HandleHookShotMovement()
+    {
+        //   Vector3 hookShotDirection = (hookShotPosition - transform.position).normalized;
+        float hookShotSpeed = Vector3.Distance(oldPosition, hookShotPosition);
 
-		if (lerpPercentage == 1f)
-		{
-			// tpcController.RecenterCamera();
-			Invoke(nameof(SetNormalGravityAndRotation), 0.2f);
-			currentState = State.Normal;
-		}
-	}
+        lerpPercentage += Time.deltaTime / hookShotSpeed * speedMultiplier;
 
-	//Tried invoking when to turn on Raycast rotation again, but it doesn't seem to help. Look further into this.
-	public void SetNormalGravityAndRotation()
-	{
-		spiderMovement.gravityValue = -9.82f;
-		spiderMovement.UseHookWebNormal = false;
+        // if (lerpPercentage > 1f)
+        // {
+        // 	lerpPercentage = 1f;
+        // }
 
-		if (LockTPCameraRotation != null)
-		{
-			LockTPCameraRotation(false);
-		}
-	}
+        spiderMovement.gravityValue = 0f;
+
+        transform.position = Vector3.Lerp(oldPosition, hookShotPosition, lerpPercentage);
+
+        if (rotateBool)
+        {
+            transform.up = newTransformUp;
+            rotateBool = false;
+        }
+
+        //Use below to Lerp the rotation to have a smoother transition between original rotation and 
+        //transform.up = Vector3.Lerp(previousTransformUp, newTransformUp, speed);
+
+        //Camerafix
+        // tpcController.RecenterCamera();
+
+        if (lerpPercentage >= 0.8f)
+        {
+            spiderMovement.UseHookWebNormal = true;
+        }
+
+        // if (lerpPercentage == 1f)
+        if (Input.GetButtonDown("Jump") || lerpPercentage >= 0.99f) // this lerpPercentage check makes sure you don't travel into objects
+        {
+            // tpcController.RecenterCamera();
+            // Invoke(nameof(SetNormalGravityAndRotation), 0.2f);
+            // currentState = State.Normal;
+            // isHookWebing = false;
+            HookWebEnd();
+        }
+    }
+
+    //Tried invoking when to turn on Raycast rotation again, but it doesn't seem to help. Look further into this.
+    public void HookWebEnd()
+    {
+        spiderMovement.gravityValue = -9.82f;
+        spiderMovement.UseHookWebNormal = false;
+        lineRenderer.enabled = false;
+        doDrawLine = false;
+
+        if (LockTPCameraRotation != null)
+        {
+            LockTPCameraRotation(false);
+        }
+
+        currentState = State.Normal;
+        isHookWebing = false;
+    }
 }

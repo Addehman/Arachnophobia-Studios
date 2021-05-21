@@ -3,184 +3,198 @@ using UnityEngine;
 
 public class ClimbWeb : MonoBehaviour
 {
-	[HideInInspector] public Vector3 newTransformUp;
+    [HideInInspector] public Vector3 newTransformUp;
+    [HideInInspector] public bool isClimbWebing = false;
 
-	[SerializeField] private float speedMultiplier = 0.005f;
+    [SerializeField] private float speedMultiplier = 0.005f;
 
-	public event Action DisableFPSCamera;
-	public event Action<bool> ActivationClimbRotation;
-	public event Action CameraStartRotation;
-	public event Action CameraEndRotation;
+    public event Action DisableFPSCamera;
+    public event Action<bool> ActivationClimbRotation;
+    public event Action CameraStartRotation;
+    public event Action CameraEndRotation;
 
-	private SpiderMovement spiderMovement;
-	private ThirdPersonCameraController tpcController;
-	private MimicCamera mimicCamera;
-	private State currentState;
-	private LineRenderer lineRenderer;
-	private Vector3 oldPosition;
-	private Vector3 climbShotPosition;
-	private Vector3 previousTransformUp;
-	private float lerpPercentage = 0f;
-	private bool rotateBool = false;
-	private bool doDrawLine = false;
+    private SpiderMovement spiderMovement;
+    private ThirdPersonCameraController tpcController;
+    private MimicCamera mimicCamera;
+    private ToggleCameras toggleCameras;
+    private LineRenderer lineRenderer;
+    private State currentState;
+    private Vector3 oldPosition;
+    private Vector3 climbShotPosition;
+    private Vector3 previousTransformUp;
+    private float lerpPercentage = 0f;
+    private bool rotateBool = false;
+    private bool doDrawLine = false;
 
-	private enum State
-	{
-		Normal,
-		Climbing,
-	}
+    private enum State
+    {
+        Normal,
+        Climbing,
+    }
 
 
-	private void Awake()
-	{
-		lineRenderer = GetComponent<LineRenderer>();
-	}
-	
-	private void Start()
-	{
-		spiderMovement = GetComponent<SpiderMovement>();
-		tpcController = FindObjectOfType<ThirdPersonCameraController>();
-		mimicCamera = FindObjectOfType<MimicCamera>();
-	}
+    private void Awake()
+    {
+        lineRenderer = GetComponent<LineRenderer>();
+    }
 
-	private void Update()
-	{
-		if (currentState == State.Normal)
-		{
-			InitiateClimbWeb();
-		}
+    private void Start()
+    {
+        spiderMovement = GetComponent<SpiderMovement>();
+        tpcController = FindObjectOfType<ThirdPersonCameraController>();
+        mimicCamera = FindObjectOfType<MimicCamera>();
+        toggleCameras = Camera.main.GetComponent<ToggleCameras>();
+    }
 
-		if (currentState == State.Climbing)
-		{
-			ClimbWebMovement();
-		}
-	}
+    private void Update()
+    {
+        if (toggleCameras.boosted == true)
+        {
+            if (currentState == State.Normal)
+            {
+                InitiateClimbWeb();
+            }
+        }
 
-	private void LateUpdate()
-	{
-		if (doDrawLine == true)
-		{
-			DrawLine();
-		}
-	}
+        if (currentState == State.Climbing)
+        {
+            ClimbWebMovement();
+        }
+    }
 
-	private void InitiateClimbWeb()
-	{
-		if (Input.GetButtonDown("ClimbWeb") && spiderMovement.debugSettings.isGrounded == true)
-		{
-			if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit raycastHit))
-			{
-				previousTransformUp = transform.up;
-				newTransformUp = raycastHit.normal;
+    private void LateUpdate()
+    {
+        if (doDrawLine == true)
+        {
+            DrawLine();
+        }
+    }
 
-				climbShotPosition = raycastHit.point;
+    private void OnDisable()
+    {
+        ClimbWebEnd();
+    }
 
-				rotateBool = true;
+    private void InitiateClimbWeb()
+    {
+        if (Input.GetButtonDown("UseWeb") && spiderMovement.debugSettings.isGrounded == true)
+        {
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit raycastHit))
+            {
+                previousTransformUp = transform.up;
+                newTransformUp = raycastHit.normal;
 
-				oldPosition = transform.position;
-				lerpPercentage = 0.02f;
+                climbShotPosition = raycastHit.point;
 
-				spiderMovement.gravityValue = 0f;
+                rotateBool = true;
 
-				spiderMovement.debugSettings.isGrounded = false;
+                oldPosition = transform.position;
+                lerpPercentage = 0.02f;
 
-				currentState = State.Climbing;
+                spiderMovement.gravityValue = 0f;
 
-				if (DisableFPSCamera != null)
-				{
-					DisableFPSCamera();
-				}
+                spiderMovement.debugSettings.isGrounded = false;
 
-				doDrawLine = true;
+                currentState = State.Climbing;
 
-				if (CameraStartRotation != null)
-				{
-					CameraStartRotation();
-				}
-			}
-		}
-	}
+                if (DisableFPSCamera != null)
+                {
+                    DisableFPSCamera();
+                }
 
-	private void ClimbWebMovement()
-	{
-		if(Input.GetButtonDown("Jump") || lerpPercentage > 0.995f || lerpPercentage < 0.005f)
-		{
-			ClimbWebEnd();
-			return;
-		}
+                doDrawLine = true;
 
-		float climbSpeed = Vector3.Distance(oldPosition, climbShotPosition);
+                if (CameraStartRotation != null)
+                {
+                    CameraStartRotation();
+                }
 
-	// Climb Controls
-		float vertical = Input.GetAxis("Vertical");
-		if (vertical > 0f)
-		{
-			lerpPercentage += speedMultiplier / climbSpeed;
-		}
-		else if (vertical < 0f)
-		{
-			lerpPercentage -= speedMultiplier / climbSpeed;
-		}
-		lerpPercentage = Mathf.Clamp(lerpPercentage, 0f, 1f);
-		print (lerpPercentage);
-		transform.position = Vector3.Lerp(oldPosition, climbShotPosition, lerpPercentage);
-		
-		if (rotateBool)
-		{
-			EnableClimbRotation();
-			rotateBool = false;
-		}
+                isClimbWebing = true;
+            }
+        }
+    }
 
-		if (lerpPercentage >= 0.8f)
-		{
-			DisableClimbRotation();
-			spiderMovement.UseClimbWebNormal = true;
-		}
-		else 
-		{
-			RotateToFaceTarget();
-		}
-	}
+    private void ClimbWebMovement()
+    {
+        if (Input.GetButtonDown("Jump") || lerpPercentage > 0.995f || lerpPercentage < 0.005f)
+        {
+            ClimbWebEnd();
+            return;
+        }
 
-	private void DrawLine()
-	{
-		lineRenderer.SetPosition(0, oldPosition);
-		lineRenderer.SetPosition(1, climbShotPosition);
-		lineRenderer.enabled = true;
-	}
+        float climbSpeed = Vector3.Distance(oldPosition, climbShotPosition);
 
-	private void ClimbWebEnd()
-	{
-		currentState = State.Normal;
-		spiderMovement.gravityValue = -9.82f;
-		spiderMovement.UseClimbWebNormal = false;
-		lineRenderer.enabled = false;
-		doDrawLine = false;
-		DisableClimbRotation();
-		if (CameraEndRotation != null)
-		{
-			CameraEndRotation();
-		}
-	}
+        // Climb Controls
+        float vertical = Input.GetAxis("Vertical");
+        if (vertical > 0f)
+        {
+            lerpPercentage += speedMultiplier / climbSpeed;
+        }
+        else if (vertical < 0f)
+        {
+            lerpPercentage -= speedMultiplier / climbSpeed;
+        }
+        lerpPercentage = Mathf.Clamp(lerpPercentage, 0f, 1f);
+        print(lerpPercentage);
+        transform.position = Vector3.Lerp(oldPosition, climbShotPosition, lerpPercentage);
 
-	private void EnableClimbRotation()
-	{
-		if (ActivationClimbRotation != null)
-		{
-			ActivationClimbRotation(false); // bool value = do raycasts?
-		}
-	}
+        if (rotateBool)
+        {
+            EnableClimbRotation();
+            rotateBool = false;
+        }
 
-	private void DisableClimbRotation()
-	{
-		if (ActivationClimbRotation != null)
-		{
-			ActivationClimbRotation(true); // bool value = do raycasts?
-		}
-	}
+        if (lerpPercentage >= 0.8f)
+        {
+            DisableClimbRotation();
+            spiderMovement.UseClimbWebNormal = true;
+        }
+        else
+        {
+            RotateToFaceTarget();
+        }
+    }
 
-	private void RotateToFaceTarget()
-	{
-		transform.forward = (climbShotPosition - transform.position).normalized;
-	}
+    private void DrawLine()
+    {
+        lineRenderer.SetPosition(0, oldPosition);
+        lineRenderer.SetPosition(1, climbShotPosition);
+        lineRenderer.enabled = true;
+    }
+
+    private void ClimbWebEnd()
+    {
+        currentState = State.Normal;
+        spiderMovement.gravityValue = -9.82f;
+        spiderMovement.UseClimbWebNormal = false;
+        lineRenderer.enabled = false;
+        doDrawLine = false;
+        DisableClimbRotation();
+        if (CameraEndRotation != null)
+        {
+            CameraEndRotation();
+        }
+        isClimbWebing = false;
+    }
+
+    private void EnableClimbRotation()
+    {
+        if (ActivationClimbRotation != null)
+        {
+            ActivationClimbRotation(false); // bool value = do raycasts?
+        }
+    }
+
+    private void DisableClimbRotation()
+    {
+        if (ActivationClimbRotation != null)
+        {
+            ActivationClimbRotation(true); // bool value = do raycasts?
+        }
+    }
+
+    private void RotateToFaceTarget()
+    {
+        transform.forward = (climbShotPosition - transform.position).normalized;
+    }
 }

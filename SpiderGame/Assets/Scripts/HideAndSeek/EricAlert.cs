@@ -230,6 +230,8 @@ public class EricAlert : MonoBehaviour
                 eric2.SetActive(true);
             }
 
+            ericIncWarning.SetActive(false);
+
             ericAnimator1.SetBool("OpenDoor", true);
             ericAnimator2.SetBool("OpenDoor", true);
 
@@ -269,8 +271,6 @@ public class EricAlert : MonoBehaviour
             ericsVision.SetActive(false);
             playerDetected = false;
             isRaycasting = false;
-
-            ericIncWarning.SetActive(false);
 
             audioSourceEric.clip = Resources.Load<AudioClip>("Audio/EricEnterRoom");
             audioSourceEric.Play();
