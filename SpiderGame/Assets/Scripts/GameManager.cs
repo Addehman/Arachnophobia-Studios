@@ -23,5 +23,7 @@ public class GameManager : MonoBehaviour
 	private void Start()
 	{
 		Cursor.lockState = CursorLockMode.Locked;
+		PauseMenu.isPaused = false;
+
 	}
 }

@@ -5,73 +5,74 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    public GameObject pauseMenu;
-    public GameObject howToPlay;
-    public static bool isPaused;
+	public GameObject pauseMenu;
+	public GameObject howToPlay;
+	public static bool isPaused;
 
-    void Start()
-    {
-        pauseMenu.SetActive(false);
-    }
-
-
-    void Update()
-    {
-        if (Input.GetButtonDown("PauseButton"))
-        {
-            if(isPaused)
-            {
-                ResumeGame();
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-                AudioListener.volume = 1f;
-            }
-            else
-            {
-                PauseGame();
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.Confined;
-                AudioListener.volume = 0f;
-            }
-        }
-    }
-
-    public void PauseGame()
-    {
-        pauseMenu.SetActive(true);
-        Time.timeScale = 0f;
-        isPaused = true;
-    }
+	void Start()
+	{
+		pauseMenu.SetActive(false);
+	}
 
 
-    public void ResumeGame()
-    {
-        pauseMenu.SetActive(false);
-        Time.timeScale = 1f;
-        isPaused = false;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        AudioListener.volume = 1f;
-    }
+	void Update()
+	{
+		if (Input.GetButtonDown("PauseButton"))
+		{
+			if(isPaused)
+			{
+				ResumeGame();
+				Cursor.visible = false;
+				Cursor.lockState = CursorLockMode.Locked;
+				AudioListener.volume = 1f;
+			}
+			else
+			{
+				PauseGame();
+				Cursor.visible = true;
+				Cursor.lockState = CursorLockMode.Confined;
+				AudioListener.volume = 0f;
+			}
+		}
+	}
 
-    public void GoToMainMenu()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");
-    }
+	public void PauseGame()
+	{
+		pauseMenu.SetActive(true);
+		Time.timeScale = 0f;
+		isPaused = true;
+	}
 
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
 
-    public void OpenHowToPlay()
-    {
-        howToPlay.SetActive(true);
-    }
+	public void ResumeGame()
+	{
+		pauseMenu.SetActive(false);
+		Time.timeScale = 1f;
+		isPaused = false;
+		Cursor.visible = false;
+		Cursor.lockState = CursorLockMode.Locked;
+		AudioListener.volume = 1f;
+	}
 
-    public void CloseHowToPlay()
-    {
-        howToPlay.SetActive(false);
-    }
+	public void GoToMainMenu()
+	{
+		Time.timeScale = 1f;
+		isPaused = false;
+		SceneManager.LoadScene("MainMenu");
+	}
+
+	public void QuitGame()
+	{
+		Application.Quit();
+	}
+
+	public void OpenHowToPlay()
+	{
+		howToPlay.SetActive(true);
+	}
+
+	public void CloseHowToPlay()
+	{
+		howToPlay.SetActive(false);
+	}
 }
