@@ -48,7 +48,7 @@ public class PickUpObject : MonoBehaviour
             canPickUp = false;
         }
 
-        if(numberOfItemsPickedUp >= 7)
+        if(numberOfItemsPickedUp >= 9)
         {
             isAllItemsCollected = true;
         }
