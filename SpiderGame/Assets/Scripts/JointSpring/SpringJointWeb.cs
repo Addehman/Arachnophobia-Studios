@@ -25,6 +25,8 @@ public class SpringJointWeb : MonoBehaviour
 	public GameObject butt;
 
 	public bool isReleased = true;
+
+	private GameObject targetCloneHolder;
 	
 
 	enum State
@@ -90,6 +92,7 @@ public class SpringJointWeb : MonoBehaviour
 			//spiderAnimator.SetBool("Web", true);
 			currentState = State.IsSwinging;
 			GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);
+			targetCloneHolder = targetPoint;
 			joint = gameObject.AddComponent<SpringJoint>();
 			joint.connectedBody = targetPoint.GetComponent<Rigidbody>();
 
@@ -116,8 +119,8 @@ public class SpringJointWeb : MonoBehaviour
 		// spiderAnimator.SetBool("Web", false);
 		debugSetting.isGrounded = true;
 		isSwingingWeb = false;
-		GameObject currentPoint = GameObject.Find("TargetPoint(Clone)");
-		Destroy(currentPoint);
+		// GameObject currentPoint = GameObject.Find("TargetPoint(Clone)");
+		Destroy(targetCloneHolder);
 		Destroy(joint);
 		lineRenderer.enabled = false;
 
@@ -139,7 +142,7 @@ public class SpringJointWeb : MonoBehaviour
 		}
 
 		lineRenderer.SetPosition(0, butt.transform.position);
-		lineRenderer.SetPosition(1, GameObject.Find("TargetPoint(Clone)").transform.position);
+		lineRenderer.SetPosition(1, targetCloneHolder.transform.position);
 		lineRenderer.enabled = true;
 	}
 
