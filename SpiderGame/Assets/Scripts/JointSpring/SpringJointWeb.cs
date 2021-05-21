@@ -50,19 +50,19 @@ public class SpringJointWeb : MonoBehaviour
 	{
 		if(toggleCameras.boosted == true)
 		{
-			if (Input.GetButtonDown("SwingWeb") || Input.GetAxis("SwingWeb") > 0f)
+			if (Input.GetButtonDown("UseWeb") || Input.GetAxis("UseWeb") > 0f)
 			{
 				StartWebGrapple();
 				isReleased = false;
 			}
-			else if ((Input.GetButtonUp("SwingWeb") || Input.GetAxis("SwingWeb") <= 0f) && isReleased == false)
+			else if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
 			{
 				StopWeb();
 				isReleased = true;
 			}
 		}
 
-		if ((Input.GetButtonUp("SwingWeb") || Input.GetAxis("SwingWeb") <= 0f) && isReleased == false)
+		if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
 		{
 			StopWeb();
 			isReleased = true;
@@ -74,7 +74,12 @@ public class SpringJointWeb : MonoBehaviour
 		DrawString();
 	}
 
-	void StartWebGrapple()
+    private void OnDisable()
+    {
+		StopWeb();
+    }
+
+    void StartWebGrapple()
 	{
 		RaycastHit hit;
 		if (Physics.Raycast(butt.transform.position, Camera.main.transform.forward, out hit, maxDistance))
@@ -145,13 +150,4 @@ public class SpringJointWeb : MonoBehaviour
 			currentState = State.IsGrounded;
 		}
 	}
-
-	// private bool RightTriggerButtonIsPressed()
-	// {
-	// 	if (Input.GetAxis("SwingWeb") > 0f)
-	// 	{
-	// 		return true;
-	// 	}
-	// 	else if (Input.GetAxis("SwingWeb") )
-	// }
 }
