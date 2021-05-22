@@ -130,16 +130,11 @@ public class SpiderMovement : MonoBehaviour
 	private GameObject[] modelChildren;
 	private Animator spiderAnimator;
 	private RaycastTypes raycastType;
-	private Animator spiderAnimator;
 	private VacuumBlackhole vacuumBlackhole;
 	private SpringJointWeb springJointWeb;
-	private GameObject parentObject;
-	private GameObject[] modelChildren;
 	private GameObject targetRotationObject;
 	private Transform cam;
 	private Transform lookAtTarget;
-	private VacuumBlackhole vacuumBlackhole;
-	private SpringJointWeb springJointWeb;
 	private HookWeb hookWeb;
 	private ClimbWeb climbWeb;
 	private RotationConstraint cameraRotationConstraint;
@@ -218,7 +213,7 @@ public class SpiderMovement : MonoBehaviour
 		// horizsaontal = Input.GetAxisRaw("Horizontal");
 
 		RaycastsToCast();
-		SetPlayerUpDirection();
+		// SetPlayerUpDirection();
 		Sprint();
 		SpiderJump();
 		SpiderAnimation();
@@ -244,13 +239,11 @@ public class SpiderMovement : MonoBehaviour
 		{
 			// CameraDirectionMovement();
 
-			SetLookDirection();
-			SetPlayerLocalUpDirection();
+			// SetLookDirection();
+			SetPlayerUpDirection();
 			TranslateMovement();
 			// DefaultMovement();
 			// RigidbodyMovement();
-
-			// RotateWithEddie();
 		}
 	}
 
@@ -518,7 +511,7 @@ public class SpiderMovement : MonoBehaviour
 		Vector3 movement = new Vector3(vertical, 0f, horizontal);
 		if (movement.sqrMagnitude > 0f)
 		{
-			parentObject.transform.Translate(transform.forward * (playerSettings.translatePlayerSpeed + sprintMulti) * Time.deltaTime);
+			parentObject.transform.Translate(transform.forward * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
 		}	
 	}
 
