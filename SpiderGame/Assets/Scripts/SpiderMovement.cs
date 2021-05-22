@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [System.Serializable]
 public class MainRaycastsAdjustment
@@ -96,6 +97,7 @@ public class DebugSettings
 	public bool isFpsEnabled = false;
 	public bool isPlayerBeingVacuumed;
 	public bool doRaycasts = true;
+	public bool doForwardCheckRay = true;
 }
 
 public class SpiderMovement : MonoBehaviour
@@ -106,6 +108,10 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public bool UseHookWebNormal = false;
 	[HideInInspector] public bool UseClimbWebNormal = false;
 
+	[SerializeField] private Transform movementParent;
+
+	public event Action<bool> cameraChangeStrategy;
+
 	public MainRaycastsAdjustment mainRaycastAdjustments;
 	public ForwardsRaycastsAdjustment forwardsRaycastAdjustment;
 	public BackwardsRaycastsAdjustment backwardsRaycastAdjustment;
@@ -114,7 +120,9 @@ public class SpiderMovement : MonoBehaviour
 	public DebugSettings debugSettings;
 
 	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any, ForwardsEdgeCheck}
-	private GameObject spiderModel;
+	// private GameObject spiderModel;
+	private GameObject parentObject;
+	private GameObject[] modelChildren;
 	private Animator spiderAnimator;
 	private RaycastTypes raycastType;
 	private Transform cam;
@@ -137,8 +145,8 @@ public class SpiderMovement : MonoBehaviour
 		rb = GetComponent<Rigidbody>();
 		cam = Camera.main.transform;
 		cam.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
-		spiderModel = transform.Find("Model_Character_Spider.6").gameObject;
-		spiderAnimator = spiderModel.GetComponentInChildren<Animator>();
+		// spiderModel = transform.Find("Model_Character_Spider.6").gameObject;
+		spiderAnimator = GetComponent<Animator>();
 		spiderAnimator.SetTrigger("Idle");
 		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>();
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
@@ -146,6 +154,18 @@ public class SpiderMovement : MonoBehaviour
 		hookWeb = GetComponent<HookWeb>();
 		climbWeb = GetComponent<ClimbWeb>();
 		climbWeb.ActivationClimbRotation += ActivationOfRaycasts;
+
+		// Here the reference is made for all the children of the spidermodel, used to be able to hide/show when in fpCamera-mode.
+		int amountOfModelParts = 0;
+		foreach (Transform item in transform)
+		{
+			amountOfModelParts ++;
+		}
+		modelChildren = new GameObject[amountOfModelParts];
+		for (int i = 0; i < modelChildren.Length; i++)
+		{
+			modelChildren[i] = transform.GetChild(i).gameObject;
+		}
 	}
 
 	private void ActivationOfRaycasts(bool isActive)
@@ -157,6 +177,7 @@ public class SpiderMovement : MonoBehaviour
 	private void activateOnKeypress_ActivationFPSCam(bool isActive)
 	{
 		debugSettings.isFpsEnabled = isActive;
+		SetVisibilityOfModel(isActive);
 	}
 
 	private void vacuumBlackhole_PullingPlayer(bool isPlayerPulled)
@@ -232,22 +253,42 @@ public class SpiderMovement : MonoBehaviour
 		RaycastHelper(transform.TransformDirection(Vector3.back) * backwardsRaycastAdjustment.rayBwdMod4 + transform.TransformDirection(Vector3.down) * backwardsRaycastAdjustment.rayBwdModDown4, mainRaycastAdjustments.raysBackOriginOffset, RaycastTypes.Backwards);
 		RaycastHelper(transform.TransformDirection(Vector3.back) * backwardsRaycastAdjustment.rayBwdMod5 + transform.TransformDirection(Vector3.down) * backwardsRaycastAdjustment.rayBwdModDown5, mainRaycastAdjustments.raysBackOriginOffset, RaycastTypes.Backwards);
 		RaycastHelper(transform.TransformDirection(Vector3.back) * backwardsRaycastAdjustment.rayBwdMod6 + transform.TransformDirection(Vector3.down) * backwardsRaycastAdjustment.rayBwdModDown6, mainRaycastAdjustments.raysBackOriginOffset, RaycastTypes.Backwards);
+		
 		// Edge Raycasts:
-		if (debugSettings.fwdRayNoHit == true && vertical > 0f)
+		Vector3 movementInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f);
+		if (debugSettings.fwdRayNoHit == true && movementInput.sqrMagnitude > 0f)
 		{
 			playerSettings.translatePlayerSpeed = playerSettings.translateSlowPlayerSpeed;
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset);
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset1);
 		}
-		else if (debugSettings.backRayNoHit == true && vertical < 0f)
-		{
-			playerSettings.translatePlayerSpeed = playerSettings.translateSlowPlayerSpeed;
-			EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset);
-			EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset1);
-		}
+		// else if (debugSettings.backRayNoHit == true && vertical < 0f)
+		// {
+		// 	playerSettings.translatePlayerSpeed = playerSettings.translateSlowPlayerSpeed;
+		// 	EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset);
+		// 	EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset1);
+		// }
 		else 
 		{
 			playerSettings.translatePlayerSpeed = playerSettings.translateNormalPlayerSpeed;
+		}
+
+		if (debugSettings.doForwardCheckRay == true)
+		{
+			if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), 0.3f))
+			{
+				if (cameraChangeStrategy != null)
+				{
+					cameraChangeStrategy(true);
+				}
+			}
+			else
+			{
+				if (cameraChangeStrategy != null)
+				{
+					cameraChangeStrategy(false);
+				}
+			}
 		}
 	}
 	// Special "Hook"- or Edge-Raycasts, used to look over edges to find footing where the other rays won't reach.
@@ -410,18 +451,23 @@ public class SpiderMovement : MonoBehaviour
 
 			myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
 			// find forward direction with new myNormal:
-			Vector3 myForward = Vector3.Cross(transform.right, myNormal);
+			Vector3 myForward = Vector3.Cross(movementParent.transform.right, myNormal);
 			// align character to the new myNormal while keeping the forward direction:
 			Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
-			transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
-			//try and make tha camera rotate with the player. Doesn't work as of now.
-			// cam.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+			movementParent.transform.rotation = Quaternion.Slerp(movementParent.transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 		}
 	}
 
 	private void TranslateMovement()
 	{
-		transform.Translate(0, 0, vertical * (playerSettings.translatePlayerSpeed + sprintMulti) * Time.deltaTime);
+		float horizontal = Input.GetAxisRaw("Horizontal");
+		float vertical = Input.GetAxisRaw("Vertical");
+
+		Vector3 movement = new Vector3(vertical, 0f, horizontal);
+		if (movement.sqrMagnitude > 0f)
+		{
+			parentObject.transform.Translate(transform.forward * (playerSettings.translatePlayerSpeed + sprintMulti) * Time.deltaTime);
+		}	
 	}
 
 	private void VelocityMovement()
@@ -512,7 +558,7 @@ public class SpiderMovement : MonoBehaviour
 		randomIdleTimer += Time.deltaTime;
 		if (randomIdleTimer >= 10f)
 		{
-			randomIdle = Random.Range(0, 2);
+			randomIdle = UnityEngine.Random.Range(0, 2);
 
 			if (randomIdle == 0)
 			{
@@ -524,15 +570,6 @@ public class SpiderMovement : MonoBehaviour
 			}
 
 			randomIdleTimer = 0f;
-		}
-
-		if (debugSettings.isFpsEnabled == true)
-		{
-			spiderModel.SetActive(false);
-		}
-		else
-		{
-			spiderModel.SetActive(true);
 		}
 	}
 
@@ -553,6 +590,14 @@ public class SpiderMovement : MonoBehaviour
 		else
 		{
 			return false;
+		}
+	}
+
+	private void SetVisibilityOfModel(bool isActive)
+	{
+		foreach (GameObject item in modelChildren)
+		{
+			item.SetActive(isActive);
 		}
 	}
 }
