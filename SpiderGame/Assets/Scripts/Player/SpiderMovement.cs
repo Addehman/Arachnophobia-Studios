@@ -99,6 +99,7 @@ public class DebugSettings
 	public bool isFpsEnabled = false;
 	public bool isPlayerBeingVacuumed;
 	public bool doForwardCheckRay = true;
+	public float forwardRotationSpeed = 1f;
 }
 
 public class SpiderMovement : MonoBehaviour
@@ -119,7 +120,7 @@ public class SpiderMovement : MonoBehaviour
 	public PlayerSettings playerSettings;
 	public DebugSettings debugSettings;
 
-	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any}
+	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any, ForwardsRay1}
 	private RaycastTypes raycastType;
 	private Animator spiderAnimator;
 	private VacuumBlackhole vacuumBlackhole;
@@ -234,12 +235,12 @@ public class SpiderMovement : MonoBehaviour
 		}
 		else
 		{
-			// DefaultMovement();
 			// CameraDirectionMovement();
 
 			SetLookDirection();
 			SetPlayerLocalUpDirection();
-			RigidbodyMovement();
+			DefaultMovement();
+			// RigidbodyMovement();
 
 			// RotateWithEddie();
 		}
@@ -255,7 +256,7 @@ public class SpiderMovement : MonoBehaviour
 		RaycastHelper(transform.TransformDirection(Vector3.right) + transform.TransformDirection(Vector3.down), 0f, RaycastTypes.Any);
 		RaycastHelper(transform.TransformDirection(Vector3.left) + transform.TransformDirection(Vector3.down), 0f, RaycastTypes.Any);
 
-		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod1 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown1, 0f, RaycastTypes.Forwards);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod1 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown1, 0f, RaycastTypes.ForwardsRay1);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod2 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown2, 0f, RaycastTypes.Forwards);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod3 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown3, 0f, RaycastTypes.Forwards);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod4 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown4, 0f, RaycastTypes.Forwards);
@@ -268,19 +269,22 @@ public class SpiderMovement : MonoBehaviour
 		RaycastHelper(transform.TransformDirection(Vector3.back) * backwardsRaycastAdjustment.rayBwdMod4 + transform.TransformDirection(Vector3.down) * backwardsRaycastAdjustment.rayBwdModDown4, mainRaycastAdjustments.raysBackOriginOffset, RaycastTypes.Backwards);
 		RaycastHelper(transform.TransformDirection(Vector3.back) * backwardsRaycastAdjustment.rayBwdMod5 + transform.TransformDirection(Vector3.down) * backwardsRaycastAdjustment.rayBwdModDown5, mainRaycastAdjustments.raysBackOriginOffset, RaycastTypes.Backwards);
 		RaycastHelper(transform.TransformDirection(Vector3.back) * backwardsRaycastAdjustment.rayBwdMod6 + transform.TransformDirection(Vector3.down) * backwardsRaycastAdjustment.rayBwdModDown6, mainRaycastAdjustments.raysBackOriginOffset, RaycastTypes.Backwards);
+		
 		// Edge Raycasts:
-		if (debugSettings.fwdRayNoHit == true && Input.GetKey(KeyCode.W))
+		float movementInput = Input.GetAxis("Horizontal") + Input.GetAxis("Vertical");
+		if (debugSettings.fwdRayNoHit == true/* && movementInput.sqrMagnitude > 0f*/)
 		{
 			playerSettings.normalPlayerSpeed = playerSettings.normalSlowPlayerSpeed;
+			// movementParent.transform.Rotate(movementParent.transform.eulerAngles.x, movementParent.transform.eulerAngles.y, movementParent.transform.eulerAngles.z + debugSettings.forwardRotationSpeed);
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset);
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset1);
 		}
-		else if (debugSettings.backRayNoHit == true && Input.GetKey(KeyCode.S))
-		{
-			playerSettings.normalPlayerSpeed = playerSettings.normalSlowPlayerSpeed;
-			EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset);
-			EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset1);
-		}
+		// else if (debugSettings.backRayNoHit == true && Input.GetKey(KeyCode.S))
+		// {
+		// 	playerSettings.normalPlayerSpeed = playerSettings.normalSlowPlayerSpeed;
+		// 	EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset);
+		// 	EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset1);
+		// }
 		else 
 		{
 			playerSettings.normalPlayerSpeed = playerSettings.normalDefaultPlayerSpeed;
@@ -376,7 +380,7 @@ public class SpiderMovement : MonoBehaviour
 					RaycastWeightMulti(debugSettings.averageNormalDirections, raycastGeneralSettings.backRaycastWeightMultiplier, hit.normal);
 				}
 				break;
-			case RaycastTypes.Forwards:
+			case RaycastTypes.ForwardsRay1:
 				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastGeneralSettings.raycastReach, raycastGeneralSettings.layerMask))
 				{
 					if (debugSettings.doDrawRayGizmos == true)
@@ -390,6 +394,21 @@ public class SpiderMovement : MonoBehaviour
 				{
 					debugSettings.fwdRayNoHit = true;
 				}
+				break;
+			case RaycastTypes.Forwards:
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastGeneralSettings.raycastReach, raycastGeneralSettings.layerMask))
+				{
+					if (debugSettings.doDrawRayGizmos == true)
+					{
+						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastGeneralSettings.raycastReach);
+					}
+					debugSettings.averageNormalDirections.Add(hit.normal);
+					// debugSettings.fwdRayNoHit = false;
+				}
+				// else
+				// {
+				// 	debugSettings.fwdRayNoHit = true;
+				// }
 				break;
 			case RaycastTypes.Backwards:
 				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastGeneralSettings.raycastReach))
@@ -443,23 +462,21 @@ public class SpiderMovement : MonoBehaviour
 			debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
 		}
 
-		/*
-		// myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, rotationSlerpSpeed * Time.deltaTime);
-		myNormal = debugSettings.averageNormalDirection;
+		myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, rotationSlerpSpeed * Time.deltaTime);
 		// myNormal = debugSettings.averageNormalDirection;
 		// find forward direction with new myNormal:
-		Vector3 myForward = Vector3.Cross(transform.right, myNormal);
+		Vector3 myForward = Vector3.Cross(movementParent.transform.right, myNormal) ;
 		// align character to the new myNormal while keeping the forward direction:
 		// My attempt to control the direction of the player:
 		// targetRotationObject.transform.LookAt(lookAtTarget, myNormal);
 		// Vector3 myForward = targetRotationObject.transform.forward;
 		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
-		// movementParent.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSlerpSpeed * Time.deltaTime);
+		movementParent.transform.rotation = Quaternion.Slerp(movementParent.transform.rotation, targetRot, rotationSlerpSpeed * Time.deltaTime);
 
 		
-		movementParent.transform.rotation = targetRot;*/
+		movementParent.transform.rotation = targetRot;
 
-		movementParent.transform.up = debugSettings.averageNormalDirection; // if I want to lerp, make sure to also lerp the other rotation(transform.LookAt), especially with the same tick/time-amount(t).
+		// movementParent.transform.up = debugSettings.averageNormalDirection; // if I want to lerp, make sure to also lerp the other rotation(transform.LookAt), especially with the same tick/time-amount(t).
 	}
 
 	private void DefaultMovement() 
@@ -475,8 +492,8 @@ public class SpiderMovement : MonoBehaviour
 		Vector3 forwardMotion = currentForward * vertical;
 		Vector3 sideMotion = currentSide * horizontal;
 
-		Vector3 movement = (forwardMotion + sideMotion) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime;
-		transform.Translate(movement);
+		Vector3 movement = transform.forward * (horizontal + vertical) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime;
+		movementParent.transform.Translate(movement);
 
 		if(horizontal + vertical == 0)
 		{
