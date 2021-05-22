@@ -239,7 +239,8 @@ public class SpiderMovement : MonoBehaviour
 
 			SetLookDirection();
 			SetPlayerLocalUpDirection();
-			DefaultMovement();
+			TranslateMovement();
+			// DefaultMovement();
 			// RigidbodyMovement();
 
 			// RotateWithEddie();
@@ -599,7 +600,6 @@ public class SpiderMovement : MonoBehaviour
 
 			// transform.rotation = Quaternion.Euler(0f, angle, 0f);
 			// transform.rotation = Quaternion.Euler(transform.eulerAngles.x, 0f, transform.eulerAngles.z); // Reset the Y-axis, without changing the other ones
-			
 			transform.Translate(moveDirection * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
 			// transform.Translate(moveDirection * 1 * Time.deltaTime);
 
