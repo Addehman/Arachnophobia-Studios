@@ -29,7 +29,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 	{
 		cameraParent = transform.parent;
 
-		cameraToZoom = FindObjectOfType<MimicCamera>().GetComponent<CinemachineVirtualCamera>();
+		cameraToZoom = GetComponent<CinemachineVirtualCamera>();
 		aimCamera = GameObject.Find("cmAimCamera").GetComponent<CinemachineVirtualCamera>();
 
 		zoomCameraComponentBase = cameraToZoom.GetCinemachineComponent(CinemachineCore.Stage.Body);
