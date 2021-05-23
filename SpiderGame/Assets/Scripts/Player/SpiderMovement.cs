@@ -474,7 +474,7 @@ public class SpiderMovement : MonoBehaviour
 			Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
 			movementParent.transform.rotation = Quaternion.Slerp(movementParent.transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 
-			movementParent.transform.rotation = targetRot;
+			// movementParent.transform.rotation = targetRot;
 		}
 	}
 
