@@ -55,6 +55,8 @@ public class RaycastGeneralSettings
 {
 	// [Header("Raycast General Settings")]
 	public float raycastReach = 0.05f;
+	public float increasedRaycastReach = 0.1f;
+	public float defaultRaycastReach = 0.05f;
 	public float raycastReachEdge = 0.1f;
 	public float edgeRayOriginOffset = 0.03f;
 	public float edgeRayOriginOffset1 = 0.04f;
@@ -70,7 +72,7 @@ public class PlayerSettings
 	// [Header("Player Settings")]
 	public float normalPlayerSpeed = 0.2f;
 	public float normalSlowPlayerSpeed = 0.1f;
-	public float normalDefaultPlayerSpeed = 0.2f;
+	public float defaultNormalPlayerSpeed = 0.2f;
 	public float normalSprintMultiAmount = 0.2f;
 	public float velocityPlayerSpeed = 30f;
 	public float velocityNormalPlayerSpeed = 30f;
@@ -93,7 +95,8 @@ public class DebugSettings
 	public Vector3 fwdRayHitNormalDebug;
 	public bool isGrounded;
 	public bool doDrawRayGizmos = true;
-	public bool fwdRayNoHit = false;
+	public bool fwdRayCheckNoHit = false;
+	public bool fwdRayCheckNoHit2 = false;
 	public bool backRayNoHit = false;
 	public bool isFwdRayHitting;
 	public bool isFpsEnabled = false;
@@ -125,8 +128,7 @@ public class SpiderMovement : MonoBehaviour
 	public PlayerSettings playerSettings;
 	public DebugSettings debugSettings;
 
-	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any, ForwardsEdgeCheck}
-	// private GameObject spiderModel;
+	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any, ForwardsEdgeCheck, ForwardsEdgeCheck2}
 	private GameObject parentObject;
 	private GameObject[] modelChildren;
 	private Animator spiderAnimator;
@@ -166,20 +168,22 @@ public class SpiderMovement : MonoBehaviour
 		climbWeb.ActivationClimbRotation += ActivationOfRaycasts;
 
 		lookAtTarget = FindObjectOfType<LookAtTargetController>().transform;
-		// targetRotationObject = GameObject.Find("PlayerTargetRotation");
 		cameraRotationConstraint = cameraParent.GetComponent<RotationConstraint>();
 
 		// Here the reference is made for all the children of the spidermodel, used to be able to hide/show when in fpCamera-mode.
 		int amountOfModelParts = 0;
-		foreach (Transform item in transform)
+		foreach (Transform item in spiderModel.transform)
 		{
 			amountOfModelParts ++;
 		}
 		modelChildren = new GameObject[amountOfModelParts];
 		for (int i = 0; i < modelChildren.Length; i++)
 		{
-			modelChildren[i] = transform.GetChild(i).gameObject;
+			modelChildren[i] = spiderModel.transform.GetChild(i).gameObject;
 		}
+
+		raycastGeneralSettings.raycastReach = raycastGeneralSettings.defaultRaycastReach;
+		playerSettings.normalPlayerSpeed = playerSettings.defaultNormalPlayerSpeed;
 	}
 
 	private void ActivationOfRaycasts(bool isActive)
@@ -191,7 +195,8 @@ public class SpiderMovement : MonoBehaviour
 	private void activateOnKeypress_ActivationFPSCam(bool isActive)
 	{
 		debugSettings.isFpsEnabled = isActive;
-		SetVisibilityOfModel(isActive);
+		bool visibilityActivation = !isActive;
+		SetVisibilityOfModel(visibilityActivation);
 	}
 
 	private void vacuumBlackhole_PullingPlayer(bool isPlayerPulled)
@@ -266,7 +271,7 @@ public class SpiderMovement : MonoBehaviour
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod2 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown2, 0f, RaycastTypes.Forwards);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod3 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown3, 0f, RaycastTypes.Forwards);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod4 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown4, 0f, RaycastTypes.Forwards);
-		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod5 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown5, 0f, RaycastTypes.Forwards);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod5 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown5, 0f, RaycastTypes.ForwardsEdgeCheck2);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod6 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown6, 0f, RaycastTypes.Forwards);
 
 		RaycastHelper(transform.TransformDirection(Vector3.back) * backwardsRaycastAdjustment.rayBwdMod1 + transform.TransformDirection(Vector3.down) * backwardsRaycastAdjustment.rayBwdModDown1, mainRaycastAdjustments.raysBackOriginOffset, RaycastTypes.Backwards);
@@ -278,16 +283,21 @@ public class SpiderMovement : MonoBehaviour
 		
 		// Edge Raycasts:
 		Vector3 movementInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f);
-		if (debugSettings.fwdRayNoHit == true && movementInput.sqrMagnitude > 0f)
+		if (debugSettings.fwdRayCheckNoHit == true && movementInput.sqrMagnitude > 0f)
 		{
-			playerSettings.normalPlayerSpeed = playerSettings.normalSlowPlayerSpeed;
-			// movementParent.transform.Rotate(movementParent.transform.eulerAngles.x, movementParent.transform.eulerAngles.y, movementParent.transform.eulerAngles.z + debugSettings.forwardRotationSpeed);
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset);
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset1);
 		}
+
+		if (debugSettings.fwdRayCheckNoHit2 == true && movementInput.sqrMagnitude > 0f)
+		{
+			playerSettings.normalPlayerSpeed = playerSettings.normalSlowPlayerSpeed;
+			raycastGeneralSettings.raycastReach = raycastGeneralSettings.increasedRaycastReach;
+		}
 		else 
 		{
-			playerSettings.normalPlayerSpeed = playerSettings.normalDefaultPlayerSpeed;
+			playerSettings.normalPlayerSpeed = playerSettings.defaultNormalPlayerSpeed;
+			raycastGeneralSettings.raycastReach = raycastGeneralSettings.defaultRaycastReach;
 		}
 
 		if (debugSettings.doForwardCheckRay == true)
@@ -387,11 +397,26 @@ public class SpiderMovement : MonoBehaviour
 						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastGeneralSettings.raycastReach);
 					}
 					debugSettings.averageNormalDirections.Add(hit.normal);
-					debugSettings.fwdRayNoHit = false;
+					debugSettings.fwdRayCheckNoHit = false;
 				}
 				else
 				{
-					debugSettings.fwdRayNoHit = true;
+					debugSettings.fwdRayCheckNoHit = true;
+				}
+				break;
+			case RaycastTypes.ForwardsEdgeCheck2:
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastGeneralSettings.raycastReach, raycastGeneralSettings.layerMask))
+				{
+					if (debugSettings.doDrawRayGizmos == true)
+					{
+						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastGeneralSettings.raycastReach);
+					}
+					debugSettings.averageNormalDirections.Add(hit.normal);
+					debugSettings.fwdRayCheckNoHit2 = false;
+				}
+				else
+				{
+					debugSettings.fwdRayCheckNoHit2 = true;
 				}
 				break;
 			case RaycastTypes.Forwards:

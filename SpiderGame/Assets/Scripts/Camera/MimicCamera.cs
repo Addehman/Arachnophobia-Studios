@@ -27,6 +27,9 @@ public class MimicCamera : MonoBehaviour
 		hookWeb.LockTPCameraRotation += LockRotation;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		springJointWeb.LockTPCameraRotation += LockRotation;
+
+		transform.position = cameraToMimic.position;
+		transform.rotation = cameraToMimic.rotation;
 	}
 
 	private void LateUpdate()
