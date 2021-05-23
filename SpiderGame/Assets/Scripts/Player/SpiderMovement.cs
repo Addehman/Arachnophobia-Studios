@@ -523,9 +523,6 @@ public class SpiderMovement : MonoBehaviour
 
 	private void SetLookDirection()
 	{
-		float horizontal = Input.GetAxis("Horizontal");
-		float vertical = Input.GetAxis("Vertical");
-		
 		if (Vector3.Distance(transform.position, lookAtTarget.position) >= 0.05f)
 		{
 			transform.LookAt(lookAtTarget, lookAtTarget.up);
