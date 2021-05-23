@@ -18,6 +18,7 @@ public class ClimbWeb : MonoBehaviour
 	private ThirdPersonCameraController tpcController;
 	private MimicCamera mimicCamera;
 	private ToggleCameras toggleCameras;
+	private WebSelector webSelector;
 	private LineRenderer lineRenderer;
 	private State currentState;
 	private Vector3 oldPosition;
@@ -28,11 +29,7 @@ public class ClimbWeb : MonoBehaviour
 	private bool doDrawLine = false;
 	private bool hasPressed = false;
 
-	private enum State
-	{
-		Normal,
-		Climbing,
-	}
+	private enum State {Normal, Climbing,}
 
 
 	private void Awake()
@@ -47,21 +44,25 @@ public class ClimbWeb : MonoBehaviour
 		tpcController = FindObjectOfType<ThirdPersonCameraController>();
 		mimicCamera = FindObjectOfType<MimicCamera>();
 		toggleCameras = Camera.main.GetComponent<ToggleCameras>();
+		webSelector = FindObjectOfType<WebSelector>();
 	}
 
 	private void Update()
 	{
-		if (toggleCameras.boosted == true)
+		if (webSelector.webState == WebAbilityState.Climb)
 		{
-			if (currentState == State.Normal)
+			if (toggleCameras.boosted == true)
 			{
-				InitiateClimbWeb();
+				if (currentState == State.Normal)
+				{
+					InitiateClimbWeb();
+				}
 			}
-		}
 
-		if (currentState == State.Climbing)
-		{
-			ClimbWebMovement();
+			if (currentState == State.Climbing)
+			{
+				ClimbWebMovement();
+			}
 		}
 	}
 

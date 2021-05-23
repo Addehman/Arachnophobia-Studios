@@ -15,7 +15,8 @@ public class ToggleCameras : MonoBehaviour
 	private ClimbWeb climbWeb;
 	private SpringJointWeb springJointWeb;
 
-	void Start()
+
+	private void Awake()
 	{
 		aimCamera = GameObject.Find("cmAimCamera").GetComponent<Cinemachine.CinemachineVirtualCamera>();
 		hardLockCam = FindObjectOfType<ThirdPersonCameraController>().GetComponent<Cinemachine.CinemachineVirtualCamera>();
@@ -83,5 +84,12 @@ public class ToggleCameras : MonoBehaviour
 		{
 			hardLockCam.Priority = PriorityBoostAmount - PriorityBoostAmount;
 		}
+	}
+
+	private void OnDestroy()
+	{
+		hookWeb.DisableFPSCamera -= DisableFPCamera;
+		climbWeb.DisableFPSCamera -= DisableFPCamera;
+		springJointWeb.ExitFPCamera -= DisableFPCamera;
 	}
 }

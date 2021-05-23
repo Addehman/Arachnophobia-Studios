@@ -20,6 +20,7 @@ public class HookWeb : MonoBehaviour
 	private LineRenderer lineRenderer;
 	private ToggleCameras toggleCameras;
 	private ThirdPersonCameraController tpcController;
+	private WebSelector webSelector;
 	private State currentState;
 	private Vector3 oldPosition;
 	private Vector3 hookShotPosition;
@@ -34,9 +35,9 @@ public class HookWeb : MonoBehaviour
 		HookFlying,
 	}
 
+
 	private void Awake()
 	{
-		// lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer = FindObjectOfType<LineRenderer>();
 	}
 
@@ -46,21 +47,25 @@ public class HookWeb : MonoBehaviour
 		spiderMovement = FindObjectOfType<SpiderMovement>();
 		tpcController = FindObjectOfType<ThirdPersonCameraController>();
 		toggleCameras = Camera.main.GetComponent<ToggleCameras>();
+		webSelector = FindObjectOfType<WebSelector>();
 	}
 
 	void Update()
 	{
-		if (toggleCameras.boosted == true)
+		if (webSelector.webState == WebAbilityState.Hook)
 		{
-			if (currentState == State.Normal)
+			if (toggleCameras.boosted == true)
 			{
-				HandleHookShotStart();
+				if (currentState == State.Normal)
+				{
+					HandleHookShotStart();
+				}
 			}
-		}
 
-		if (currentState == State.HookFlying)
-		{
-			HandleHookShotMovement();
+			if (currentState == State.HookFlying)
+			{
+				HandleHookShotMovement();
+			}
 		}
 	}
 

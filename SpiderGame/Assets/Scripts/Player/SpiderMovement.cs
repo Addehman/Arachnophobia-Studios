@@ -117,7 +117,6 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private Transform movementParent;
 	[SerializeField] private GameObject cmTPCamera;
 	[SerializeField] private GameObject cameraParent;
-	[SerializeField] private GameObject spiderModel;
 
 	public event Action<bool> cameraChangeStrategy;
 
@@ -129,10 +128,11 @@ public class SpiderMovement : MonoBehaviour
 	public DebugSettings debugSettings;
 
 	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any, ForwardsEdgeCheck, ForwardsEdgeCheck2}
+	private RaycastTypes raycastType;
 	private GameObject parentObject;
 	private GameObject[] modelChildren;
 	private Animator spiderAnimator;
-	private RaycastTypes raycastType;
+	private ToggleCameras toggleCameras;
 	private VacuumBlackhole vacuumBlackhole;
 	private SpringJointWeb springJointWeb;
 	private GameObject targetRotationObject;
@@ -151,12 +151,13 @@ public class SpiderMovement : MonoBehaviour
 	private float rotationSlerpSpeed = 10f;
 
 
-	void Start()
+	void Awake()
 	{
 		parentObject = transform.parent.gameObject;
 		rb = parentObject.GetComponent<Rigidbody>();
 		cam = Camera.main.transform;
-		cam.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
+		toggleCameras = cam.GetComponent<ToggleCameras>();
+		toggleCameras.ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
 		spiderAnimator = GetComponent<Animator>();
 		spiderAnimator.SetTrigger("Idle");
 		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>();
@@ -172,14 +173,14 @@ public class SpiderMovement : MonoBehaviour
 
 		// Here the reference is made for all the children of the spidermodel, used to be able to hide/show when in fpCamera-mode.
 		int amountOfModelParts = 0;
-		foreach (Transform item in spiderModel.transform)
+		foreach (Transform item in transform)
 		{
 			amountOfModelParts ++;
 		}
 		modelChildren = new GameObject[amountOfModelParts - 1];
 		for (int i = 0; i < modelChildren.Length; i++)
 		{
-			modelChildren[i] = spiderModel.transform.GetChild(i).gameObject;
+			modelChildren[i] = transform.GetChild(i).gameObject;
 		}
 
 		raycastGeneralSettings.raycastReach = raycastGeneralSettings.defaultRaycastReach;
@@ -503,9 +504,6 @@ public class SpiderMovement : MonoBehaviour
 
 	private void TranslateMovement()
 	{
-		float horizontal = Input.GetAxisRaw("Horizontal");
-		float vertical = Input.GetAxisRaw("Vertical");
-
 		Vector3 movement = new Vector3(vertical, 0f, horizontal);
 		if (movement.sqrMagnitude > 0f)
 		{
@@ -515,9 +513,6 @@ public class SpiderMovement : MonoBehaviour
 
 	private void VacuumPullingMovement() // The Rigidbody-based movement used only for when the player is in range of being pulled with rb.AddForce towards the Robot Vacuum Cleaner - becomes most smooth this way.
 	{
-		float vertical = Input.GetAxis("Vertical");
-		float horizontal = Input.GetAxis("Horizontal");
-
 		rb.velocity = (transform.forward * vertical) * (playerSettings.velocityPlayerSpeed + sprintMulti) * Time.deltaTime;
 	}
 
@@ -658,5 +653,12 @@ public class SpiderMovement : MonoBehaviour
 	{
 		Gizmos.color = Color.green;
 		Gizmos.DrawRay(transform.position, debugSettings.averageNormalDirection * 1f);
+	}
+
+	private void OnDestroy()
+	{
+		toggleCameras.ActivationFPSCam -= activateOnKeypress_ActivationFPSCam;
+		vacuumBlackhole.PullingPlayer -= vacuumBlackhole_PullingPlayer;
+		climbWeb.ActivationClimbRotation -= ActivationOfRaycasts;
 	}
 }

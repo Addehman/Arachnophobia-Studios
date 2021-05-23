@@ -17,7 +17,7 @@ public class MimicCamera : MonoBehaviour
 	private Quaternion lockedRotation;
 
 
-	private void Start()
+	private void Awake()
 	{
 		spiderMovement = FindObjectOfType<SpiderMovement>();
 		spiderMovement.cameraChangeStrategy += CameraChangeStrategy;
@@ -27,7 +27,10 @@ public class MimicCamera : MonoBehaviour
 		hookWeb.LockTPCameraRotation += LockRotation;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		springJointWeb.LockTPCameraRotation += LockRotation;
+	}
 
+	private void Start()
+	{
 		transform.position = cameraToMimic.position;
 		transform.rotation = cameraToMimic.rotation;
 	}
@@ -66,5 +69,12 @@ public class MimicCamera : MonoBehaviour
 		{
 			cmColl.m_Strategy = CinemachineCollider.ResolutionStrategy.PullCameraForward;
 		}
+	}
+
+	private void OnDestroy()
+	{
+		spiderMovement.cameraChangeStrategy -= CameraChangeStrategy;
+		hookWeb.LockTPCameraRotation -= LockRotation;
+		springJointWeb.LockTPCameraRotation -= LockRotation;
 	}
 }

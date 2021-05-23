@@ -26,10 +26,20 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private bool doLockCameraInput = false;
 
 
-	private void Start()
+	private void Awake()
 	{
 		cameraParent = transform.parent;
-
+		hookWeb = FindObjectOfType<HookWeb>();
+		hookWeb.LockTPCameraRotation += HookWebRecenterCamera;
+		climbWeb = FindObjectOfType<ClimbWeb>();
+		climbWeb.CameraStartRotation += BeginClimbRotation;
+		climbWeb.CameraEndRotation += RecenterCamera;
+		springJointWeb = FindObjectOfType<SpringJointWeb>();
+		springJointWeb.RecenterCamera += RecenterCamera;
+	}
+	
+	private void Start()
+	{
 		cameraToZoom = GetComponent<CinemachineVirtualCamera>();
 		aimCamera = GameObject.Find("cmAimCamera").GetComponent<CinemachineVirtualCamera>();
 
@@ -41,13 +51,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 
 		tpCameraComponentBase = aimCamera.GetCinemachineComponent(CinemachineCore.Stage.Aim);
 
-		hookWeb = FindObjectOfType<HookWeb>();
-		hookWeb.LockTPCameraRotation += HookWebRecenterCamera;
-		climbWeb = FindObjectOfType<ClimbWeb>();
-		climbWeb.CameraStartRotation += BeginClimbRotation;
-		climbWeb.CameraEndRotation += RecenterCamera;
-		springJointWeb = FindObjectOfType<SpringJointWeb>();
-		springJointWeb.RecenterCamera += RecenterCamera;
+		
 	}
 	
 	private void LateUpdate()
@@ -81,7 +85,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 		}
 		
 		// cameraParent.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
-		transform.localRotation = Quaternion.identity;
+		// transform.localRotation = Quaternion.identity;
 		cameraTarget.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
 		targetToRotate.localRotation = Quaternion.Euler(0f, cameraInputX, 0f);
 
@@ -125,4 +129,12 @@ public class ThirdPersonCameraController : MonoBehaviour
 	// 		transform.localRotation = cameraToZoom.transform.rotation;
 	// 	}
 	// }
+
+	private void OnDestroy()
+	{
+		hookWeb.LockTPCameraRotation -= HookWebRecenterCamera;
+		climbWeb.CameraStartRotation -= BeginClimbRotation;
+		climbWeb.CameraEndRotation -= RecenterCamera;
+		springJointWeb.RecenterCamera -= RecenterCamera;
+	}
 }

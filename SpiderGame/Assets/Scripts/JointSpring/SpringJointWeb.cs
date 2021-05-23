@@ -15,10 +15,11 @@ public class SpringJointWeb : MonoBehaviour
 	SpiderAudio spiderAudio;
 	LineRenderer lineRenderer;
 	State currentState = State.IsGrounded;
+	private WebSelector webSelector;
 
+	public Animator spiderAnimator;
 	private ToggleCameras toggleCameras;
 	public DebugSettings debugSetting;
-	public Animator spiderAnimator;
 
 	public GameObject firstPersonCamera;
 	public GameObject targetPointPrefab;
@@ -27,7 +28,6 @@ public class SpringJointWeb : MonoBehaviour
 	public bool isReleased = true;
 
 	private GameObject targetCloneHolder;
-	
 
 	enum State
 	{
@@ -36,10 +36,12 @@ public class SpringJointWeb : MonoBehaviour
 		IsHanging,
 		IsLanding
 	}
+	
 
 	private void Awake()
 	{
 		lineRenderer = GetComponent<LineRenderer>();
+		webSelector = FindObjectOfType<WebSelector>();
 	}
 
 	private void Start()
@@ -50,24 +52,27 @@ public class SpringJointWeb : MonoBehaviour
 
 	private void Update()
 	{
-		if(toggleCameras.boosted == true)
-		{
-			if (Input.GetButtonDown("UseWeb") || Input.GetAxis("UseWeb") > 0f)
+		if (webSelector.webState == WebAbilityState.Swing)
+		{	
+			if(toggleCameras.boosted == true)
 			{
-				StartWebGrapple();
-				isReleased = false;
+				if (Input.GetButtonDown("UseWeb") || Input.GetAxis("UseWeb") > 0f)
+				{
+					StartWebGrapple();
+					isReleased = false;
+				}
+				else if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
+				{
+					StopWeb();
+					isReleased = true;
+				}
 			}
-			else if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
+
+			if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
 			{
 				StopWeb();
 				isReleased = true;
 			}
-		}
-
-		if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
-		{
-			StopWeb();
-			isReleased = true;
 		}
 	}
 

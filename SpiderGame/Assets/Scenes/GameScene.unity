@@ -218,7 +218,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 617263165, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
 --- !u!4 &44092023 stripped
 Transform:
@@ -396,17 +397,6 @@ AudioSource:
   m_CorrespondingSourceObject: {fileID: 473091955, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
   m_PrefabInstance: {fileID: 21217446}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &550623839 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5019500232089557643, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
-  m_PrefabInstance: {fileID: 21217446}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b49550f1dd428c345be7a92b65f02497, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &551321884 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7675020262434144730, guid: ab2e80a3145f1fa4e85fc34edc646c5c, type: 3}
@@ -923,7 +913,7 @@ PrefabInstance:
     - target: {fileID: 9030271896098012341, guid: 9468a1f75dd136749a8babe924b361b3, type: 3}
       propertyPath: spiderMovement
       value: 
-      objectReference: {fileID: 550623839}
+      objectReference: {fileID: 0}
     - target: {fileID: 9030271896098012341, guid: 9468a1f75dd136749a8babe924b361b3, type: 3}
       propertyPath: flySwatterAnimator
       value: 
@@ -1092,7 +1082,7 @@ PrefabInstance:
     - target: {fileID: 1373441494517549752, guid: 300e17d01286adf4fa11f86a030c40d9, type: 3}
       propertyPath: spiderMovement
       value: 
-      objectReference: {fileID: 550623839}
+      objectReference: {fileID: 0}
     - target: {fileID: 1373441494517549752, guid: 300e17d01286adf4fa11f86a030c40d9, type: 3}
       propertyPath: flySwatterAnimator
       value: 
@@ -1139,10 +1129,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1205551919466345892, guid: 75fb85727e1172a4bb9ca8880a6b575e, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1205551919466345894, guid: 75fb85727e1172a4bb9ca8880a6b575e, type: 3}
       propertyPath: m_Name
       value: cmMimicCamera
@@ -1199,10 +1185,6 @@ PrefabInstance:
       propertyPath: m_LookAt
       value: 
       objectReference: {fileID: 617263164}
-    - target: {fileID: 1205551919466345915, guid: 75fb85727e1172a4bb9ca8880a6b575e, type: 3}
-      propertyPath: m_Transitions.m_BlendHint
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75fb85727e1172a4bb9ca8880a6b575e, type: 3}
 --- !u!114 &1640167361 stripped
