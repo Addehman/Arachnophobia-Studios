@@ -186,10 +186,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1223232361448141085, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3944242281898070522, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
       propertyPath: m_LookAt
       value: 
@@ -214,8 +210,15 @@ PrefabInstance:
       propertyPath: cameraParent
       value: 
       objectReference: {fileID: 1053704508}
-    m_RemovedComponents:
-    - {fileID: 1236858823, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
+    - target: {fileID: 6051964067968600891, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6051964067968600893, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
 --- !u!4 &44092023 stripped
 Transform:
