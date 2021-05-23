@@ -569,7 +569,7 @@ public class SpiderMovement : MonoBehaviour
 			StaminaBar.staminaBarInstance.UseStamina(0.0035f);
 		}
 
-		if (Input.GetButtonUp("Sprint") || vertical <= 0f || StaminaBar.staminaBarInstance.currentStamina < 0.0050f || Input.GetAxis("Sprint") >= 0f 
+		if (Input.GetButtonUp("Sprint") || movementInput.sqrMagnitude <= 0f || StaminaBar.staminaBarInstance.currentStamina < 0.0050f || Input.GetAxis("Sprint") >= 0f 
 			&& Input.GetButton("Sprint") == false && IsUsingWeb() == false)
 		{
 			sprintMulti = 0f;
