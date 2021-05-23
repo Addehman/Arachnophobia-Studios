@@ -7,7 +7,7 @@ public class EricAlert : MonoBehaviour
 {
     public RaycastToggler raycastToggler;
     SoundManager soundManager;
-    public SpiderMovement spiderMovement;
+    private SpiderMovement spiderMovement;
     public GameOver gameOver;
 
     public Animator animatorDoor1;
@@ -69,6 +69,7 @@ public class EricAlert : MonoBehaviour
 
     void Start()
     {
+        spiderMovement = FindObjectOfType<SpiderMovement>();
     //    animatorDoor = GetComponent<Animator>();
         audioSourceEric = GetComponent<AudioSource>();
         soundManager = FindObjectOfType<SoundManager>();
