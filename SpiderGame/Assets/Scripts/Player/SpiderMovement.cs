@@ -209,8 +209,8 @@ public class SpiderMovement : MonoBehaviour
 		// cam.Rotate(transform.up, Space.Self);
 
 
-		// vertical = Input.GetAxisRaw("Vertical");
-		// horizsaontal = Input.GetAxisRaw("Horizontal");
+		vertical = Input.GetAxisRaw("Vertical");
+		horizontal = Input.GetAxisRaw("Horizontal");
 
 		RaycastsToCast();
 		// SetPlayerUpDirection();
@@ -480,8 +480,8 @@ public class SpiderMovement : MonoBehaviour
 
 	private void TranslateMovement()
 	{
-		float horizontal = Input.GetAxis("Horizontal");
-		float vertical = Input.GetAxis("Vertical");
+		float horizontal = Input.GetAxisRaw("Horizontal");
+		float vertical = Input.GetAxisRaw("Vertical");
 
 		Vector3 movement = new Vector3(vertical, 0f, horizontal);
 		if (movement.sqrMagnitude > 0f)
@@ -529,7 +529,8 @@ public class SpiderMovement : MonoBehaviour
 	// Binds key for player to use to increase move speed.
 	private void Sprint()
 	{
-		if ((Input.GetButton("Sprint") && vertical > 0f || Input.GetAxis("Sprint") < 0f) && StaminaBar.staminaBarInstance.currentStamina >= 0.0035f 
+		Vector3 movementInput = new Vector3(horizontal, 0f, vertical);
+		if ((Input.GetButton("Sprint") && movementInput.sqrMagnitude > 0f || Input.GetAxis("Sprint") < 0f) && StaminaBar.staminaBarInstance.currentStamina >= 0.0035f 
 			&& PauseMenu.isPaused == false && IsUsingWeb() == false)
 		{
 			spiderAnimator.speed = 3f;
