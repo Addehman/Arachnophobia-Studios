@@ -12,15 +12,14 @@ public class HookWeb : MonoBehaviour
 
 	public event Action DisableFPSCamera;
 	public event Action<bool> LockTPCameraRotation;
+	public event Action<bool> SwitchToHardLockCam;
 	public Vector3 newTransformUp;
 
+	private Transform parentObject;
 	private SpiderMovement spiderMovement;
 	private LineRenderer lineRenderer;
-
 	private ToggleCameras toggleCameras;
 	private ThirdPersonCameraController tpcController;
-	private MimicCamera mimicCamera;
-
 	private State currentState;
 	private Vector3 oldPosition;
 	private Vector3 hookShotPosition;
@@ -37,14 +36,15 @@ public class HookWeb : MonoBehaviour
 
 	private void Awake()
 	{
-		lineRenderer = GetComponent<LineRenderer>();
+		// lineRenderer = GetComponent<LineRenderer>();
+		lineRenderer = FindObjectOfType<LineRenderer>();
 	}
 
 	void Start()
 	{
+		parentObject = transform.parent;
 		spiderMovement = FindObjectOfType<SpiderMovement>();
 		tpcController = FindObjectOfType<ThirdPersonCameraController>();
-		mimicCamera = FindObjectOfType<MimicCamera>();
 		toggleCameras = Camera.main.GetComponent<ToggleCameras>();
 	}
 
@@ -90,7 +90,7 @@ public class HookWeb : MonoBehaviour
 
 				rotateBool = true;
 
-				oldPosition = transform.position;
+				oldPosition = parentObject.position;
 				lerpPercentage = 0;
 
 				currentState = State.HookFlying;
@@ -98,6 +98,11 @@ public class HookWeb : MonoBehaviour
 				if (DisableFPSCamera != null)
 				{
 					DisableFPSCamera();
+				}
+
+				if (SwitchToHardLockCam != null)
+				{
+					SwitchToHardLockCam(true);
 				}
 
 				doDrawLine = true;
@@ -139,7 +144,7 @@ public class HookWeb : MonoBehaviour
 
 		spiderMovement.gravityValue = 0f;
 
-		transform.position = Vector3.Lerp(oldPosition, hookShotPosition, lerpPercentage);
+		parentObject.position = Vector3.Lerp(oldPosition, hookShotPosition, lerpPercentage);
 
 		if (rotateBool)
 		{
@@ -153,9 +158,14 @@ public class HookWeb : MonoBehaviour
 		//Camerafix
 		// tpcController.RecenterCamera();
 
-		if (lerpPercentage >= 0.8f)
+		if (lerpPercentage >= 0.7f)
 		{
 			spiderMovement.UseHookWebNormal = true;
+		}
+		
+		if (LockTPCameraRotation != null)
+		{
+			LockTPCameraRotation(true);
 		}
 
 		// if (lerpPercentage == 1f)
@@ -167,6 +177,7 @@ public class HookWeb : MonoBehaviour
 			// isHookWebing = false;
 			HookWebEnd();
 		}
+
 	}
 
 	//Tried invoking when to turn on Raycast rotation again, but it doesn't seem to help. Look further into this.
@@ -180,6 +191,11 @@ public class HookWeb : MonoBehaviour
 		if (LockTPCameraRotation != null)
 		{
 			LockTPCameraRotation(false);
+		}
+
+		if (SwitchToHardLockCam != null)
+		{
+			SwitchToHardLockCam(false);
 		}
 
 		currentState = State.Normal;

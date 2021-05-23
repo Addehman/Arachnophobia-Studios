@@ -13,6 +13,7 @@ public class ClimbWeb : MonoBehaviour
 	public event Action CameraStartRotation;
 	public event Action CameraEndRotation;
 
+	private Transform parentObject;
 	private SpiderMovement spiderMovement;
 	private ThirdPersonCameraController tpcController;
 	private MimicCamera mimicCamera;
@@ -36,12 +37,13 @@ public class ClimbWeb : MonoBehaviour
 
 	private void Awake()
 	{
-		lineRenderer = GetComponent<LineRenderer>();
+		lineRenderer = FindObjectOfType<LineRenderer>();
 	}
 
 	private void Start()
 	{
-		spiderMovement = FindObjectOfType<SpiderMovement>();
+		parentObject = transform.parent;
+		spiderMovement = GetComponent<SpiderMovement>();
 		tpcController = FindObjectOfType<ThirdPersonCameraController>();
 		mimicCamera = FindObjectOfType<MimicCamera>();
 		toggleCameras = Camera.main.GetComponent<ToggleCameras>();
@@ -89,7 +91,7 @@ public class ClimbWeb : MonoBehaviour
 
 				rotateBool = true;
 
-				oldPosition = transform.position;
+				oldPosition = parentObject.transform.position;
 				lerpPercentage = 0.02f;
 
 				spiderMovement.gravityValue = 0f;
@@ -143,7 +145,7 @@ public class ClimbWeb : MonoBehaviour
 		}
 		lerpPercentage = Mathf.Clamp(lerpPercentage, 0f, 1f);
 		print(lerpPercentage);
-		transform.position = Vector3.Lerp(oldPosition, climbShotPosition, lerpPercentage);
+		parentObject.transform.position = Vector3.Lerp(oldPosition, climbShotPosition, lerpPercentage);
 
 		if (rotateBool)
 		{
@@ -202,6 +204,6 @@ public class ClimbWeb : MonoBehaviour
 
 	private void RotateToFaceTarget()
 	{
-		transform.forward = (climbShotPosition - transform.position).normalized;
+		transform.forward = (climbShotPosition - parentObject.transform.position).normalized;
 	}
 }

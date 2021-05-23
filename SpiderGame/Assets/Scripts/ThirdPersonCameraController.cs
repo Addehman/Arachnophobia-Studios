@@ -23,6 +23,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private float cameraInputX;
 	private float cameraInputY;
 	private float lerpSpeed = 10f;
+	private bool doLockCameraInput = false;
 
 
 	private void Start()
@@ -49,9 +50,12 @@ public class ThirdPersonCameraController : MonoBehaviour
 		springJointWeb.RecenterCamera += RecenterCamera;
 	}
 	
-	void LateUpdate()
+	private void LateUpdate()
 	{
-		CamControl();
+		if (doLockCameraInput == false)
+		{
+			CamControl();
+		}
 	}
 
 	private void CamControl()
@@ -94,6 +98,9 @@ public class ThirdPersonCameraController : MonoBehaviour
 
 	public void HookWebRecenterCamera(bool isActive)
 	{
+		// Lock CameraInput:
+		doLockCameraInput = isActive;
+
 		cameraInputX = 0f;
 		cameraInputY = 0f;
 	}

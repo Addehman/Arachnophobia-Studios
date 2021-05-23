@@ -163,7 +163,7 @@ public class SpiderMovement : MonoBehaviour
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
 
 		springJointWeb = parentObject.GetComponent<SpringJointWeb>();
-		hookWeb = parentObject.GetComponent<HookWeb>();
+		hookWeb = GetComponent<HookWeb>();
 		climbWeb = parentObject.GetComponent<ClimbWeb>();
 		climbWeb.ActivationClimbRotation += ActivationOfRaycasts;
 
@@ -176,7 +176,7 @@ public class SpiderMovement : MonoBehaviour
 		{
 			amountOfModelParts ++;
 		}
-		modelChildren = new GameObject[amountOfModelParts];
+		modelChildren = new GameObject[amountOfModelParts - 1];
 		for (int i = 0; i < modelChildren.Length; i++)
 		{
 			modelChildren[i] = spiderModel.transform.GetChild(i).gameObject;
@@ -498,8 +498,6 @@ public class SpiderMovement : MonoBehaviour
 			// align character to the new myNormal while keeping the forward direction:
 			Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
 			movementParent.transform.rotation = Quaternion.Slerp(movementParent.transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
-
-			// movementParent.transform.rotation = targetRot;
 		}
 	}
 

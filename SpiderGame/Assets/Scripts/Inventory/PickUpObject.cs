@@ -26,7 +26,7 @@ public class PickUpObject : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && canPickUp == true)
+        if (Input.GetButtonDown("Interact") && canPickUp == true)
         {
             numberOfItemsPickedUp++;
             Debug.Log("number of items picked up: " + numberOfItemsPickedUp);

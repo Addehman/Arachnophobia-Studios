@@ -10,6 +10,7 @@ public class ToggleCameras : MonoBehaviour
 	public int PriorityBoostAmount = 20;
 
 	private Cinemachine.CinemachineVirtualCamera aimCamera;
+	private Cinemachine.CinemachineVirtualCamera hardLockCam;
 	private HookWeb hookWeb;
 	private ClimbWeb climbWeb;
 	private SpringJointWeb springJointWeb;
@@ -17,8 +18,10 @@ public class ToggleCameras : MonoBehaviour
 	void Start()
 	{
 		aimCamera = GameObject.Find("cmAimCamera").GetComponent<Cinemachine.CinemachineVirtualCamera>();
+		hardLockCam = FindObjectOfType<ThirdPersonCameraController>().GetComponent<Cinemachine.CinemachineVirtualCamera>();
 		hookWeb = FindObjectOfType<HookWeb>();
 		hookWeb.DisableFPSCamera += DisableFPCamera;
+		// hookWeb.SwitchToHardLockCam += ActivationHardLockCam;
 		climbWeb = FindObjectOfType<ClimbWeb>();
 		climbWeb.DisableFPSCamera += DisableFPCamera;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
@@ -42,7 +45,9 @@ public class ToggleCameras : MonoBehaviour
 			}
 		}
 		if (crosshair != null)
+		{
 			crosshair.SetActive(boosted);
+		}
 	}
 
 	public void EnableFPSCamera()
@@ -64,6 +69,19 @@ public class ToggleCameras : MonoBehaviour
 		if (ActivationFPSCam != null)
 		{
 			ActivationFPSCam(false);
+		}
+	}
+
+	private void ActivationHardLockCam(bool isActive)
+	{
+		// Increase or Decrease the hard-lock-camera's priority.
+		if (isActive == true)
+		{
+			hardLockCam.Priority = PriorityBoostAmount;
+		}
+		else
+		{
+			hardLockCam.Priority = PriorityBoostAmount - PriorityBoostAmount;
 		}
 	}
 }
