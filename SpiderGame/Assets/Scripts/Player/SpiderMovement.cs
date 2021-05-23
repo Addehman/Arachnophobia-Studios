@@ -157,14 +157,14 @@ public class SpiderMovement : MonoBehaviour
 		rb = parentObject.GetComponent<Rigidbody>();
 		cam = Camera.main.transform;
 		cam.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
-		spiderAnimator = spiderModel.GetComponent<Animator>();
+		spiderAnimator = GetComponent<Animator>();
 		spiderAnimator.SetTrigger("Idle");
 		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>();
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
 
 		springJointWeb = parentObject.GetComponent<SpringJointWeb>();
 		hookWeb = GetComponent<HookWeb>();
-		climbWeb = parentObject.GetComponent<ClimbWeb>();
+		climbWeb = GetComponent<ClimbWeb>();
 		climbWeb.ActivationClimbRotation += ActivationOfRaycasts;
 
 		lookAtTarget = FindObjectOfType<LookAtTargetController>().transform;
