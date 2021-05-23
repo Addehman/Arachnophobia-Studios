@@ -534,14 +534,17 @@ public class SpiderMovement : MonoBehaviour
 
 	private void SpiderJump()
 	{
-		if (vertical <= 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f && PauseMenu.isPaused == false)
+		Vector3 movementInput = new Vector3(horizontal, 0f, vertical);
+		// Jump Straight Up
+		if (movementInput.sqrMagnitude <= 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f && PauseMenu.isPaused == false)
 		{
 			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce(transform.up * playerSettings.jumpUpStrength);
 			debugSettings.isGrounded = false;
 			StaminaBar.staminaBarInstance.UseStamina(0.1f);
 		}
-		else if (vertical > 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f && PauseMenu.isPaused == false)
+		// Jump Forwards
+		else if (movementInput.sqrMagnitude > 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f && PauseMenu.isPaused == false)
 		{
 			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce((transform.up + transform.forward) * playerSettings.jumpFwdStrength);
