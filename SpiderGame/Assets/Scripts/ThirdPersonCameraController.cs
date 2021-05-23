@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class ThirdPersonCameraController : MonoBehaviour
 {
+	[SerializeField] private Transform cameraTarget;
+	[SerializeField] private Transform targetToRotate;
 	[SerializeField] private float mouseRotationSpeed = 1f;
 	[SerializeField] private float gamepadRotationSpeed = 10f;
 	[SerializeField] private float smoothTime = 10f;
@@ -75,7 +77,9 @@ public class ThirdPersonCameraController : MonoBehaviour
 		}
 		
 		// cameraParent.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
-		transform.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
+		transform.localRotation = Quaternion.identity;
+		cameraTarget.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
+		targetToRotate.localRotation = Quaternion.Euler(0f, cameraInputX, 0f);
 
 
 		if (zoomCameraComponentBase is CinemachineFramingTransposer)

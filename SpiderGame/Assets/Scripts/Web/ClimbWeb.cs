@@ -41,7 +41,7 @@ public class ClimbWeb : MonoBehaviour
 
 	private void Start()
 	{
-		spiderMovement = GetComponent<SpiderMovement>();
+		spiderMovement = FindObjectOfType<SpiderMovement>();
 		tpcController = FindObjectOfType<ThirdPersonCameraController>();
 		mimicCamera = FindObjectOfType<MimicCamera>();
 		toggleCameras = Camera.main.GetComponent<ToggleCameras>();

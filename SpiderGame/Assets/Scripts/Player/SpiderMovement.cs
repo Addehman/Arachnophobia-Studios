@@ -114,6 +114,7 @@ public class SpiderMovement : MonoBehaviour
 	[SerializeField] private Transform movementParent;
 	[SerializeField] private GameObject cmTPCamera;
 	[SerializeField] private GameObject cameraParent;
+	[SerializeField] private GameObject spiderModel;
 
 	public event Action<bool> cameraChangeStrategy;
 
@@ -154,19 +155,18 @@ public class SpiderMovement : MonoBehaviour
 		rb = parentObject.GetComponent<Rigidbody>();
 		cam = Camera.main.transform;
 		cam.GetComponent<ToggleCameras>().ActivationFPSCam += activateOnKeypress_ActivationFPSCam;
-		// spiderModel = transform.Find("Model_Character_Spider.6").gameObject;
-		spiderAnimator = GetComponent<Animator>();
+		spiderAnimator = spiderModel.GetComponent<Animator>();
 		spiderAnimator.SetTrigger("Idle");
 		vacuumBlackhole = FindObjectOfType<VacuumBlackhole>();
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
 
-		springJointWeb = FindObjectOfType<SpringJointWeb>();
-		hookWeb = GetComponent<HookWeb>();
-		climbWeb = GetComponent<ClimbWeb>();
+		springJointWeb = parentObject.GetComponent<SpringJointWeb>();
+		hookWeb = parentObject.GetComponent<HookWeb>();
+		climbWeb = parentObject.GetComponent<ClimbWeb>();
 		climbWeb.ActivationClimbRotation += ActivationOfRaycasts;
 
 		lookAtTarget = FindObjectOfType<LookAtTargetController>().transform;
-		targetRotationObject = GameObject.Find("PlayerTargetRotation");
+		// targetRotationObject = GameObject.Find("PlayerTargetRotation");
 		cameraRotationConstraint = cameraParent.GetComponent<RotationConstraint>();
 
 		// Here the reference is made for all the children of the spidermodel, used to be able to hide/show when in fpCamera-mode.
@@ -239,7 +239,7 @@ public class SpiderMovement : MonoBehaviour
 		{
 			// CameraDirectionMovement();
 
-			// SetLookDirection();
+			SetLookDirection();
 			SetPlayerUpDirection();
 			TranslateMovement();
 			// DefaultMovement();
@@ -262,8 +262,8 @@ public class SpiderMovement : MonoBehaviour
 		RaycastHelper(transform.TransformDirection(Vector3.right) + transform.TransformDirection(Vector3.down), 0f, RaycastTypes.Any);
 		RaycastHelper(transform.TransformDirection(Vector3.left) + transform.TransformDirection(Vector3.down), 0f, RaycastTypes.Any);
 
-		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod1 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown1, 0f, RaycastTypes.Forwards);
-		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod2 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown2, 0f, RaycastTypes.ForwardsEdgeCheck);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod1 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown1, 0f, RaycastTypes.ForwardsEdgeCheck);
+		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod2 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown2, 0f, RaycastTypes.Forwards);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod3 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown3, 0f, RaycastTypes.Forwards);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod4 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown4, 0f, RaycastTypes.Forwards);
 		RaycastHelper(transform.TransformDirection(Vector3.forward) * forwardsRaycastAdjustment.rayFwdMod5 + transform.TransformDirection(Vector3.down) * forwardsRaycastAdjustment.rayFwdModDown5, 0f, RaycastTypes.Forwards);
@@ -285,35 +285,9 @@ public class SpiderMovement : MonoBehaviour
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset);
 			EdgeRaycastHelper(transform.TransformDirection(Vector3.back) + transform.TransformDirection(Vector3.down), raycastGeneralSettings.edgeRayOriginOffset1);
 		}
-		// else if (debugSettings.backRayNoHit == true && vertical < 0f)
-		// {
-		// 	playerSettings.translatePlayerSpeed = playerSettings.translateSlowPlayerSpeed;
-		// 	EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset);
-		// 	EdgeRaycastHelper(transform.TransformDirection(Vector3.forward) + transform.TransformDirection(Vector3.down), -raycastGeneralSettings.edgeRayOriginOffset1);
-		// }
 		else 
 		{
 			playerSettings.normalPlayerSpeed = playerSettings.normalDefaultPlayerSpeed;
-		}
-
-		if (debugSettings.doForwardCheckRay == true)
-		{
-			if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), 0.3f))
-			{
-				if (cameraChangeStrategy != null)
-				{
-					cameraChangeStrategy(true);
-				}
-				// cameraRotationConstraint.weight = 0f;
-			}
-			else
-			{
-				if (cameraChangeStrategy != null)
-				{
-					cameraChangeStrategy(false);
-				}
-				// cameraRotationConstraint.weight = 1f;
-			}
 		}
 
 		if (debugSettings.doForwardCheckRay == true)
@@ -357,7 +331,8 @@ public class SpiderMovement : MonoBehaviour
 		switch (inRaycastType)
 		{
 			case RaycastTypes.MainForwards:
-				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastGeneralSettings.raycastReach, raycastGeneralSettings.layerMask) && Input.GetKey(KeyCode.W))
+				Vector3 movementInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastGeneralSettings.raycastReach, raycastGeneralSettings.layerMask) && movementInput.sqrMagnitude > 0f)
 				{
 					if (debugSettings.doDrawRayGizmos == true)
 					{
@@ -379,7 +354,7 @@ public class SpiderMovement : MonoBehaviour
 						Debug.DrawRay(transform.position - originOffset, direction, Color.red, raycastGeneralSettings.raycastReach);
 					}
 					debugSettings.averageNormalDirections.Add(hit.normal);
-					debugSettings.mainDownRayNormalDirection = hit.normal;
+					// debugSettings.mainDownRayNormalDirection = hit.normal;
 
 					float rbVelocity = rb.velocity.y;
 					if (hit.distance < playerSettings.playerToGroundRange && rbVelocity < 0f)
@@ -391,11 +366,11 @@ public class SpiderMovement : MonoBehaviour
 				else
 				{
 					debugSettings.isGrounded = false;
-					debugSettings.mainDownRayNormalDirection = Vector3.zero;
+					// debugSettings.mainDownRayNormalDirection = Vector3.zero;
 				}
 				break;
 			case RaycastTypes.MainBackwards:
-				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastGeneralSettings.raycastReach, raycastGeneralSettings.layerMask) && Input.GetKey(KeyCode.S))
+				if (Physics.Raycast(transform.position - originOffset, direction, out hit, raycastGeneralSettings.raycastReach, raycastGeneralSettings.layerMask))
 				{
 					if (debugSettings.doDrawRayGizmos == true)
 					{
@@ -499,14 +474,14 @@ public class SpiderMovement : MonoBehaviour
 			Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
 			movementParent.transform.rotation = Quaternion.Slerp(movementParent.transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 
-			// movementParent.transform.rotation = targetRot;
+			movementParent.transform.rotation = targetRot;
 		}
 	}
 
 	private void TranslateMovement()
 	{
-		float horizontal = Input.GetAxisRaw("Horizontal");
-		float vertical = Input.GetAxisRaw("Vertical");
+		float horizontal = Input.GetAxis("Horizontal");
+		float vertical = Input.GetAxis("Vertical");
 
 		Vector3 movement = new Vector3(vertical, 0f, horizontal);
 		if (movement.sqrMagnitude > 0f)
@@ -517,19 +492,21 @@ public class SpiderMovement : MonoBehaviour
 
 	private void VacuumPullingMovement() // The Rigidbody-based movement used only for when the player is in range of being pulled with rb.AddForce towards the Robot Vacuum Cleaner - becomes most smooth this way.
 	{
-		float vertical = Input.GetAxisRaw("Vertical");
-		float horizontal = Input.GetAxisRaw("Horizontal");
+		float vertical = Input.GetAxis("Vertical");
+		float horizontal = Input.GetAxis("Horizontal");
 
 		rb.velocity = (transform.forward * vertical) * (playerSettings.velocityPlayerSpeed + sprintMulti) * Time.deltaTime;
 	}
 
-	private void PlayerRotation()
+	private void SetLookDirection()
 	{
-		float vertical = Input.GetAxisRaw("Vertical");
-		float horizontal = Input.GetAxisRaw("Horizontal");
-
-		// float horizontalMouse = Input.GetAxis("Mouse X");
-		transform.Rotate(0f, horizontal * playerSettings.turnSpeed * Time.deltaTime, 0f);
+		float horizontal = Input.GetAxis("Horizontal");
+		float vertical = Input.GetAxis("Vertical");
+		
+		if (Vector3.Distance(transform.position, lookAtTarget.position) >= 0.05f)
+		{
+			transform.LookAt(lookAtTarget, lookAtTarget.up);
+		}
 	}
 
 	private void SpiderJump()
@@ -642,47 +619,6 @@ public class SpiderMovement : MonoBehaviour
 		else
 		{
 			return false;
-		}
-	}
-
-	private void PlayerAnimation()
-	{
-		if (springJointWeb.isSwingingWeb == true)
-        {
-			spiderAnimator.SetBool("Web", true);
-        }
-
-		else if (springJointWeb.isSwingingWeb == false)
-		{
-			spiderAnimator.SetBool("Web", false);
-		}
-
-
-		if (((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true))
-		{
-			spiderAnimator.SetBool("Walk", true);
-		}
-
-		else if (((Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.W)) && spiderAnimator.GetBool("Walk") == true))
-		{
-			spiderAnimator.SetBool("Walk", false);
-		}
-
-		randomIdleTimer += Time.deltaTime;
-		if (randomIdleTimer >= 10f)
-		{
-			randomIdle = UnityEngine.Random.Range(0, 2); // Look over if this is correct - Should the "2" be included or excluded?
-
-			if(randomIdle == 0)
-			{
-				spiderAnimator.SetTrigger("Idle_Shake");
-			}
-			else if(randomIdle == 1)
-			{
-				spiderAnimator.SetTrigger("Idle_LookAround");
-			}
-
-			randomIdleTimer = 0f;
 		}
 	}
 

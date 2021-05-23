@@ -42,7 +42,7 @@ public class HookWeb : MonoBehaviour
 
 	void Start()
 	{
-		spiderMovement = GetComponent<SpiderMovement>();
+		spiderMovement = FindObjectOfType<SpiderMovement>();
 		tpcController = FindObjectOfType<ThirdPersonCameraController>();
 		mimicCamera = FindObjectOfType<MimicCamera>();
 		toggleCameras = Camera.main.GetComponent<ToggleCameras>();
