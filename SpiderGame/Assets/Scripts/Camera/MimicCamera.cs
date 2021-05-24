@@ -35,7 +35,7 @@ public class MimicCamera : MonoBehaviour
 		transform.rotation = cameraToMimic.rotation;
 	}
 
-	private void LateUpdate()
+	private void FixedUpdate()
 	{
 		transform.position = Vector3.SmoothDamp(transform.position, cameraToMimic.position, ref currentVelocity, positionLerpSpeed * Time.deltaTime);
 

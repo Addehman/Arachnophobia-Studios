@@ -14,8 +14,7 @@ public class SpringJointWeb : MonoBehaviour
 	SpringJoint joint;
 	SpiderAudio spiderAudio;
 	LineRenderer lineRenderer;
-	State currentState = State.IsGrounded;
-	private WebSelector webSelector;
+	public SwingState currentState = SwingState.IsGrounded;
 
 	public Animator spiderAnimator;
 	private ToggleCameras toggleCameras;
@@ -28,20 +27,11 @@ public class SpringJointWeb : MonoBehaviour
 	public bool isReleased = true;
 
 	private GameObject targetCloneHolder;
-
-	enum State
-	{
-		IsGrounded,
-		IsSwinging,
-		IsHanging,
-		IsLanding
-	}
 	
 
 	private void Awake()
 	{
 		lineRenderer = GetComponent<LineRenderer>();
-		webSelector = FindObjectOfType<WebSelector>();
 	}
 
 	private void Start()
@@ -52,28 +42,27 @@ public class SpringJointWeb : MonoBehaviour
 
 	private void Update()
 	{
-		if (webSelector.webState == WebAbilityState.Swing)
-		{	
-			if(toggleCameras.boosted == true)
-			{
-				if (Input.GetButtonDown("UseWeb") || Input.GetAxis("UseWeb") > 0f)
-				{
-					StartWebGrapple();
-					isReleased = false;
-				}
-				else if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
-				{
-					StopWeb();
-					isReleased = true;
-				}
-			}
 
-			if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
+		if(toggleCameras.boosted == true)
+		{
+			if (Input.GetButtonDown("UseWeb") || Input.GetAxis("UseWeb") > 0f)
+			{
+				StartWebGrapple();
+				isReleased = false;
+			}
+			else if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
 			{
 				StopWeb();
 				isReleased = true;
 			}
 		}
+
+		if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
+		{
+			StopWeb();
+			isReleased = true;
+		}
+
 	}
 
 	private void LateUpdate()
@@ -81,12 +70,12 @@ public class SpringJointWeb : MonoBehaviour
 		DrawString();
 	}
 
-    private void OnDisable()
-    {
-		StopWeb();
-    }
+	private void OnDisable()
+	{
+		StopWeb(false);
+	}
 
-    void StartWebGrapple()
+	void StartWebGrapple()
 	{
 		RaycastHit hit;
 		if (Physics.Raycast(butt.transform.position, Camera.main.transform.forward, out hit, maxDistance))
@@ -95,7 +84,7 @@ public class SpringJointWeb : MonoBehaviour
 
 			isSwingingWeb = true;
 			//spiderAnimator.SetBool("Web", true);
-			currentState = State.IsSwinging;
+			currentState = SwingState.IsSwinging;
 			GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);
 			targetCloneHolder = targetPoint;
 			joint = gameObject.AddComponent<SpringJoint>();
@@ -119,10 +108,11 @@ public class SpringJointWeb : MonoBehaviour
 		}
 	}
 
-	void StopWeb()
+	void StopWeb(bool recenterCamera = true)
 	{
 		// spiderAnimator.SetBool("Web", false);
 		debugSetting.isGrounded = true;
+		currentState = SwingState.IsGrounded;
 		isSwingingWeb = false;
 		// GameObject currentPoint = GameObject.Find("TargetPoint(Clone)");
 		Destroy(targetCloneHolder);
@@ -133,7 +123,7 @@ public class SpringJointWeb : MonoBehaviour
 		{
 			LockTPCameraRotation(false);
 		}
-		if (RecenterCamera != null)
+		if (RecenterCamera != null && recenterCamera == true)
 		{
 			RecenterCamera();
 		}
@@ -155,7 +145,15 @@ public class SpringJointWeb : MonoBehaviour
 	{
 		if (collision.CompareTag("Ground"))
 		{
-			currentState = State.IsGrounded;
+			currentState = SwingState.IsGrounded;
 		}
 	}
+}
+
+public enum SwingState
+{
+	IsGrounded,
+	IsSwinging,
+	IsHanging,
+	IsLanding
 }

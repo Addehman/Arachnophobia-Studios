@@ -30,12 +30,14 @@ public class ThirdPersonCameraController : MonoBehaviour
 	{
 		cameraParent = transform.parent;
 		hookWeb = FindObjectOfType<HookWeb>();
-		hookWeb.LockTPCameraRotation += HookWebRecenterCamera;
+		hookWeb.LockTPCameraRotation += LockCameraInput;
+		hookWeb.RecenterCamera += RecenterCamera;
 		climbWeb = FindObjectOfType<ClimbWeb>();
 		climbWeb.CameraStartRotation += BeginClimbRotation;
-		climbWeb.CameraEndRotation += RecenterCamera;
+		climbWeb.RecenterCamera += RecenterCamera;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		springJointWeb.RecenterCamera += RecenterCamera;
+		springJointWeb.LockTPCameraRotation += LockCameraInput;
 	}
 	
 	private void Start()
@@ -59,6 +61,11 @@ public class ThirdPersonCameraController : MonoBehaviour
 		if (doLockCameraInput == false)
 		{
 			CamControl();
+		}
+
+		if (Input.GetKeyDown(KeyCode.K))
+		{
+			RecenterCamera();
 		}
 	}
 
@@ -100,19 +107,18 @@ public class ThirdPersonCameraController : MonoBehaviour
 		}
 	}
 
-	public void HookWebRecenterCamera(bool isActive)
+	public void LockCameraInput(bool isActive)
 	{
 		// Lock CameraInput:
 		doLockCameraInput = isActive;
-
-		cameraInputX = 0f;
-		cameraInputY = 0f;
 	}
 
 	public void RecenterCamera()
 	{
 		cameraInputX = 0f;
 		cameraInputY = 0f;
+
+		// transform.rotation = Quaternion.identity;
 	}
 
 	private void BeginClimbRotation()
@@ -132,9 +138,9 @@ public class ThirdPersonCameraController : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		hookWeb.LockTPCameraRotation -= HookWebRecenterCamera;
+		hookWeb.LockTPCameraRotation -= LockCameraInput;
 		climbWeb.CameraStartRotation -= BeginClimbRotation;
-		climbWeb.CameraEndRotation -= RecenterCamera;
+		climbWeb.RecenterCamera -= RecenterCamera;
 		springJointWeb.RecenterCamera -= RecenterCamera;
 	}
 }

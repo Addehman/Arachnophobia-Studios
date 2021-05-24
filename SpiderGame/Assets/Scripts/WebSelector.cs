@@ -1,12 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WebSelector : MonoBehaviour
 {
-	public WebAbilityState webState = WebAbilityState.Swing;
-
 	//Make selectedWeb public if we want to listen to it from the spring-/hook-/climbWeb scripts instead.
 	private int selectedWeb = 0;
 	SpringJointWeb springJointWeb;
@@ -50,28 +45,21 @@ public class WebSelector : MonoBehaviour
 
 		if (selectedWeb == 0)
 		{
-			// springJointWeb.enabled = true;
-			// hookWeb.enabled = false;
-			// climbWeb.enabled = false;
-
-			webState = WebAbilityState.Swing;
+			springJointWeb.enabled = true;
+			hookWeb.enabled = false;
+			climbWeb.enabled = false;
 		}
 		else if (selectedWeb == 1)
 		{
-			// springJointWeb.enabled = false;
-			// hookWeb.enabled = true;
-			// climbWeb.enabled = false;
-
-			webState = WebAbilityState.Hook;
-
+			springJointWeb.enabled = false;
+			hookWeb.enabled = true;
+			climbWeb.enabled = false;
 		}
 		else
 		{
-			// springJointWeb.enabled = false;
-			// hookWeb.enabled = false;
-			// climbWeb.enabled = true;
-
-			webState = WebAbilityState.Climb;
+			springJointWeb.enabled = false;
+			hookWeb.enabled = false;
+			climbWeb.enabled = true;
 		}
 
 		SwitchWebAbilityOnGamepad();
@@ -119,5 +107,3 @@ public class WebSelector : MonoBehaviour
 		selectedWeb = Mathf.Clamp(selectedWeb, 0, 2);
 	}
 }
-
-public enum WebAbilityState {Swing, Hook, Climb,}

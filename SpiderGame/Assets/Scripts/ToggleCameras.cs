@@ -27,6 +27,7 @@ public class ToggleCameras : MonoBehaviour
 		climbWeb.DisableFPSCamera += DisableFPCamera;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		springJointWeb.ExitFPCamera += DisableFPCamera;
+		// springJointWeb.LockTPCameraRotation += ActivationHardLockCam;
 	}
 
 	private void Update()

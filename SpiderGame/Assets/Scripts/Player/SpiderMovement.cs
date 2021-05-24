@@ -1,7 +1,8 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
-using System;
 
 [System.Serializable]
 public class MainRaycastsAdjustment
@@ -177,7 +178,7 @@ public class SpiderMovement : MonoBehaviour
 		{
 			amountOfModelParts ++;
 		}
-		modelChildren = new GameObject[amountOfModelParts - 1];
+		modelChildren = new GameObject[amountOfModelParts - 2];
 		for (int i = 0; i < modelChildren.Length; i++)
 		{
 			modelChildren[i] = transform.GetChild(i).gameObject;
@@ -212,17 +213,14 @@ public class SpiderMovement : MonoBehaviour
 
 		currentPosition = transform.position;
 
-		// cam.Rotate(transform.up, Space.Self);
-
-
 		vertical = Input.GetAxisRaw("Vertical");
 		horizontal = Input.GetAxisRaw("Horizontal");
 
 		RaycastsToCast();
-		// SetPlayerUpDirection();
 		Sprint();
 		SpiderJump();
 		SpiderAnimation();
+
 	}
 
 	private void FixedUpdate()
@@ -243,13 +241,11 @@ public class SpiderMovement : MonoBehaviour
 		}
 		else
 		{
-			// CameraDirectionMovement();
-
+			// SwingRaysToCheckDirectionToLandOn();
+			
 			SetLookDirection();
 			SetPlayerUpDirection();
 			TranslateMovement();
-			// DefaultMovement();
-			// RigidbodyMovement();
 		}
 	}
 
@@ -372,6 +368,7 @@ public class SpiderMovement : MonoBehaviour
 					{
 						debugSettings.isGrounded = true;
 						spiderAnimator.SetBool("Jump", false);
+						// springJointWeb.currentState = SwingState.IsGrounded;
 					}
 				}
 				else
@@ -482,6 +479,7 @@ public class SpiderMovement : MonoBehaviour
 				debugSettings.averageNormalDirection = Vector3.up;
 			}
 
+		// These two could probably be added into the calculation above instead of having this separated assignment, I mean if the newTransform from the web-abilities is added even when it's 0, then it wont contribute anyway!
 			if (UseHookWebNormal)
 			{
 				debugSettings.averageNormalDirection = hookWeb.newTransformUp;
@@ -490,15 +488,25 @@ public class SpiderMovement : MonoBehaviour
 			{
 				debugSettings.averageNormalDirection = climbWeb.newTransformUp;
 			}
+			else if (springJointWeb.currentState == SwingState.IsSwinging)
+			{
+				debugSettings.averageNormalDirection = Vector3.up;
+			}
 
 			float lerpSpeed = 10f;
 
+		// Here the rotation of the MoveAndCamParent is being calculated and set by the average normal that the Raycasts find.
 			myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
 			// find forward direction with new myNormal:
 			Vector3 myForward = Vector3.Cross(movementParent.transform.right, myNormal);
 			// align character to the new myNormal while keeping the forward direction:
 			Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
 			movementParent.transform.rotation = Quaternion.Slerp(movementParent.transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+
+		// Here the rotation of the spiderModel is calculated and set according to the average normals that the raycasts find, thus this also decides the direction of the Raycasts.
+			Vector3 modelForward = Vector3.Cross(transform.right, myNormal);
+			Quaternion modelRot = Quaternion.LookRotation(modelForward, myNormal);
+			transform.rotation = Quaternion.Slerp(transform.rotation, modelRot, lerpSpeed * Time.deltaTime);
 		}
 	}
 
@@ -578,30 +586,29 @@ public class SpiderMovement : MonoBehaviour
 		{
 			spiderAnimator.SetBool("Web", true);
 		}
-
 		else if (springJointWeb.isSwingingWeb == false)
 		{
 			spiderAnimator.SetBool("Web", false);
 		}
 
-		float movementInput = Mathf.Abs(vertical + horizontal);
-		if (movementInput > 0.01f && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true)
+		Vector3 movementInput = new Vector3(horizontal, 0f, vertical);
+		if (movementInput.sqrMagnitude != 0f && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true)
 		{
 			spiderAnimator.SetBool("Walk", true);
 		}
-		else if (movementInput < 0.01f && spiderAnimator.GetBool("Walk") == true)
+		else if (movementInput.sqrMagnitude == 0f && spiderAnimator.GetBool("Walk") == true)
 		{
 			spiderAnimator.SetBool("Walk", false);
 		}
 
-		if(Input.GetKey(KeyCode.A) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true || Input.GetKey(KeyCode.D) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true)
-        {
-			spiderAnimator.SetBool("Walk", true);
-		}
-		else if(Input.GetKeyUp(KeyCode.A) && spiderAnimator.GetBool("Walk") == true || Input.GetKeyUp(KeyCode.D) && spiderAnimator.GetBool("Walk") == true)
-		{
-			spiderAnimator.SetBool("Walk", false);
-		}
+		// if(Input.GetKey(KeyCode.A) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true || Input.GetKey(KeyCode.D) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true)
+        // {
+		// 	spiderAnimator.SetBool("Walk", true);
+		// }
+		// else if(movementInput.sqrMagnitude <= 0.01f && spiderAnimator.GetBool("Walk") == true)
+		// {
+		// 	spiderAnimator.SetBool("Walk", false);
+		// }
 
 		randomIdleTimer += Time.deltaTime;
 		if (randomIdleTimer >= 10f)
