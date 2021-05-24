@@ -10,6 +10,16 @@ public class PickUpObject : MonoBehaviour
 	public bool canPickUp = false;
 	public bool isAllItemsCollected = false;
 
+	public GameObject tomatoCheck;
+	public GameObject bananaCheck;
+	public GameObject blueberryCheck;
+	public GameObject appleCheck;
+	public GameObject carrotCheck;
+	public GameObject cheeseCheck;
+	public GameObject tBoneCheck;
+	public GameObject cookieCheck;
+	public GameObject chickenBone;
+
 	public int itemID;
 	[SerializeField]
 	public int numberOfItemsPickedUp;
@@ -46,6 +56,8 @@ public class PickUpObject : MonoBehaviour
 			}
 
 			canPickUp = false;
+
+			CheckIgredients();
 		}
 
 		if(numberOfItemsPickedUp >= 9)
@@ -72,6 +84,54 @@ public class PickUpObject : MonoBehaviour
 			helpText.SetActive(false);
 			thisObjectThatWeStandOn = null;
 			canPickUp = false;
+		}
+	}
+
+	void CheckIgredients()
+    {
+		if (itemID == 0)
+		{
+			tomatoCheck.SetActive(true);
+		}
+
+		else if (itemID == 1)
+        {
+			bananaCheck.SetActive(true);
+		}
+
+		else if (itemID == 2)
+		{
+			blueberryCheck.SetActive(true);
+		}
+
+		else if (itemID == 3)
+		{
+			appleCheck.SetActive(true);
+		}
+
+		else if (itemID == 4)
+		{
+			carrotCheck.SetActive(true);
+		}
+
+		else if (itemID == 6)
+		{
+			cheeseCheck.SetActive(true);
+		}
+
+		else if (itemID == 7)
+		{
+			tBoneCheck.SetActive(true);
+		}
+
+		else if (itemID == 8)
+		{
+			chickenBone.SetActive(true);
+		}
+
+		else if (itemID == 9)
+		{
+			cookieCheck.SetActive(true);
 		}
 	}
 }

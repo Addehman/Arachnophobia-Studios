@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class LightSwitchQuest : MonoBehaviour
 {
+    public GameObject lampModelsOn;
+    public GameObject lampModelsOff;
     public GameObject lightSource1;
     public GameObject lightSource2;
     public GameObject lightSource3;
     public GameObject questCircle;
     public GameObject check;
     public GameObject helpText;
+
     bool isFinished = false;
     bool canSwitchLight = false;
 
@@ -18,6 +21,9 @@ public class LightSwitchQuest : MonoBehaviour
         if (Input.GetButtonDown("Interact") && isFinished == false && canSwitchLight == true)
         {
             Winstate.AddCompletedQuest();
+
+            lampModelsOn.SetActive(false);
+            lampModelsOff.SetActive(true);
             lightSource1.SetActive(false);
             lightSource2.SetActive(false);
             lightSource3.SetActive(false);
