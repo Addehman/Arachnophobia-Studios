@@ -22,7 +22,7 @@ public class VacuumBlackhole : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("PlayerParent"))
         {
             playerTransform = other.gameObject.GetComponent<Transform>();
             playerRb = other.gameObject.GetComponent<Rigidbody>();
@@ -31,7 +31,7 @@ public class VacuumBlackhole : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("PlayerParent"))
         {
             if (PullingPlayer != null)
             {
@@ -43,7 +43,7 @@ public class VacuumBlackhole : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("PlayerParent"))
         {
             playerRb.velocity = Vector3.zero;
             if (PullingPlayer != null)
