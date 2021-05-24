@@ -14,25 +14,25 @@ public class VictoryMenu : MonoBehaviour
     }
     public void MainMenuButtonVictory()
     {
-        GUISound.clickSound();
+        ClickingSound.clickSound();
         SceneManager.LoadScene("MainMenu");
     }
 
     public void CreditsButtonVictory()
     {
-        GUISound.clickSound();
+        ClickingSound.clickSound();
         creditsUI.SetActive(true);
     }
 
     public void xButtonVictory()
     {
-        GUISound.clickSound();
+        ClickingSound.clickSound();
         creditsUI.SetActive(false);
     }
 
     public void exiButtonVictory()
     {
-        GUISound.clickSound();
+        ClickingSound.clickSound();
         Application.Quit();
     }
 }

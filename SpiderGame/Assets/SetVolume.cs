@@ -21,3 +21,6 @@ public class SetVolume : MonoBehaviour
         PlayerPrefs.SetFloat("MusicVolume", sliderValue);
     }
 }
+
+
+//CHECK

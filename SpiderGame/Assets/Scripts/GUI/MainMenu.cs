@@ -13,47 +13,46 @@ public class MainMenu : MonoBehaviour
 
 	private void Start()
 	{
-		// float volume = PlayerPrefs.GetFloat("MusicVolume", 1f);
-		// volume = Mathf.Log10(volume) * 20;
-		// audioMixer.SetFloat("Master", volume);
+        float volume = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        volume = Mathf.Log10(volume) * 20;
+        audioMixer.SetFloat("Master", volume);
 
-		AudioListener.volume = 1f;
+        AudioListener.volume = 1f;
 	}
 
 	public void PlayButton()
 	{
-		GUISound.clickSound();
+		ClickingSound.clickSound();
 		SceneManager.LoadScene("GameScene");
 	}
 
 	public void HowToPlayButton()
 	{
-		GUISound.clickSound();
+		ClickingSound.clickSound();
 		SceneManager.LoadScene("TutorialScene");
 	}
 
 	public void CreditsButton()
 	{
-		GUISound.clickSound();
+		ClickingSound.clickSound();
 		credits.SetActive(true);
 	}
 
 	public void QuitGameButton()
 	{
-		GUISound.clickSound();
+		ClickingSound.clickSound();
 		Application.Quit();
 	}
 
 	public void Back()
 	{
-		GUISound.clickSound();
+		ClickingSound.clickSound();
 		credits.SetActive(false);
 		howToPlay.SetActive(false);
 	}
 
 	public void GenericClickButton()
 	{
-		// ClickSound.PlayClickSFX();
-		GUISound.clickSound();
+		ClickingSound.clickSound();
 	}
 }
