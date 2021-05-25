@@ -42,9 +42,10 @@ public class MimicCamera : MonoBehaviour
 		componentBase = thisCmVirtualCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
 	}
 
-	private void FixedUpdate()
+	private void Update()
 	{
-		transform.position = Vector3.SmoothDamp(transform.position, cameraToMimic.position, ref currentVelocity, positionLerpSpeed * Time.deltaTime);
+		// transform.position = Vector3.SmoothDamp(transform.position, cameraToMimic.position, ref currentVelocity, 1f);
+		// transform.position = cameraToMimic.position;
 
 		if (doLockRotation == true)
 		{
@@ -52,7 +53,8 @@ public class MimicCamera : MonoBehaviour
 		}
 		else
 		{
-			transform.rotation = Quaternion.Slerp(transform.rotation, cameraToMimic.rotation, rotationLerpSpeed * Time.deltaTime);
+			// transform.rotation = Quaternion.Slerp(transform.rotation, cameraToMimic.rotation, 1f);
+			// transform.rotation = cameraToMimic.rotation;
 		}
 	}
 
