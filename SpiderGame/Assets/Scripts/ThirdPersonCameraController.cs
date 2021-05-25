@@ -92,6 +92,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 			}
 			// cameraParent.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
 			// transform.localRotation = Quaternion.identity;
+			cameraInputY = Mathf.Clamp(cameraInputY, -10, 80);
 			cameraTarget.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
 			targetToRotate.localRotation = Quaternion.Euler(0f, cameraInputX, 0f);
 
