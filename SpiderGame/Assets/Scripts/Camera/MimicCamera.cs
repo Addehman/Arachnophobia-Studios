@@ -5,11 +5,14 @@ public class MimicCamera : MonoBehaviour
 {
 	[SerializeField] private float positionLerpSpeed = 10f;
 	[SerializeField] private float rotationLerpSpeed = 10f;
+	[SerializeField] private float activeSwingDamping = 0.1f;
+	[SerializeField] private float inactiveSwingDamping = 1f;
 
 	public bool doLockRotation = false;
 
 	private SpiderMovement spiderMovement;
 	private CinemachineCollider cmColl;
+	private CinemachineComponentBase componentBase;
 	private HookWeb hookWeb;
 	private SpringJointWeb springJointWeb;
 	private Transform cameraToMimic;
@@ -24,20 +27,26 @@ public class MimicCamera : MonoBehaviour
 		cameraToMimic = FindObjectOfType<ThirdPersonCameraController>().transform;
 		cmColl = GetComponent<CinemachineCollider>();
 		hookWeb = FindObjectOfType<HookWeb>();
-		hookWeb.LockTPCameraRotation += LockRotation;
+		// hookWeb.LockTPCameraRotation += LockRotation;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
-		springJointWeb.LockTPCameraRotation += LockRotation;
+		// springJointWeb.SwitchToSwingCamera += LockRotation;
+		// springJointWeb.SetCameraDampingForSwing += SetCameraDampingForSwing;
 	}
 
 	private void Start()
 	{
-		transform.position = cameraToMimic.position;
-		transform.rotation = cameraToMimic.rotation;
+		CinemachineVirtualCamera thisCmVirtualCamera = GetComponent<CinemachineVirtualCamera>();
+		componentBase = thisCmVirtualCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
+
+		// transform.position = cameraToMimic.position;
+		// print (cameraToMimic.position);
+		// transform.rotation = cameraToMimic.rotation;
 	}
 
-	private void LateUpdate()
+	private void Update()
 	{
-		transform.position = Vector3.SmoothDamp(transform.position, cameraToMimic.position, ref currentVelocity, positionLerpSpeed * Time.deltaTime);
+		// transform.position = Vector3.SmoothDamp(transform.position, cameraToMimic.position, ref currentVelocity, 1f);
+		// transform.position = cameraToMimic.position;
 
 		if (doLockRotation == true)
 		{
@@ -45,7 +54,8 @@ public class MimicCamera : MonoBehaviour
 		}
 		else
 		{
-			transform.rotation = Quaternion.Slerp(transform.rotation, cameraToMimic.rotation, rotationLerpSpeed * Time.deltaTime);
+			// transform.rotation = Quaternion.Slerp(transform.rotation, cameraToMimic.rotation, 1f);
+			// transform.rotation = cameraToMimic.rotation;
 		}
 	}
 
@@ -71,10 +81,29 @@ public class MimicCamera : MonoBehaviour
 		}
 	}
 
+	private void SetCameraDampingForSwing(bool isSwingActive)
+	{
+		if (isSwingActive == true)
+		{
+			if (componentBase is CinemachineHardLockToTarget)
+			{
+				(componentBase as CinemachineHardLockToTarget).m_Damping = activeSwingDamping;
+			}
+		}
+		else
+		{
+			if (componentBase is CinemachineHardLockToTarget)
+			{
+				(componentBase as CinemachineHardLockToTarget).m_Damping = inactiveSwingDamping;
+			}
+		}
+	}
+
 	private void OnDestroy()
 	{
 		spiderMovement.cameraChangeStrategy -= CameraChangeStrategy;
 		hookWeb.LockTPCameraRotation -= LockRotation;
-		springJointWeb.LockTPCameraRotation -= LockRotation;
+		springJointWeb.SwitchToSwingCamera -= LockRotation;
+		springJointWeb.SetCameraDampingForSwing -= SetCameraDampingForSwing;
 	}
 }

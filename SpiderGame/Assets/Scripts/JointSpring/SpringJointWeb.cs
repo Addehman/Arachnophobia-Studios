@@ -7,72 +7,79 @@ public class SpringJointWeb : MonoBehaviour
 
 	public event Action ExitFPCamera;
 	public event Action RecenterCamera;
-	public event Action<bool> LockTPCameraRotation;
-
-	float maxDistance = 100f;
-
-	SpringJoint joint;
-	SpiderAudio spiderAudio;
-	LineRenderer lineRenderer;
-	State currentState = State.IsGrounded;
-	private WebSelector webSelector;
-
-	public Animator spiderAnimator;
-	private ToggleCameras toggleCameras;
-	public DebugSettings debugSetting;
+	public event Action<bool> SwitchToSwingCamera;
+	public event Action<bool> SetCameraDampingForSwing;
 
 	public GameObject firstPersonCamera;
 	public GameObject targetPointPrefab;
 	public GameObject butt;
-
+	public SwingState currentState = SwingState.IsGrounded;
+	public Animator spiderAnimator;
+	public SpiderMovement spiderMovement;
 	public bool isReleased = true;
 
 	private GameObject targetCloneHolder;
-
-	enum State
-	{
-		IsGrounded,
-		IsSwinging,
-		IsHanging,
-		IsLanding
-	}
+	private ToggleCameras toggleCameras;
+	private SpringJoint joint;
+	private SpiderAudio spiderAudio;
+	private LineRenderer lineRenderer;
+	private float maxDistance = 100f;
+	private bool hasFlaggedOnce = true;
 	
 
 	private void Awake()
 	{
 		lineRenderer = GetComponent<LineRenderer>();
-		webSelector = FindObjectOfType<WebSelector>();
 	}
 
 	private void Start()
 	{
+		spiderMovement = FindObjectOfType<SpiderMovement>();
 		spiderAudio = GetComponent<SpiderAudio>();
 		toggleCameras = Camera.main.GetComponent<ToggleCameras>();
 	}
 
 	private void Update()
 	{
-		if (webSelector.webState == WebAbilityState.Swing)
-		{	
-			if(toggleCameras.boosted == true)
+		if(toggleCameras.boosted == true)
+		{
+			if (Input.GetButtonDown("UseWeb") || Input.GetAxis("UseWeb") > 0f)
 			{
-				if (Input.GetButtonDown("UseWeb") || Input.GetAxis("UseWeb") > 0f)
-				{
-					StartWebGrapple();
-					isReleased = false;
-				}
-				else if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
-				{
-					StopWeb();
-					isReleased = true;
-				}
+				StartWebGrapple();
+				isReleased = false;
 			}
-
-			if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
+			else if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
 			{
 				StopWeb();
 				isReleased = true;
+
+				if (SetCameraDampingForSwing != null)
+				{
+					SetCameraDampingForSwing(true);
+				}
+				hasFlaggedOnce = false;
 			}
+		}
+
+		if ((Input.GetButtonUp("UseWeb") || Input.GetAxis("UseWeb") <= 0f) && isReleased == false)
+		{
+			StopWeb();
+			isReleased = true;
+
+			// if (SetCameraDampingForSwing != null)
+			// {
+			// 	SetCameraDampingForSwing(true);
+			// }
+			hasFlaggedOnce = false;
+		}
+	// Set MimicCamera's Damping back to default, and do it only one time per use of Swing.
+		if (spiderMovement.debugSettings.isGrounded == true && hasFlaggedOnce == false && currentState == SwingState.IsGrounded)
+		{
+			if (SwitchToSwingCamera != null)
+			{
+				SwitchToSwingCamera(false);
+			}
+			hasFlaggedOnce = true;
 		}
 	}
 
@@ -81,12 +88,12 @@ public class SpringJointWeb : MonoBehaviour
 		DrawString();
 	}
 
-    private void OnDisable()
-    {
-		StopWeb();
-    }
+	private void OnDisable()
+	{
+		StopWeb(false);
+	}
 
-    void StartWebGrapple()
+	private void StartWebGrapple()
 	{
 		RaycastHit hit;
 		if (Physics.Raycast(butt.transform.position, Camera.main.transform.forward, out hit, maxDistance))
@@ -95,7 +102,7 @@ public class SpringJointWeb : MonoBehaviour
 
 			isSwingingWeb = true;
 			//spiderAnimator.SetBool("Web", true);
-			currentState = State.IsSwinging;
+			currentState = SwingState.IsSwinging;
 			GameObject targetPoint = Instantiate(targetPointPrefab, hit.point, Quaternion.identity);
 			targetCloneHolder = targetPoint;
 			joint = gameObject.AddComponent<SpringJoint>();
@@ -112,34 +119,35 @@ public class SpringJointWeb : MonoBehaviour
 			{
 				ExitFPCamera();
 			}
-			if (LockTPCameraRotation != null)
+			if (SwitchToSwingCamera != null)
 			{
-				LockTPCameraRotation(true);
+				SwitchToSwingCamera(true);
 			}
 		}
 	}
 
-	void StopWeb()
+	private void StopWeb(bool recenterCamera = true)
 	{
 		// spiderAnimator.SetBool("Web", false);
-		debugSetting.isGrounded = true;
+		// debugSetting.isGrounded = true;
+		currentState = SwingState.IsGrounded;
 		isSwingingWeb = false;
 		// GameObject currentPoint = GameObject.Find("TargetPoint(Clone)");
 		Destroy(targetCloneHolder);
 		Destroy(joint);
 		lineRenderer.enabled = false;
 
-		if (LockTPCameraRotation != null)
-		{
-			LockTPCameraRotation(false);
-		}
-		if (RecenterCamera != null)
+		if (RecenterCamera != null && recenterCamera == true)
 		{
 			RecenterCamera();
 		}
+		// if (SetCameraDampingForSwing != null)
+		// {
+		// 	SetCameraDampingForSwing(false);
+		// }
 	}
 
-	void DrawString()
+	private void DrawString()
 	{
 		if (!joint)
 		{
@@ -155,7 +163,15 @@ public class SpringJointWeb : MonoBehaviour
 	{
 		if (collision.CompareTag("Ground"))
 		{
-			currentState = State.IsGrounded;
+			currentState = SwingState.IsGrounded;
 		}
 	}
+}
+
+public enum SwingState
+{
+	IsGrounded,
+	IsSwinging,
+	IsHanging,
+	IsLanding
 }

@@ -11,14 +11,13 @@ public class ClimbWeb : MonoBehaviour
 	public event Action DisableFPSCamera;
 	public event Action<bool> ActivationClimbRotation;
 	public event Action CameraStartRotation;
-	public event Action CameraEndRotation;
+	public event Action RecenterCamera;
 
 	private Transform parentObject;
 	private SpiderMovement spiderMovement;
 	private ThirdPersonCameraController tpcController;
 	private MimicCamera mimicCamera;
 	private ToggleCameras toggleCameras;
-	private WebSelector webSelector;
 	private LineRenderer lineRenderer;
 	private State currentState;
 	private Vector3 oldPosition;
@@ -44,13 +43,12 @@ public class ClimbWeb : MonoBehaviour
 		tpcController = FindObjectOfType<ThirdPersonCameraController>();
 		mimicCamera = FindObjectOfType<MimicCamera>();
 		toggleCameras = Camera.main.GetComponent<ToggleCameras>();
-		webSelector = FindObjectOfType<WebSelector>();
 	}
 
 	private void Update()
 	{
-		if (webSelector.webState == WebAbilityState.Climb)
-		{
+		// if (webSelector.webState == WebAbilityState.Climb)
+		// {
 			if (toggleCameras.boosted == true)
 			{
 				if (currentState == State.Normal)
@@ -63,7 +61,7 @@ public class ClimbWeb : MonoBehaviour
 			{
 				ClimbWebMovement();
 			}
-		}
+		// }
 	}
 
 	private void LateUpdate()
@@ -76,7 +74,7 @@ public class ClimbWeb : MonoBehaviour
 
 	private void OnDisable()
 	{
-		ClimbWebEnd();
+		ClimbWebEnd(false);
 	}
 
 	private void InitiateClimbWeb()
@@ -172,7 +170,7 @@ public class ClimbWeb : MonoBehaviour
 		lineRenderer.enabled = true;
 	}
 
-	private void ClimbWebEnd()
+	private void ClimbWebEnd(bool recenterCamera = true)
 	{
 		currentState = State.Normal;
 		spiderMovement.gravityValue = -9.82f;
@@ -180,9 +178,9 @@ public class ClimbWeb : MonoBehaviour
 		lineRenderer.enabled = false;
 		doDrawLine = false;
 		DisableClimbRotation();
-		if (CameraEndRotation != null)
+		if (RecenterCamera != null  && recenterCamera == true)
 		{
-			CameraEndRotation();
+			RecenterCamera();
 		}
 		isClimbWebing = false;
 	}
