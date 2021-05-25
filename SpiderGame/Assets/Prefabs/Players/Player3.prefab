@@ -326,27 +326,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSwingingWeb: 0
-  currentState: 0
-  spiderAnimator: {fileID: 1344089395}
-  debugSetting:
-    mainDownRayNormalDirection: {x: 0, y: 0, z: 0}
-    averageNormalDirection: {x: 0, y: 0, z: 0}
-    averageNormalDirections: []
-    fwdRayHitNormalDebug: {x: 0, y: 0, z: 0}
-    isGrounded: 0
-    doDrawRayGizmos: 1
-    fwdRayCheckNoHit: 0
-    fwdRayCheckNoHit2: 0
-    backRayNoHit: 0
-    isFwdRayHitting: 0
-    isFpsEnabled: 0
-    isPlayerBeingVacuumed: 0
-    doRaycasts: 1
-    doForwardCheckRay: 1
-    forwardRotationSpeed: 1
   firstPersonCamera: {fileID: 3944242281898070516}
   targetPointPrefab: {fileID: 2288128265524229465, guid: 4e4411aca44651543800b9077af1e0cf, type: 3}
   butt: {fileID: 1247032614615311147}
+  currentState: 0
+  spiderAnimator: {fileID: 1344089395}
+  spiderMovement: {fileID: 0}
   isReleased: 1
 --- !u!114 &4801097130878541006
 MonoBehaviour:
@@ -362,6 +347,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canPickUp: 0
   isAllItemsCollected: 0
+  tomatoCheck: {fileID: 0}
+  bananaCheck: {fileID: 0}
+  blueberryCheck: {fileID: 0}
+  appleCheck: {fileID: 0}
+  carrotCheck: {fileID: 0}
+  cheeseCheck: {fileID: 0}
+  tBoneCheck: {fileID: 0}
+  cookieCheck: {fileID: 0}
+  chickenBone: {fileID: 0}
   itemID: 190
   numberOfItemsPickedUp: 0
   helpText: {fileID: 0}

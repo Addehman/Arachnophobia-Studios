@@ -11,7 +11,7 @@ public class HookWeb : MonoBehaviour
 	public event Action DisableFPSCamera;
 	public event Action<bool> LockTPCameraRotation;
 	public event Action RecenterCamera;
-	public event Action<bool> SwitchToHardLockCam;
+	public event Action<bool> SwitchToWebCamera;
 	public Vector3 newTransformUp;
 
 	private Transform parentObject;
@@ -102,9 +102,9 @@ public class HookWeb : MonoBehaviour
 					DisableFPSCamera();
 				}
 
-				if (SwitchToHardLockCam != null)
+				if (SwitchToWebCamera != null)
 				{
-					SwitchToHardLockCam(true);
+					SwitchToWebCamera(true);
 				}
 
 				doDrawLine = true;
@@ -210,9 +210,9 @@ public class HookWeb : MonoBehaviour
 			RecenterCamera();
 		}
 
-		if (SwitchToHardLockCam != null)
+		if (SwitchToWebCamera != null)
 		{
-			SwitchToHardLockCam(false);
+			SwitchToWebCamera(false);
 		}
 
 		currentState = State.Normal;

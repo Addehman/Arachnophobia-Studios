@@ -24,6 +24,7 @@ public class ToggleCameras : MonoBehaviour
 		hardLockCam = FindObjectOfType<ThirdPersonCameraController>().GetComponent<Cinemachine.CinemachineVirtualCamera>();
 		hookWeb = FindObjectOfType<HookWeb>();
 		hookWeb.DisableFPSCamera += DisableFPCamera;
+		hookWeb.SwitchToWebCamera += SwitchToSwingCamera;
 		// hookWeb.SwitchToHardLockCam += ActivationHardLockCam;
 		climbWeb = FindObjectOfType<ClimbWeb>();
 		climbWeb.DisableFPSCamera += DisableFPCamera;
