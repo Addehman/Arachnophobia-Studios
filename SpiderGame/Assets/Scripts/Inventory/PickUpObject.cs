@@ -10,6 +10,7 @@ public class PickUpObject : MonoBehaviour
 	public bool canPickUp = false;
 	public bool isAllItemsCollected = false;
 
+	public SpiderAudio spiderAudio;
 	public GameObject tomatoCheck;
 	public GameObject bananaCheck;
 	public GameObject blueberryCheck;
@@ -41,6 +42,7 @@ public class PickUpObject : MonoBehaviour
 			numberOfItemsPickedUp++;
 			Debug.Log("number of items picked up: " + numberOfItemsPickedUp);
 			helpText.SetActive(false);
+			spiderAudio.PickUpSound();
 
 			inventoryOnPlayer.GiveItem(itemID);
 

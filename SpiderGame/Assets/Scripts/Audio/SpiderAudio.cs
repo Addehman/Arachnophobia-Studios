@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpiderAudio : MonoBehaviour
 {
     AudioSource audioSourceSpider;
+    public AudioSource pickUpSound;
 
     void Start()
     {
@@ -26,6 +27,12 @@ public class SpiderAudio : MonoBehaviour
     public void VacuumSuck()
     {
         audioSourceSpider.clip = Resources.Load<AudioClip>("Audio/VacuumPlayer");
+        audioSourceSpider.Play();
+    }
+
+    public void PickUpSound()
+    {
+        audioSourceSpider.clip = Resources.Load<AudioClip>("Audio/ItemPickUp");
         audioSourceSpider.Play();
     }
 }
