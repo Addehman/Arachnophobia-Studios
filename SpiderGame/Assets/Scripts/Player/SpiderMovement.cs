@@ -165,6 +165,7 @@ public class SpiderMovement : MonoBehaviour
 		vacuumBlackhole.PullingPlayer += vacuumBlackhole_PullingPlayer;
 
 		springJointWeb = parentObject.GetComponent<SpringJointWeb>();
+		// springJointWeb.SwitchToSwingCamera += SetSwingRotation;
 		hookWeb = GetComponent<HookWeb>();
 		climbWeb = GetComponent<ClimbWeb>();
 		climbWeb.ActivationClimbRotation += ActivationOfRaycasts;
@@ -186,6 +187,14 @@ public class SpiderMovement : MonoBehaviour
 
 		raycastGeneralSettings.raycastReach = raycastGeneralSettings.defaultRaycastReach;
 		playerSettings.normalPlayerSpeed = playerSettings.defaultNormalPlayerSpeed;
+	}
+
+	private void SetSwingRotation(bool isSwingActive)
+	{
+		if (isSwingActive == true)
+		{
+			transform.up = movementParent.up = Vector3.up;
+		}
 	}
 
 	private void ActivationOfRaycasts(bool isActive)

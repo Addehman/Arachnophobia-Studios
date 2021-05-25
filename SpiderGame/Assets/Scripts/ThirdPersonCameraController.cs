@@ -11,10 +11,10 @@ public class ThirdPersonCameraController : MonoBehaviour
 	[SerializeField] private float minZoom = 0.1f;
 	[SerializeField] private float maxZoom = 0.5f;
 	
-	private CinemachineVirtualCamera aimCamera;
+	private CinemachineVirtualCamera aimTPCamera;
 	private CinemachineVirtualCamera cameraToZoom;
 	private CinemachineComponentBase zoomCameraComponentBase;
-	private CinemachineComponentBase tpCameraComponentBase;
+	private CinemachineComponentBase tpCameraAimComponentBase;
 	private HookWeb hookWeb;
 	private ClimbWeb climbWeb;
 	private SpringJointWeb springJointWeb;
@@ -37,13 +37,13 @@ public class ThirdPersonCameraController : MonoBehaviour
 		climbWeb.RecenterCamera += RecenterCamera;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		springJointWeb.RecenterCamera += RecenterCamera;
-		springJointWeb.LockTPCameraRotation += LockCameraInput;
+		// springJointWeb.SwitchToSwingCamera += LockCameraInput;
 	}
 	
 	private void Start()
 	{
 		cameraToZoom = GetComponent<CinemachineVirtualCamera>();
-		aimCamera = GameObject.Find("cmAimCamera").GetComponent<CinemachineVirtualCamera>();
+		aimTPCamera = GameObject.Find("cmAimCamera").GetComponent<CinemachineVirtualCamera>();
 
 		zoomCameraComponentBase = cameraToZoom.GetCinemachineComponent(CinemachineCore.Stage.Body);
 		if (zoomCameraComponentBase is CinemachineFramingTransposer)
@@ -51,9 +51,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 			(zoomCameraComponentBase as CinemachineFramingTransposer).m_CameraDistance = 0.3f;
 		}
 
-		tpCameraComponentBase = aimCamera.GetCinemachineComponent(CinemachineCore.Stage.Aim);
-
-		
+		tpCameraAimComponentBase = aimTPCamera.GetCinemachineComponent(CinemachineCore.Stage.Aim);
 	}
 	
 	private void LateUpdate()
@@ -71,40 +69,49 @@ public class ThirdPersonCameraController : MonoBehaviour
 
 	private void CamControl()
 	{
-		float mouseInput = Mathf.Abs(Input.GetAxis("Mouse X") + Input.GetAxis("Mouse Y"));
-		if (mouseInput == 0f)
+		if (doLockCameraInput == false)
 		{
-			cameraInputX += Input.GetAxis("CameraInputX") * gamepadRotationSpeed;
-			cameraInputY += Input.GetAxis("CameraInputY") * gamepadRotationSpeed;
-			if (tpCameraComponentBase is CinemachinePOV)
+			// float mouseInput = Mathf.Abs(Input.GetAxis("Mouse X") + Input.GetAxis("Mouse Y"));
+			Vector3 mouseInput = new Vector3(Input.GetAxis("Mouse X"), 0f, Input.GetAxis("Mouse Y"));
+			if (mouseInput.sqrMagnitude == 0f)
 			{
-				(tpCameraComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = false;
+				cameraInputX += Input.GetAxis("CameraInputX") * gamepadRotationSpeed;
+				cameraInputY += Input.GetAxis("CameraInputY") * gamepadRotationSpeed;
+				if (tpCameraAimComponentBase is CinemachinePOV)
+				{
+					(tpCameraAimComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = false;
+				}
+			}
+			else
+			{
+				cameraInputX += Input.GetAxis("CameraInputX") * mouseRotationSpeed;
+				cameraInputY -= Input.GetAxis("CameraInputY") * mouseRotationSpeed;
+				if (tpCameraAimComponentBase is CinemachinePOV)
+				{
+					(tpCameraAimComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = true;
+				}
+			}
+			// cameraParent.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
+			// transform.localRotation = Quaternion.identity;
+			cameraTarget.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
+			targetToRotate.localRotation = Quaternion.Euler(0f, cameraInputX, 0f);
+
+
+			if (zoomCameraComponentBase is CinemachineFramingTransposer)
+			{
+				float cameraDistance = (zoomCameraComponentBase as CinemachineFramingTransposer).m_CameraDistance -= Input.GetAxis("Mouse ScrollWheel") + Input.GetAxis("Zoom");
+				float zoomValue = Mathf.Clamp(cameraDistance, minZoom, maxZoom);
+				
+				(zoomCameraComponentBase as CinemachineFramingTransposer).m_CameraDistance = zoomValue;
+				// (componentBase as CinemachineFramingTransposer).m_TrackedObjectOffset = 
 			}
 		}
 		else
 		{
-			cameraInputX += Input.GetAxis("CameraInputX") * mouseRotationSpeed;
-			cameraInputY -= Input.GetAxis("CameraInputY") * mouseRotationSpeed;
-			if (tpCameraComponentBase is CinemachinePOV)
-			{
-				(tpCameraComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = true;
-			}
+			print ("setting cameraTarget Up");
+			cameraTarget.parent.transform.up = Vector3.up;
 		}
 		
-		// cameraParent.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
-		// transform.localRotation = Quaternion.identity;
-		cameraTarget.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
-		targetToRotate.localRotation = Quaternion.Euler(0f, cameraInputX, 0f);
-
-
-		if (zoomCameraComponentBase is CinemachineFramingTransposer)
-		{
-			float cameraDistance = (zoomCameraComponentBase as CinemachineFramingTransposer).m_CameraDistance -= Input.GetAxis("Mouse ScrollWheel") + Input.GetAxis("Zoom");
-			float zoomValue = Mathf.Clamp(cameraDistance, minZoom, maxZoom);
-			
-			(zoomCameraComponentBase as CinemachineFramingTransposer).m_CameraDistance = zoomValue;
-			// (componentBase as CinemachineFramingTransposer).m_TrackedObjectOffset = 
-		}
 	}
 
 	public void LockCameraInput(bool isActive)

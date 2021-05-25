@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4053938280847350664}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.594, y: 0.032, z: 1.032}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
@@ -126,6 +126,10 @@ PrefabInstance:
       propertyPath: m_CameraRadius
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4310413171799943084, guid: 0b49b1582bb7b4748b834365b32eaaf0, type: 3}
+      propertyPath: m_MaximumEffort
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4310413171799943085, guid: 0b49b1582bb7b4748b834365b32eaaf0, type: 3}
       propertyPath: getUpFrom
       value: 
@@ -137,6 +141,14 @@ PrefabInstance:
     - target: {fileID: 4310413171799943085, guid: 0b49b1582bb7b4748b834365b32eaaf0, type: 3}
       propertyPath: targetToRotate
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4310413171799943085, guid: 0b49b1582bb7b4748b834365b32eaaf0, type: 3}
+      propertyPath: mouseRotationSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4310413171799943085, guid: 0b49b1582bb7b4748b834365b32eaaf0, type: 3}
+      propertyPath: gamepadRotationSpeed
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b49b1582bb7b4748b834365b32eaaf0, type: 3}

@@ -3,6 +3,8 @@ using System;
 
 public class ToggleCameras : MonoBehaviour
 {	
+	[SerializeField] private Cinemachine.CinemachineVirtualCamera swingCamera;
+
 	public event Action<bool> ActivationFPSCam;
 
 	public GameObject crosshair;
@@ -27,7 +29,7 @@ public class ToggleCameras : MonoBehaviour
 		climbWeb.DisableFPSCamera += DisableFPCamera;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		springJointWeb.ExitFPCamera += DisableFPCamera;
-		// springJointWeb.LockTPCameraRotation += ActivationHardLockCam;
+		springJointWeb.SwitchToSwingCamera += SwitchToSwingCamera;
 	}
 
 	private void Update()
@@ -74,16 +76,16 @@ public class ToggleCameras : MonoBehaviour
 		}
 	}
 
-	private void ActivationHardLockCam(bool isActive)
+	private void SwitchToSwingCamera(bool isActive)
 	{
 		// Increase or Decrease the hard-lock-camera's priority.
 		if (isActive == true)
 		{
-			hardLockCam.Priority = PriorityBoostAmount;
+			swingCamera.Priority = PriorityBoostAmount;
 		}
 		else
 		{
-			hardLockCam.Priority = PriorityBoostAmount - PriorityBoostAmount;
+			swingCamera.Priority = PriorityBoostAmount - PriorityBoostAmount;
 		}
 	}
 

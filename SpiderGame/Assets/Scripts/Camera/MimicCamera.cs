@@ -5,11 +5,14 @@ public class MimicCamera : MonoBehaviour
 {
 	[SerializeField] private float positionLerpSpeed = 10f;
 	[SerializeField] private float rotationLerpSpeed = 10f;
+	[SerializeField] private float activeSwingDamping = 0.1f;
+	[SerializeField] private float inactiveSwingDamping = 1f;
 
 	public bool doLockRotation = false;
 
 	private SpiderMovement spiderMovement;
 	private CinemachineCollider cmColl;
+	private CinemachineComponentBase componentBase;
 	private HookWeb hookWeb;
 	private SpringJointWeb springJointWeb;
 	private Transform cameraToMimic;
@@ -26,13 +29,17 @@ public class MimicCamera : MonoBehaviour
 		hookWeb = FindObjectOfType<HookWeb>();
 		hookWeb.LockTPCameraRotation += LockRotation;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
-		springJointWeb.LockTPCameraRotation += LockRotation;
+		// springJointWeb.SwitchToSwingCamera += LockRotation;
+		// springJointWeb.SetCameraDampingForSwing += SetCameraDampingForSwing;
+
+		transform.position = cameraToMimic.position;
+		transform.rotation = cameraToMimic.rotation;
 	}
 
 	private void Start()
 	{
-		transform.position = cameraToMimic.position;
-		transform.rotation = cameraToMimic.rotation;
+		CinemachineVirtualCamera thisCmVirtualCamera = GetComponent<CinemachineVirtualCamera>();
+		componentBase = thisCmVirtualCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
 	}
 
 	private void FixedUpdate()
@@ -71,10 +78,29 @@ public class MimicCamera : MonoBehaviour
 		}
 	}
 
+	private void SetCameraDampingForSwing(bool isSwingActive)
+	{
+		if (isSwingActive == true)
+		{
+			if (componentBase is CinemachineHardLockToTarget)
+			{
+				(componentBase as CinemachineHardLockToTarget).m_Damping = activeSwingDamping;
+			}
+		}
+		else
+		{
+			if (componentBase is CinemachineHardLockToTarget)
+			{
+				(componentBase as CinemachineHardLockToTarget).m_Damping = inactiveSwingDamping;
+			}
+		}
+	}
+
 	private void OnDestroy()
 	{
 		spiderMovement.cameraChangeStrategy -= CameraChangeStrategy;
 		hookWeb.LockTPCameraRotation -= LockRotation;
-		springJointWeb.LockTPCameraRotation -= LockRotation;
+		springJointWeb.SwitchToSwingCamera -= LockRotation;
+		springJointWeb.SetCameraDampingForSwing -= SetCameraDampingForSwing;
 	}
 }
