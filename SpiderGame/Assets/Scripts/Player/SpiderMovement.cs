@@ -104,6 +104,7 @@ public class DebugSettings
 	public bool isPlayerBeingVacuumed;
 	public bool doRaycasts = true;
 	public bool doForwardCheckRay = true;
+	public bool allowUnlimitedStamina = false;
 	public float forwardRotationSpeed = 1f;
 }
 
@@ -230,6 +231,10 @@ public class SpiderMovement : MonoBehaviour
 		SpiderJump();
 		SpiderAnimation();
 
+		if (Input.GetKeyDown(KeyCode.L))
+		{
+			debugSettings.allowUnlimitedStamina = !debugSettings.allowUnlimitedStamina;
+		}
 	}
 
 	private void FixedUpdate()
@@ -550,7 +555,11 @@ public class SpiderMovement : MonoBehaviour
 			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce(transform.up * playerSettings.jumpUpStrength);
 			debugSettings.isGrounded = false;
-			StaminaBar.staminaBarInstance.UseStamina(0.1f);
+			
+			if (debugSettings.allowUnlimitedStamina == false)
+			{
+				StaminaBar.staminaBarInstance.UseStamina(0.1f);
+			}
 		}
 		// Jump Forwards
 		else if (movementInput.sqrMagnitude > 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f && PauseMenu.isPaused == false)
@@ -558,7 +567,11 @@ public class SpiderMovement : MonoBehaviour
 			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce((transform.up + transform.forward) * playerSettings.jumpFwdStrength);
 			debugSettings.isGrounded = false;
-			StaminaBar.staminaBarInstance.UseStamina(0.1f);
+
+			if (debugSettings.allowUnlimitedStamina == false)
+			{
+				StaminaBar.staminaBarInstance.UseStamina(0.1f);
+			}
 		}
 	}
 	// Binds key for player to use to increase move speed.
@@ -578,7 +591,10 @@ public class SpiderMovement : MonoBehaviour
 				sprintMulti = playerSettings.normalSprintMultiAmount;
 			}
 
-			StaminaBar.staminaBarInstance.UseStamina(0.0035f);
+			if (debugSettings.allowUnlimitedStamina == false)
+			{
+				StaminaBar.staminaBarInstance.UseStamina(0.0035f);
+			}
 		}
 
 		if (Input.GetButtonUp("Sprint") || movementInput.sqrMagnitude <= 0f || StaminaBar.staminaBarInstance.currentStamina < 0.0050f || Input.GetAxis("Sprint") >= 0f 
