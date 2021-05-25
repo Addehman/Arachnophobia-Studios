@@ -27,19 +27,20 @@ public class MimicCamera : MonoBehaviour
 		cameraToMimic = FindObjectOfType<ThirdPersonCameraController>().transform;
 		cmColl = GetComponent<CinemachineCollider>();
 		hookWeb = FindObjectOfType<HookWeb>();
-		hookWeb.LockTPCameraRotation += LockRotation;
+		// hookWeb.LockTPCameraRotation += LockRotation;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		// springJointWeb.SwitchToSwingCamera += LockRotation;
 		// springJointWeb.SetCameraDampingForSwing += SetCameraDampingForSwing;
-
-		transform.position = cameraToMimic.position;
-		transform.rotation = cameraToMimic.rotation;
 	}
 
 	private void Start()
 	{
 		CinemachineVirtualCamera thisCmVirtualCamera = GetComponent<CinemachineVirtualCamera>();
 		componentBase = thisCmVirtualCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
+
+		// transform.position = cameraToMimic.position;
+		// print (cameraToMimic.position);
+		// transform.rotation = cameraToMimic.rotation;
 	}
 
 	private void Update()
