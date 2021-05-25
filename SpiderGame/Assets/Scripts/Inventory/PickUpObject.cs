@@ -7,7 +7,6 @@ using System;
 
 public class PickUpObject : MonoBehaviour
 {
-	public bool canPickUp = false;
 	public bool isAllItemsCollected = false;
 
 	public SpiderAudio spiderAudio;
@@ -20,6 +19,7 @@ public class PickUpObject : MonoBehaviour
 	public GameObject tBoneCheck;
 	public GameObject cookieCheck;
 	public GameObject chickenBone;
+	public GameObject helpText;
 
 	public int itemID;
 	[SerializeField]
@@ -27,13 +27,15 @@ public class PickUpObject : MonoBehaviour
 
 	private Inventory inventoryOnPlayer;
 	private GameObject thisObjectThatWeStandOn;
-	public GameObject helpText;
+	[SerializeField]
+	private bool canPickUp;
 
 	public event Action pickedUpItem;
 
 	private void Start()
 	{
 		inventoryOnPlayer = FindObjectOfType<Inventory>();
+		canPickUp = false;
 	}
 	private void Update()
 	{
