@@ -19,7 +19,7 @@ public class GameOver : MonoBehaviour
 	private float gameOverTimer = 0f;
 	private float soundFadeOutTimer = 0f;
 	private bool itIsGameOver = false;
-	
+	bool diedByVacuum = false;
 
 	private void Start()
 	{
@@ -34,9 +34,18 @@ public class GameOver : MonoBehaviour
 		if(itIsGameOver == true)
 		{
 			gameOverTimer += Time.deltaTime;
+			if(gameOverTimer >= 1.5f && diedByVacuum == false)
+            {
+				gameOverScreen.SetActive(true);
+			}
+			else if (diedByVacuum == true)
+            {
+				gameOverScreen.SetActive(true);
+			}
+
 			StartCoroutine(soundFadeOut(0.005f));
 
-			if (gameOverTimer >= 3f)
+			if (gameOverTimer >= 4.5f)
 			{
 				soundFadeOutTimer += Time.deltaTime;
 				Time.timeScale = 0f;
@@ -63,13 +72,13 @@ public class GameOver : MonoBehaviour
 		itIsGameOver = true;
 		Cursor.visible = true;
 		Cursor.lockState = CursorLockMode.Confined; //None
-		gameOverScreen.SetActive(true);
 		spiderMovement.rb.isKinematic = true;
 		spiderMovement.enabled = false;
 		Winstate.RemoveCompletedQuests();
 
 		if(vacuumKillPlayer.diedByVacuum == true)
 		{
+			diedByVacuum = true;
 			spider.SetActive(false);
 		}
 	}
