@@ -27,24 +27,26 @@ public class MimicCamera : MonoBehaviour
 		cameraToMimic = FindObjectOfType<ThirdPersonCameraController>().transform;
 		cmColl = GetComponent<CinemachineCollider>();
 		hookWeb = FindObjectOfType<HookWeb>();
-		hookWeb.LockTPCameraRotation += LockRotation;
+		// hookWeb.LockTPCameraRotation += LockRotation;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		// springJointWeb.SwitchToSwingCamera += LockRotation;
 		// springJointWeb.SetCameraDampingForSwing += SetCameraDampingForSwing;
-
-		transform.position = cameraToMimic.position;
-		transform.rotation = cameraToMimic.rotation;
 	}
 
 	private void Start()
 	{
 		CinemachineVirtualCamera thisCmVirtualCamera = GetComponent<CinemachineVirtualCamera>();
 		componentBase = thisCmVirtualCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
+
+		// transform.position = cameraToMimic.position;
+		// print (cameraToMimic.position);
+		// transform.rotation = cameraToMimic.rotation;
 	}
 
-	private void FixedUpdate()
+	private void Update()
 	{
-		transform.position = Vector3.SmoothDamp(transform.position, cameraToMimic.position, ref currentVelocity, positionLerpSpeed * Time.deltaTime);
+		// transform.position = Vector3.SmoothDamp(transform.position, cameraToMimic.position, ref currentVelocity, 1f);
+		// transform.position = cameraToMimic.position;
 
 		if (doLockRotation == true)
 		{
@@ -52,7 +54,8 @@ public class MimicCamera : MonoBehaviour
 		}
 		else
 		{
-			transform.rotation = Quaternion.Slerp(transform.rotation, cameraToMimic.rotation, rotationLerpSpeed * Time.deltaTime);
+			// transform.rotation = Quaternion.Slerp(transform.rotation, cameraToMimic.rotation, 1f);
+			// transform.rotation = cameraToMimic.rotation;
 		}
 	}
 

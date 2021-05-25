@@ -54,7 +54,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 		tpCameraAimComponentBase = aimTPCamera.GetCinemachineComponent(CinemachineCore.Stage.Aim);
 	}
 	
-	private void LateUpdate()
+	private void Update()
 	{
 		if (doLockCameraInput == false)
 		{
@@ -71,7 +71,6 @@ public class ThirdPersonCameraController : MonoBehaviour
 	{
 		if (doLockCameraInput == false)
 		{
-			// float mouseInput = Mathf.Abs(Input.GetAxis("Mouse X") + Input.GetAxis("Mouse Y"));
 			Vector3 mouseInput = new Vector3(Input.GetAxis("Mouse X"), 0f, Input.GetAxis("Mouse Y"));
 			if (mouseInput.sqrMagnitude == 0f)
 			{
