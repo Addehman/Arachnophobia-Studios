@@ -21,10 +21,6 @@ public class CookQuest : MonoBehaviour
         {
             cookButtonShow = true;
             helpText.SetActive(true);
-            /*helpText.SetActive(true);
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Confined;
-            window.SetActive(true);*/
         }
 
         else if(other.CompareTag("Player") && isFinished == false && pickUpObject.isAllItemsCollected == false)
@@ -46,10 +42,6 @@ public class CookQuest : MonoBehaviour
         {
             cookButtonShow = false;
             helpText.SetActive(false);
-            /*helpText.SetActive(false);
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-            window.SetActive(false);*/
         }
 
         else if (other.CompareTag("Player") && isFinished == false && pickUpObject.isAllItemsCollected == false)
@@ -60,13 +52,16 @@ public class CookQuest : MonoBehaviour
 
     public void CookButton()
     {
-        helpText.SetActive(false);
-        Winstate.AddCompletedQuest();
-        isFinished = true;
-        check.SetActive(true);
-        window.SetActive(false);
-        questCircle.SetActive(false);
-        ClearInventory();
+        if(isFinished == false)
+        {
+            helpText.SetActive(false);
+            Winstate.AddCompletedQuest();
+            isFinished = true;
+            check.SetActive(true);
+            window.SetActive(false);
+            questCircle.SetActive(false);
+            ClearInventory();
+        }
     }
 
     public void ClearInventory()
