@@ -7,6 +7,12 @@ public class CutsceneManager : MonoBehaviour
 {
     float timer;
 
+    private void Start()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
     void Update()
     {
         timer += Time.deltaTime;
