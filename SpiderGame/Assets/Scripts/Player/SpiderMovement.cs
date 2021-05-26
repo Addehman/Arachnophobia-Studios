@@ -195,12 +195,15 @@ public class SpiderMovement : MonoBehaviour
 		raycastGeneralSettings.raycastReach = raycastGeneralSettings.defaultRaycastReach;
 		playerSettings.normalPlayerSpeed = playerSettings.defaultNormalPlayerSpeed;
 
-		debugSettings.ericAlerts = new EricAlert[2];
-		debugSettings.ericAlerts = FindObjectsOfType<EricAlert>();
+		if (Debug.isDebugBuild == true && GameObject.Find("Eric1") == true && GameObject.Find("Eric2") == true)
+		{
+			debugSettings.ericAlerts = new EricAlert[2];
+			debugSettings.ericAlerts = FindObjectsOfType<EricAlert>();
 
-		debugSettings.erics = new GameObject[2];
-		debugSettings.erics[0] = debugSettings.ericAlerts[0].transform.parent.gameObject;
-		debugSettings.erics[1] = debugSettings.ericAlerts[1].transform.parent.gameObject;
+			debugSettings.erics = new GameObject[2];
+			debugSettings.erics[0] = debugSettings.ericAlerts[0].transform.parent.gameObject;
+			debugSettings.erics[1] = debugSettings.ericAlerts[1].transform.parent.gameObject;
+		}
 	}
 
 	private void SetSwingRotation(bool isSwingActive)

@@ -116,7 +116,11 @@ public class TutorialStates : MonoBehaviour
 
         else if (currentState == State.HowToPickUp)
         {
-            apple.SetActive(true);
+            if (apple != null)
+            {
+                apple.SetActive(true);
+            }
+
             howToSprintUI.SetActive(false);
             staminaInfoUI.SetActive(false);
 
