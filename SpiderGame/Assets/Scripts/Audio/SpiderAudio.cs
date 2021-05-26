@@ -35,4 +35,16 @@ public class SpiderAudio : MonoBehaviour
         audioSourceSpider.clip = Resources.Load<AudioClip>("Audio/ItemPickUp");
         audioSourceSpider.Play();
     }
+
+    public void LightSwitch()
+    {
+        audioSourceSpider.clip = Resources.Load<AudioClip>("Audio/LightSwitchNEW");
+        audioSourceSpider.Play();
+    }
+
+    public void KillFlies()
+    {
+        audioSourceSpider.clip = Resources.Load<AudioClip>("Audio/FlyKillGood");
+        audioSourceSpider.Play();
+    }
 }

@@ -7,6 +7,7 @@ using UnityEngine.Audio;
 
 public class MainMenu : MonoBehaviour
 {
+	public GameObject fadeIn;
 	public GameObject howToPlay;
 	public GameObject credits;
 	public AudioMixer audioMixer;
@@ -24,7 +25,7 @@ public class MainMenu : MonoBehaviour
 	public void PlayButton()
 	{
 		ClickingSound.clickSound();
-		SceneManager.LoadScene("GameScene");
+		SceneManager.LoadScene("Cutscene");
 	}
 
 	public void HowToPlayButton()

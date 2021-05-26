@@ -12,6 +12,7 @@ public class LightSwitchQuest : MonoBehaviour
     public GameObject questCircle;
     public GameObject check;
     public GameObject helpText;
+    public SpiderAudio spiderAudio;
 
     bool isFinished = false;
     bool canSwitchLight = false;
@@ -20,6 +21,7 @@ public class LightSwitchQuest : MonoBehaviour
     {
         if (Input.GetButtonDown("Interact") && isFinished == false && canSwitchLight == true)
         {
+            spiderAudio.LightSwitch();
             Winstate.AddCompletedQuest();
 
             lampModelsOn.SetActive(false);
