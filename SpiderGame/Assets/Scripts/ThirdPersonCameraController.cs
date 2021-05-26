@@ -5,8 +5,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 {
 	[SerializeField] private Transform cameraTarget;
 	[SerializeField] private Transform targetToRotate;
-	[SerializeField] private float mouseRotationSpeed = 1f;
-	[SerializeField] private float gamepadRotationSpeed = 10f;
+	[SerializeField] private float mouseRotationSpeed = 2f;
+	[SerializeField] private float gamepadRotationSpeed = 7f;
 	[SerializeField] private float smoothTime = 10f;
 	[SerializeField] private float minZoom = 0.1f;
 	[SerializeField] private float maxZoom = 0.5f;
@@ -17,6 +17,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private CinemachineComponentBase tpCameraAimComponentBase;
 	//private HookWeb hookWeb;
 	//private ClimbWeb climbWeb;
+	private SpiderMovement spiderMovement;
 	private SpringJointWeb springJointWeb;
 	private Transform cameraParent;
 	private Vector3 currentVelocity;
@@ -29,6 +30,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private void Awake()
 	{
 		cameraParent = transform.parent;
+		spiderMovement = FindObjectOfType<SpiderMovement>();
 		//hookWeb = FindObjectOfType<HookWeb>();
 		//hookWeb.LockTPCameraRotation += LockCameraInput;
 		//hookWeb.RecenterCamera += RecenterCamera;

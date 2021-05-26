@@ -120,6 +120,7 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public bool UseClimbWebNormal = false;
 
 	[SerializeField] private Transform movementParent;
+	[SerializeField] private Transform fpsCamera;
 	[SerializeField] private GameObject cmTPCamera;
 	[SerializeField] private GameObject cameraParent;
 
@@ -540,7 +541,7 @@ public class SpiderMovement : MonoBehaviour
 	private void TranslateMovement()
 	{
 		Vector3 movement = new Vector3(vertical, 0f, horizontal);
-		if (movement.sqrMagnitude > 0f)
+		if (movement.sqrMagnitude > 0f && debugSettings.isFpsEnabled == false)
 		{
 			parentObject.transform.Translate(transform.forward * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
 		}	
@@ -553,7 +554,7 @@ public class SpiderMovement : MonoBehaviour
 
 	private void SetLookDirection()
 	{
-		if (Vector3.Distance(transform.position, lookAtTarget.position) >= 0.05f)
+		if (Vector3.Distance(transform.position, lookAtTarget.position) >= 0.05f && debugSettings.isFpsEnabled == false)
 		{
 			transform.LookAt(lookAtTarget, lookAtTarget.up);
 		}
