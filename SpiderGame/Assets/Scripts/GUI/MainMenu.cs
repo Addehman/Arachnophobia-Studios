@@ -14,6 +14,10 @@ public class MainMenu : MonoBehaviour
 
 	private void Start()
 	{
+		Winstate.RemoveCompletedQuests();
+		Cursor.visible = true;
+		Cursor.lockState = CursorLockMode.Confined;
+
 		float volume = PlayerPrefs.GetFloat("MusicVolume", 1f);
         volume = Mathf.Log10(volume) * 20;
         audioMixer.SetFloat("Master", volume);
