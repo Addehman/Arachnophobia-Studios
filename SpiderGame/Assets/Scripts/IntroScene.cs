@@ -11,7 +11,7 @@ public class IntroScene : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        if(timer >= 7f)
+        if(timer >= 8f)
         {
             SceneManager.LoadScene("MainMenu");
         }
