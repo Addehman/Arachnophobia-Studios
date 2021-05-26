@@ -27,6 +27,7 @@ public class Victory : MonoBehaviour
     public void VictoryScreen()
     {
         victoryUI.SetActive(true);
+        Winstate.RemoveCompletedQuests();
 
         {
             vcitoryTimer += Time.deltaTime;

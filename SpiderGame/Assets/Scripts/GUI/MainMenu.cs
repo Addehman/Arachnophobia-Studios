@@ -14,6 +14,7 @@ public class MainMenu : MonoBehaviour
 
 	private void Start()
 	{
+		Winstate.RemoveCompletedQuests();
 		Cursor.visible = true;
 		Cursor.lockState = CursorLockMode.Confined;
 
