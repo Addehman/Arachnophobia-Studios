@@ -90,9 +90,11 @@ public class PlayerSettings
 public class DebugSettings
 {
 	// [Header("Debug")]
+	public EricAlert[] ericAlerts;
+	public GameObject[] erics;
+	public List<Vector3> averageNormalDirections = new List<Vector3>();
 	public Vector3 mainDownRayNormalDirection;
 	public Vector3 averageNormalDirection;
-	public List<Vector3> averageNormalDirections = new List<Vector3>();
 	public Vector3 fwdRayHitNormalDebug;
 	public bool isGrounded;
 	public bool doDrawRayGizmos = true;
@@ -105,6 +107,7 @@ public class DebugSettings
 	public bool doRaycasts = true;
 	public bool doForwardCheckRay = true;
 	public bool allowUnlimitedStamina = false;
+	public bool isEricHidden = false;
 	public float forwardRotationSpeed = 1f;
 }
 
@@ -148,9 +151,9 @@ public class SpiderMovement : MonoBehaviour
 	private float horizontal;
 	private float turnSmoothVelocity;
 	private float sprintMulti;
-	private int randomIdle;
 	private float randomIdleTimer = 0f;
 	private float rotationSlerpSpeed = 10f;
+	private int randomIdle;
 
 
 	void Awake()
@@ -173,7 +176,10 @@ public class SpiderMovement : MonoBehaviour
 
 		lookAtTarget = FindObjectOfType<LookAtTargetController>().transform;
 		cameraRotationConstraint = cameraParent.GetComponent<RotationConstraint>();
+	}
 
+	private void Start()
+	{
 		// Here the reference is made for all the children of the spidermodel, used to be able to hide/show when in fpCamera-mode.
 		int amountOfModelParts = 0;
 		foreach (Transform item in transform)
@@ -188,6 +194,13 @@ public class SpiderMovement : MonoBehaviour
 
 		raycastGeneralSettings.raycastReach = raycastGeneralSettings.defaultRaycastReach;
 		playerSettings.normalPlayerSpeed = playerSettings.defaultNormalPlayerSpeed;
+
+		debugSettings.ericAlerts = new EricAlert[2];
+		debugSettings.ericAlerts = FindObjectsOfType<EricAlert>();
+
+		debugSettings.erics = new GameObject[2];
+		debugSettings.erics[0] = debugSettings.ericAlerts[0].transform.parent.gameObject;
+		debugSettings.erics[1] = debugSettings.ericAlerts[1].transform.parent.gameObject;
 	}
 
 	private void SetSwingRotation(bool isSwingActive)
@@ -231,10 +244,7 @@ public class SpiderMovement : MonoBehaviour
 		SpiderJump();
 		SpiderAnimation();
 
-		if (Input.GetKeyDown(KeyCode.L))
-		{
-			debugSettings.allowUnlimitedStamina = !debugSettings.allowUnlimitedStamina;
-		}
+		Cheats();
 	}
 
 	private void FixedUpdate()
@@ -681,16 +691,34 @@ public class SpiderMovement : MonoBehaviour
 		}
 	}
 
-	private void OnDrawGizmos()
-	{
-		Gizmos.color = Color.green;
-		Gizmos.DrawRay(transform.position, debugSettings.averageNormalDirection * 1f);
-	}
-
 	private void OnDestroy()
 	{
 		toggleCameras.ActivationFPSCam -= activateOnKeypress_ActivationFPSCam;
 		vacuumBlackhole.PullingPlayer -= vacuumBlackhole_PullingPlayer;
 		//climbWeb.ActivationClimbRotation -= ActivationOfRaycasts;
 	}
+
+#region Debugs
+
+	public void Cheats()
+	{
+		if (Debug.isDebugBuild == true && Input.GetKeyDown(KeyCode.L))
+		{
+			debugSettings.allowUnlimitedStamina = !debugSettings.allowUnlimitedStamina;
+		}
+
+		if (Debug.isDebugBuild == true && Input.GetKeyDown(KeyCode.O))
+		{
+			debugSettings.isEricHidden = !debugSettings.isEricHidden;
+			debugSettings.erics[0].SetActive(debugSettings.isEricHidden);
+			debugSettings.erics[1].SetActive(debugSettings.isEricHidden);
+		}
+	}
+
+	private void OnDrawGizmos()
+	{
+		Gizmos.color = Color.green;
+		Gizmos.DrawRay(transform.position, debugSettings.averageNormalDirection * 1f);
+	}
+#endregion
 }
