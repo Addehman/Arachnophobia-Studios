@@ -9,6 +9,7 @@ public class FliesQuest : MonoBehaviour
     public GameObject helpText;
     public GameObject check;
     public GameObject questCircle;
+    public GameObject destroyFliesSound;
     bool isFinished = false;
     bool canPickUpFlies = false;
 
@@ -19,6 +20,7 @@ public class FliesQuest : MonoBehaviour
             spiderAudio.KillFlies();
             Winstate.AddCompletedQuest(); // Winstate needs to be fixed from 4 to 5.
             flies.SetActive(false);
+            destroyFliesSound.SetActive(false);
             helpText.SetActive(false);
             check.SetActive(true);
             questCircle.SetActive(false);

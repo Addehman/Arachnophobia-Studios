@@ -47,4 +47,5 @@ public class SpiderAudio : MonoBehaviour
         audioSourceSpider.clip = Resources.Load<AudioClip>("Audio/FlyKillGood");
         audioSourceSpider.Play();
     }
+
 }
