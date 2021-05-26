@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,10 +21,20 @@ public class GameManager : MonoBehaviour
 	// 	DontDestroyOnLoad(this);
 	// }
 
+	public GameObject fadeScreen;
+	private Image fadeScreenImage;
+
+
 	private void Start()
 	{
 		Cursor.lockState = CursorLockMode.Locked;
 		PauseMenu.isPaused = false;
 
+		if (GameObject.Find("FadeOut"))
+		{
+			fadeScreen = GameObject.Find("FadeOut");
+			fadeScreenImage = fadeScreen.GetComponent<Image>();
+			fadeScreenImage.color = Color.black;
+		}
 	}
 }
