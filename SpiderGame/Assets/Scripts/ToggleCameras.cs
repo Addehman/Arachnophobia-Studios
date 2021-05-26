@@ -13,8 +13,8 @@ public class ToggleCameras : MonoBehaviour
 
 	private Cinemachine.CinemachineVirtualCamera aimCamera;
 	private Cinemachine.CinemachineVirtualCamera hardLockCam;
-	private HookWeb hookWeb;
-	private ClimbWeb climbWeb;
+	//private HookWeb hookWeb;
+	//private ClimbWeb climbWeb;
 	private SpringJointWeb springJointWeb;
 
 
@@ -22,12 +22,12 @@ public class ToggleCameras : MonoBehaviour
 	{
 		aimCamera = GameObject.Find("cmAimCamera").GetComponent<Cinemachine.CinemachineVirtualCamera>();
 		hardLockCam = FindObjectOfType<ThirdPersonCameraController>().GetComponent<Cinemachine.CinemachineVirtualCamera>();
-		hookWeb = FindObjectOfType<HookWeb>();
-		hookWeb.DisableFPSCamera += DisableFPCamera;
-		hookWeb.SwitchToWebCamera += SwitchToSwingCamera;
+		//hookWeb = FindObjectOfType<HookWeb>();
+		//hookWeb.DisableFPSCamera += DisableFPCamera;
+		//hookWeb.SwitchToWebCamera += SwitchToSwingCamera;
 		// hookWeb.SwitchToHardLockCam += ActivationHardLockCam;
-		climbWeb = FindObjectOfType<ClimbWeb>();
-		climbWeb.DisableFPSCamera += DisableFPCamera;
+		//climbWeb = FindObjectOfType<ClimbWeb>();
+		//climbWeb.DisableFPSCamera += DisableFPCamera;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		springJointWeb.ExitFPCamera += DisableFPCamera;
 		springJointWeb.SwitchToSwingCamera += SwitchToSwingCamera;
@@ -92,8 +92,8 @@ public class ToggleCameras : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		hookWeb.DisableFPSCamera -= DisableFPCamera;
-		climbWeb.DisableFPSCamera -= DisableFPCamera;
+		//hookWeb.DisableFPSCamera -= DisableFPCamera;
+		//climbWeb.DisableFPSCamera -= DisableFPCamera;
 		springJointWeb.ExitFPCamera -= DisableFPCamera;
 	}
 }

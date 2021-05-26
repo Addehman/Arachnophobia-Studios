@@ -140,8 +140,8 @@ public class SpiderMovement : MonoBehaviour
 	private GameObject targetRotationObject;
 	private Transform cam;
 	private Transform lookAtTarget;
-	private HookWeb hookWeb;
-	private ClimbWeb climbWeb;
+	//private HookWeb hookWeb;
+	//private ClimbWeb climbWeb;
 	private RotationConstraint cameraRotationConstraint;
 	private Vector3 myNormal;
 	private float vertical;
@@ -167,9 +167,9 @@ public class SpiderMovement : MonoBehaviour
 
 		springJointWeb = parentObject.GetComponent<SpringJointWeb>();
 		// springJointWeb.SwitchToSwingCamera += SetSwingRotation;
-		hookWeb = GetComponent<HookWeb>();
-		climbWeb = GetComponent<ClimbWeb>();
-		climbWeb.ActivationClimbRotation += ActivationOfRaycasts;
+		//hookWeb = GetComponent<HookWeb>();
+		//climbWeb = GetComponent<ClimbWeb>();
+		//climbWeb.ActivationClimbRotation += ActivationOfRaycasts;
 
 		lookAtTarget = FindObjectOfType<LookAtTargetController>().transform;
 		cameraRotationConstraint = cameraParent.GetComponent<RotationConstraint>();
@@ -494,15 +494,15 @@ public class SpiderMovement : MonoBehaviour
 			}
 
 		// These two could probably be added into the calculation above instead of having this separated assignment, I mean if the newTransform from the web-abilities is added even when it's 0, then it wont contribute anyway!
-			if (UseHookWebNormal)
-			{
-				debugSettings.averageNormalDirection = hookWeb.newTransformUp;
-			}
-			else if (UseClimbWebNormal)
-			{
-				debugSettings.averageNormalDirection = climbWeb.newTransformUp;
-			}
-			else if (springJointWeb.currentState == SwingState.IsSwinging)
+			//if (UseHookWebNormal)
+			//{
+			//	debugSettings.averageNormalDirection = hookWeb.newTransformUp;
+			//}
+			//else if (UseClimbWebNormal)
+			//{
+			//	debugSettings.averageNormalDirection = climbWeb.newTransformUp;
+			//}
+			if (springJointWeb.currentState == SwingState.IsSwinging)
 			{
 				debugSettings.averageNormalDirection = Vector3.up;
 			}
@@ -659,14 +659,14 @@ public class SpiderMovement : MonoBehaviour
 		{
 			return true;
 		}
-		else if (hookWeb.isHookWebing == true)
-		{
-			return true;
-		}
-		else if(climbWeb.isClimbWebing == true)
-		{
-			return true;
-		}
+		//else if (hookWeb.isHookWebing == true)
+		//{
+		//	return true;
+		//}
+		//else if(climbWeb.isClimbWebing == true)
+		//{
+		//	return true;
+		//}
 		else
 		{
 			return false;
@@ -691,6 +691,6 @@ public class SpiderMovement : MonoBehaviour
 	{
 		toggleCameras.ActivationFPSCam -= activateOnKeypress_ActivationFPSCam;
 		vacuumBlackhole.PullingPlayer -= vacuumBlackhole_PullingPlayer;
-		climbWeb.ActivationClimbRotation -= ActivationOfRaycasts;
+		//climbWeb.ActivationClimbRotation -= ActivationOfRaycasts;
 	}
 }

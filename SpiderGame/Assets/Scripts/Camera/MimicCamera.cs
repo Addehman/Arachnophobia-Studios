@@ -13,7 +13,7 @@ public class MimicCamera : MonoBehaviour
 	private SpiderMovement spiderMovement;
 	private CinemachineCollider cmColl;
 	private CinemachineComponentBase componentBase;
-	private HookWeb hookWeb;
+	//private HookWeb hookWeb;
 	private SpringJointWeb springJointWeb;
 	private Transform cameraToMimic;
 	private Vector3 currentVelocity;
@@ -26,7 +26,7 @@ public class MimicCamera : MonoBehaviour
 		spiderMovement.cameraChangeStrategy += CameraChangeStrategy;
 		cameraToMimic = FindObjectOfType<ThirdPersonCameraController>().transform;
 		cmColl = GetComponent<CinemachineCollider>();
-		hookWeb = FindObjectOfType<HookWeb>();
+		//hookWeb = FindObjectOfType<HookWeb>();
 		// hookWeb.LockTPCameraRotation += LockRotation;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		// springJointWeb.SwitchToSwingCamera += LockRotation;
@@ -102,7 +102,7 @@ public class MimicCamera : MonoBehaviour
 	private void OnDestroy()
 	{
 		spiderMovement.cameraChangeStrategy -= CameraChangeStrategy;
-		hookWeb.LockTPCameraRotation -= LockRotation;
+		//hookWeb.LockTPCameraRotation -= LockRotation;
 		springJointWeb.SwitchToSwingCamera -= LockRotation;
 		springJointWeb.SetCameraDampingForSwing -= SetCameraDampingForSwing;
 	}

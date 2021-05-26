@@ -15,8 +15,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private CinemachineVirtualCamera cameraToZoom;
 	private CinemachineComponentBase zoomCameraComponentBase;
 	private CinemachineComponentBase tpCameraAimComponentBase;
-	private HookWeb hookWeb;
-	private ClimbWeb climbWeb;
+	//private HookWeb hookWeb;
+	//private ClimbWeb climbWeb;
 	private SpringJointWeb springJointWeb;
 	private Transform cameraParent;
 	private Vector3 currentVelocity;
@@ -29,12 +29,12 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private void Awake()
 	{
 		cameraParent = transform.parent;
-		hookWeb = FindObjectOfType<HookWeb>();
-		hookWeb.LockTPCameraRotation += LockCameraInput;
-		hookWeb.RecenterCamera += RecenterCamera;
-		climbWeb = FindObjectOfType<ClimbWeb>();
-		climbWeb.CameraStartRotation += BeginClimbRotation;
-		climbWeb.RecenterCamera += RecenterCamera;
+		//hookWeb = FindObjectOfType<HookWeb>();
+		//hookWeb.LockTPCameraRotation += LockCameraInput;
+		//hookWeb.RecenterCamera += RecenterCamera;
+		//climbWeb = FindObjectOfType<ClimbWeb>();
+		//climbWeb.CameraStartRotation += BeginClimbRotation;
+		//climbWeb.RecenterCamera += RecenterCamera;
 		springJointWeb = FindObjectOfType<SpringJointWeb>();
 		springJointWeb.RecenterCamera += RecenterCamera;
 		// springJointWeb.SwitchToSwingCamera += LockCameraInput;
@@ -128,11 +128,11 @@ public class ThirdPersonCameraController : MonoBehaviour
 		// transform.rotation = Quaternion.identity;
 	}
 
-	private void BeginClimbRotation()
-	{
-		cameraInputX = 0f;
-		cameraInputY = climbWeb.transform.position.y + 45f;
-	}
+	//private void BeginClimbRotation()
+	//{
+	//	cameraInputX = 0f;
+	//	cameraInputY = climbWeb.transform.position.y + 45f;
+	//}
 
 	// private void FollowMimicCamera(bool isActive)
 	// {
@@ -145,9 +145,9 @@ public class ThirdPersonCameraController : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		hookWeb.LockTPCameraRotation -= LockCameraInput;
-		climbWeb.CameraStartRotation -= BeginClimbRotation;
-		climbWeb.RecenterCamera -= RecenterCamera;
+		//hookWeb.LockTPCameraRotation -= LockCameraInput;
+		//climbWeb.CameraStartRotation -= BeginClimbRotation;
+		//climbWeb.RecenterCamera -= RecenterCamera;
 		springJointWeb.RecenterCamera -= RecenterCamera;
 	}
 }
