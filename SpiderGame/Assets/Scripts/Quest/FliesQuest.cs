@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FliesQuest : MonoBehaviour
 {
+    public SpiderAudio spiderAudio;
     public GameObject flies;
     public GameObject helpText;
     public GameObject check;
@@ -15,6 +16,7 @@ public class FliesQuest : MonoBehaviour
     {
         if (Input.GetButtonDown("Interact") && isFinished == false && canPickUpFlies == true)
         {
+            spiderAudio.KillFlies();
             Winstate.AddCompletedQuest(); // Winstate needs to be fixed from 4 to 5.
             flies.SetActive(false);
             helpText.SetActive(false);
