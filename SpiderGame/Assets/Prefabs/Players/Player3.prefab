@@ -260,7 +260,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.005
+    widthMultiplier: 0.001
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -328,7 +328,7 @@ MonoBehaviour:
   isSwingingWeb: 0
   firstPersonCamera: {fileID: 3944242281898070516}
   targetPointPrefab: {fileID: 2288128265524229465, guid: 4e4411aca44651543800b9077af1e0cf, type: 3}
-  butt: {fileID: 1247032614615311147}
+  butt: {fileID: 3944242281898070516}
   currentState: 0
   spiderAnimator: {fileID: 1344089395}
   spiderMovement: {fileID: 0}
@@ -345,8 +345,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc82949691eb734439dbdace15407f3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canPickUp: 0
   isAllItemsCollected: 0
+  spiderAudio: {fileID: 7560893008458635980}
   tomatoCheck: {fileID: 0}
   bananaCheck: {fileID: 0}
   blueberryCheck: {fileID: 0}
@@ -356,9 +356,10 @@ MonoBehaviour:
   tBoneCheck: {fileID: 0}
   cookieCheck: {fileID: 0}
   chickenBone: {fileID: 0}
+  helpText: {fileID: 0}
   itemID: 190
   numberOfItemsPickedUp: 0
-  helpText: {fileID: 0}
+  canPickUp: 1
 --- !u!114 &4801097130878541007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -484,6 +485,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 175683cf28365f2468abb3a1775b51b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickUpSound: {fileID: 0}
 --- !u!1 &617540068036129192
 GameObject:
   m_ObjectHideFlags: 0
@@ -588,8 +590,6 @@ GameObject:
   - component: {fileID: 617263166}
   - component: {fileID: 1344089395}
   - component: {fileID: 617263168}
-  - component: {fileID: 617263167}
-  - component: {fileID: 1746578699803717687}
   m_Layer: 0
   m_Name: Model_Character_Spider.6
   m_TagString: Player
@@ -768,38 +768,8 @@ MonoBehaviour:
     isPlayerBeingVacuumed: 0
     doRaycasts: 1
     doForwardCheckRay: 0
+    allowUnlimitedStamina: 0
     forwardRotationSpeed: 1
---- !u!114 &617263167
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919132147514444500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4158639adfc98e846a8800fdcb3d50a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isHookWebing: 0
-  speedMultiplier: 1
-  rotateBool: 0
-  newTransformUp: {x: 0, y: 0, z: 0}
---- !u!114 &1746578699803717687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919132147514444500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20c36fec130c60541ba92cc6405838f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newTransformUp: {x: 0, y: 0, z: 0}
-  isClimbWebing: 0
-  speedMultiplier: 0.005
 --- !u!95 &386104294
 Animator:
   serializedVersion: 3
@@ -843,7 +813,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1247032614615311147}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 327015175050774158}
@@ -3632,6 +3602,18 @@ PrefabInstance:
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 543450651985563758}
+    - target: {fileID: 3944242282009029609, guid: 437d80861df5f7c4e930811b03d8af62, type: 3}
+      propertyPath: m_Transitions.m_OnCameraLive.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944242282009029609, guid: 437d80861df5f7c4e930811b03d8af62, type: 3}
+      propertyPath: m_Transitions.m_OnCameraLive.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944242282009029609, guid: 437d80861df5f7c4e930811b03d8af62, type: 3}
+      propertyPath: m_Transitions.m_OnCameraLive.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 437d80861df5f7c4e930811b03d8af62, type: 3}
 --- !u!1 &3944242281898070516 stripped
