@@ -879,18 +879,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2096117061}
     m_Modifications:
-    - target: {fileID: 1157382019279626120, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1.03
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145907272646271972, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145907273056175119, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2145907274202765028, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -987,50 +975,6 @@ PrefabInstance:
       propertyPath: helpText
       value: 
       objectReference: {fileID: 1493458193}
-    - target: {fileID: 2145907274615420901, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -1339.881
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145907274615420901, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1074.4766
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145907274615420901, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.794
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145907274615420901, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145907274615420901, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145907274615420901, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145907274615420901, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145907274615420901, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145907274615420902, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145907274615420903, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145907274615420906, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
-      propertyPath: m_Layer
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
 --- !u!1 &331039685 stripped
@@ -1380,6 +1324,11 @@ CanvasRenderer:
 Transform:
   m_CorrespondingSourceObject: {fileID: 543450651985563758, guid: 98c5b1e879edb284e966a7d841c99343, type: 3}
   m_PrefabInstance: {fileID: 21217446}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &708866837 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 708866837, guid: 9e9f7ad8c7ca2d1478467fe8f98f180a, type: 3}
+  m_PrefabInstance: {fileID: 331039684}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &749660450
 GameObject:
@@ -1883,6 +1832,10 @@ PrefabInstance:
       propertyPath: howToJumpUI
       value: 
       objectReference: {fileID: 331039689}
+    - target: {fileID: 5382346048205474707, guid: ad1ed8da93763974dbf05c2f2a4d6553, type: 3}
+      propertyPath: howToLookUI
+      value: 
+      objectReference: {fileID: 708866837}
     - target: {fileID: 5382346048205474707, guid: ad1ed8da93763974dbf05c2f2a4d6553, type: 3}
       propertyPath: howToMoveUI
       value: 
@@ -9690,7 +9643,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &6839547225190347834
 MonoBehaviour:
   m_ObjectHideFlags: 0

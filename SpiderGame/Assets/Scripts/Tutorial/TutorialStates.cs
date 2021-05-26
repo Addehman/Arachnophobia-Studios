@@ -5,6 +5,7 @@ using UnityEngine;
 public class TutorialStates : MonoBehaviour
 {
     public GameObject howToMoveUI;
+    public GameObject howToLookUI;
     public GameObject howToJumpUI;
     public GameObject howToWallWalkingUI;
     public GameObject howToSprintUI;
@@ -38,6 +39,7 @@ public class TutorialStates : MonoBehaviour
     enum State
     {
         HowToMove,
+        HowToLook,
         HowToJump,
         HowToWalkWall,
         HowToSprint,
@@ -64,13 +66,26 @@ public class TutorialStates : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 ClickingSound.clickSound();
+                currentState = State.HowToLook;
+            }
+        }
+
+        else if (currentState == State.HowToLook)
+        {
+            howToMoveUI.SetActive(false);
+
+            howToLookUI.SetActive(true);
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                ClickingSound.clickSound();
                 currentState = State.HowToJump;
             }
         }
 
         else if (currentState == State.HowToJump)
         {
-            howToMoveUI.SetActive(false);
+            howToLookUI.SetActive(false);
 
             howToJumpUI.SetActive(true);
 
