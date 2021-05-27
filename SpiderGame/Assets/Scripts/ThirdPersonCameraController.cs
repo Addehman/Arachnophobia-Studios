@@ -11,10 +11,10 @@ public class ThirdPersonCameraController : MonoBehaviour
 	[SerializeField] private float minZoom = 0.1f;
 	[SerializeField] private float maxZoom = 0.5f;
 	
-	private CinemachineVirtualCamera aimTPCamera;
+	private CinemachineVirtualCamera aimCamera;
 	private CinemachineVirtualCamera cameraToZoom;
 	private CinemachineComponentBase zoomCameraComponentBase;
-	private CinemachineComponentBase tpCameraAimComponentBase;
+	private CinemachineComponentBase aimCameraComponentBase;
 	//private HookWeb hookWeb;
 	//private ClimbWeb climbWeb;
 	private SpiderMovement spiderMovement;
@@ -45,7 +45,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private void Start()
 	{
 		cameraToZoom = GetComponent<CinemachineVirtualCamera>();
-		aimTPCamera = GameObject.Find("cmAimCamera").GetComponent<CinemachineVirtualCamera>();
+		aimCamera = GameObject.Find("cmAimCamera").GetComponent<CinemachineVirtualCamera>();
 
 		zoomCameraComponentBase = cameraToZoom.GetCinemachineComponent(CinemachineCore.Stage.Body);
 		if (zoomCameraComponentBase is CinemachineFramingTransposer)
@@ -53,7 +53,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 			(zoomCameraComponentBase as CinemachineFramingTransposer).m_CameraDistance = 0.3f;
 		}
 
-		tpCameraAimComponentBase = aimTPCamera.GetCinemachineComponent(CinemachineCore.Stage.Aim);
+		aimCameraComponentBase = aimCamera.GetCinemachineComponent(CinemachineCore.Stage.Aim);
 	}
 	
 	private void Update()
@@ -73,23 +73,23 @@ public class ThirdPersonCameraController : MonoBehaviour
 	{
 		if (doLockCameraInput == false)
 		{
-			Vector3 mouseInput = new Vector3(Input.GetAxis("Mouse X"), 0f, Input.GetAxis("Mouse Y"));
-			if (mouseInput.sqrMagnitude == 0f)
+			Vector3 gamepadInput = new Vector3(Input.GetAxis("RightStickX"), 0f, Input.GetAxis("RightStickY"));
+			if (gamepadInput.sqrMagnitude > 0f)
 			{
-				cameraInputX += Input.GetAxis("CameraInputX") * gamepadRotationSpeed;
-				cameraInputY += Input.GetAxis("CameraInputY") * gamepadRotationSpeed;
-				if (tpCameraAimComponentBase is CinemachinePOV)
+				cameraInputX += Input.GetAxis("CameraInputX") * gamepadRotationSpeed * Time.deltaTime;
+				cameraInputY += Input.GetAxis("CameraInputY") * gamepadRotationSpeed * Time.deltaTime;
+				if (aimCameraComponentBase is CinemachinePOV)
 				{
-					(tpCameraAimComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = false;
+					(aimCameraComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = false;
 				}
 			}
 			else
 			{
-				cameraInputX += Input.GetAxis("CameraInputX") * mouseRotationSpeed;
-				cameraInputY -= Input.GetAxis("CameraInputY") * mouseRotationSpeed;
-				if (tpCameraAimComponentBase is CinemachinePOV)
+				cameraInputX += Input.GetAxis("CameraInputX") * mouseRotationSpeed * Time.deltaTime;
+				cameraInputY -= Input.GetAxis("CameraInputY") * mouseRotationSpeed * Time.deltaTime;
+				if (aimCameraComponentBase is CinemachinePOV)
 				{
-					(tpCameraAimComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = true;
+					(aimCameraComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = true;
 				}
 			}
 			// cameraParent.localRotation = Quaternion.Euler(cameraInputY, cameraInputX, 0f);
