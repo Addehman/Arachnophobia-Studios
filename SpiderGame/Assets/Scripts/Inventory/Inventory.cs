@@ -68,15 +68,15 @@ public class Inventory : MonoBehaviour
 
 	public void EnableInventory()
 	{
-		Cursor.visible = false;
-		Cursor.lockState = CursorLockMode.Locked;
+		// Cursor.visible = false;
+		// Cursor.lockState = CursorLockMode.Locked;
 		toggleInventory.SetActive(false);
 	}
 
 	public void DisableInventory()
 	{
-		Cursor.visible = true;
-		Cursor.lockState = CursorLockMode.Confined;
+		// Cursor.visible = true;
+		// Cursor.lockState = CursorLockMode.Confined;
 		toggleInventory.SetActive(true);
 	}
 }
