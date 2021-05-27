@@ -85,8 +85,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 			}
 			else
 			{
-				cameraInputX += Input.GetAxis("CameraInputX") * mouseRotationSpeed * Time.deltaTime;
-				cameraInputY -= Input.GetAxis("CameraInputY") * mouseRotationSpeed * Time.deltaTime;
+				cameraInputX += Input.GetAxisRaw("CameraInputX") * mouseRotationSpeed * Time.deltaTime;
+				cameraInputY -= Input.GetAxisRaw("CameraInputY") * mouseRotationSpeed * Time.deltaTime;
 				if (aimCameraComponentBase is CinemachinePOV)
 				{
 					(aimCameraComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = true;
