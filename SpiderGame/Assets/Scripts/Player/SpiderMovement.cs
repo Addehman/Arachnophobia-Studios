@@ -147,8 +147,8 @@ public class SpiderMovement : MonoBehaviour
 	//private ClimbWeb climbWeb;
 	private RotationConstraint cameraRotationConstraint;
 	private Vector3 myNormal;
-	private float vertical;
-	private float horizontal;
+	private float verticalRaw;
+	private float horizontalRaw;
 	private float turnSmoothVelocity;
 	private float sprintMulti;
 	private float randomIdleTimer = 0f;
@@ -241,8 +241,8 @@ public class SpiderMovement : MonoBehaviour
 
 		currentPosition = transform.position;
 
-		vertical = Input.GetAxisRaw("Vertical");
-		horizontal = Input.GetAxisRaw("Horizontal");
+		verticalRaw = Input.GetAxisRaw("Vertical");
+		horizontalRaw = Input.GetAxisRaw("Horizontal");
 
 		RaycastsToCast();
 		Sprint();
@@ -541,16 +541,31 @@ public class SpiderMovement : MonoBehaviour
 
 	private void TranslateMovement()
 	{
-		Vector3 movement = new Vector3(vertical, 0f, horizontal);
+		float horizontal = Input.GetAxis("Horizontal");
+		float vertical = Input.GetAxis("Vertical");
+		Vector3 movement = new Vector3(verticalRaw, 0f, horizontalRaw);
 		if (movement.sqrMagnitude > 0f && debugSettings.isFpsEnabled == false)
 		{
-			parentObject.transform.Translate(transform.forward * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
-		}	
+			// parentObject.transform.Translate(transform.forward * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+
+		// This is for a smoother Movement, and it checks for input from Gamepad and applies the smooth if the gamepad is used. GetAxis for Gamepad, GetAxisRaw for keyboard.
+			Vector3 gamepadInput = new Vector3(Input.GetAxis("LeftStickX"), 0f, Input.GetAxis("LeftStickY"));
+			if (gamepadInput.sqrMagnitude > 0f)
+			{
+				parentObject.transform.Translate((lookAtTarget.parent.forward * vertical) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+				parentObject.transform.Translate((lookAtTarget.parent.right * horizontal) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+			}
+			else
+			{
+				parentObject.transform.Translate((lookAtTarget.parent.forward * verticalRaw) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+				parentObject.transform.Translate((lookAtTarget.parent.right * horizontalRaw) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+			}
+		}
 	}
 
 	private void VacuumPullingMovement() // The Rigidbody-based movement used only for when the player is in range of being pulled with rb.AddForce towards the Robot Vacuum Cleaner - becomes most smooth this way.
 	{
-		rb.velocity = (transform.forward * vertical) * (playerSettings.velocityPlayerSpeed + sprintMulti) * Time.deltaTime;
+		rb.velocity = (transform.forward * verticalRaw) * (playerSettings.velocityPlayerSpeed + sprintMulti) * Time.deltaTime;
 	}
 
 	private void SetLookDirection()
@@ -563,7 +578,7 @@ public class SpiderMovement : MonoBehaviour
 
 	private void SpiderJump()
 	{
-		Vector3 movementInput = new Vector3(horizontal, 0f, vertical);
+		Vector3 movementInput = new Vector3(horizontalRaw, 0f, verticalRaw);
 		// Jump Straight Up
 		if (movementInput.sqrMagnitude <= 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f && PauseMenu.isPaused == false)
 		{
@@ -592,7 +607,7 @@ public class SpiderMovement : MonoBehaviour
 	// Binds key for player to use to increase move speed.
 	private void Sprint()
 	{
-		Vector3 movementInput = new Vector3(horizontal, 0f, vertical);
+		Vector3 movementInput = new Vector3(horizontalRaw, 0f, verticalRaw);
 		if ((Input.GetButton("Sprint") && movementInput.sqrMagnitude > 0f || Input.GetAxis("Sprint") < 0f) && StaminaBar.staminaBarInstance.currentStamina >= 0.0035f 
 			&& PauseMenu.isPaused == false && IsUsingWeb() == false)
 		{
@@ -631,7 +646,7 @@ public class SpiderMovement : MonoBehaviour
 			spiderAnimator.SetBool("Web", false);
 		}
 
-		Vector3 movementInput = new Vector3(horizontal, 0f, vertical);
+		Vector3 movementInput = new Vector3(horizontalRaw, 0f, verticalRaw);
 		if (movementInput.sqrMagnitude != 0f && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true)
 		{
 			spiderAnimator.SetBool("Walk", true);
@@ -642,7 +657,7 @@ public class SpiderMovement : MonoBehaviour
 		}
 
 		// if(Input.GetKey(KeyCode.A) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true || Input.GetKey(KeyCode.D) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true)
-        // {
+		// {
 		// 	spiderAnimator.SetBool("Walk", true);
 		// }
 		// else if(movementInput.sqrMagnitude <= 0.01f && spiderAnimator.GetBool("Walk") == true)
