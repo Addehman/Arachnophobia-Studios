@@ -120,7 +120,6 @@ public class SpiderMovement : MonoBehaviour
 	[HideInInspector] public bool UseClimbWebNormal = false;
 
 	[SerializeField] private Transform movementParent;
-	[SerializeField] private Transform fpsCamera;
 	[SerializeField] private GameObject cmTPCamera;
 	[SerializeField] private GameObject cameraParent;
 
@@ -205,6 +204,8 @@ public class SpiderMovement : MonoBehaviour
 			debugSettings.erics[0] = debugSettings.ericAlerts[0].transform.parent.gameObject;
 			debugSettings.erics[1] = debugSettings.ericAlerts[1].transform.parent.gameObject;
 		}
+
+		// debugSettings.isEricHidden = !debugSettings.isEricHidden;
 	}
 
 	private void SetSwingRotation(bool isSwingActive)
@@ -709,13 +710,29 @@ public class SpiderMovement : MonoBehaviour
 		if (Debug.isDebugBuild == true && Input.GetKeyDown(KeyCode.L))
 		{
 			debugSettings.allowUnlimitedStamina = !debugSettings.allowUnlimitedStamina;
+			if (debugSettings.allowUnlimitedStamina == true)
+			{
+				Debug.Log($"Unlimited Stamina: ON ");
+			}
+			else
+			{
+				Debug.Log($"Unlimited Stamina: OFF ");
+			}
 		}
 
 		if (Debug.isDebugBuild == true && Input.GetKeyDown(KeyCode.O))
 		{
 			debugSettings.isEricHidden = !debugSettings.isEricHidden;
-			debugSettings.erics[0].SetActive(debugSettings.isEricHidden);
-			debugSettings.erics[1].SetActive(debugSettings.isEricHidden);
+			if (debugSettings.isEricHidden == true)
+			{
+				Debug.Log($"Eric is will not appear now.");
+			}
+			else
+			{
+				Debug.Log($"Eric now will appear again.");
+			}
+			debugSettings.erics[0].SetActive(!debugSettings.isEricHidden);
+			debugSettings.erics[1].SetActive(!debugSettings.isEricHidden);
 		}
 	}
 
