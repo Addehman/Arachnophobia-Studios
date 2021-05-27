@@ -8,13 +8,14 @@ public class UIInventory : MonoBehaviour
     public List<UIItem> uIItems = new List<UIItem>();
     public GameObject slotPrefab;
     public Transform slotPanel;
-    public int numberOfSlots = 9; // Add so that we dont need to double change between this and inspector value.
+    public int numberOfSlots = 9; 
 
     private void Awake()
     {
         uIItems = new List<UIItem>();
 
         InstantiateSlotPrefab();
+
     }
 
     public void InstantiateSlotPrefab()
