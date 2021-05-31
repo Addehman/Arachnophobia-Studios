@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -7,7 +6,6 @@ using UnityEngine.Animations;
 [System.Serializable]
 public class MainRaycastsAdjustment
 {
-	// [Header("Main Raycasts Adjustment")]
 	public float rayFwdMod	= 1f;
 	public float rayBwdMod	= 1f;
 	public float raysBackOriginOffset = 0f;
@@ -18,7 +16,6 @@ public class MainRaycastsAdjustment
 [System.Serializable]
 public class ForwardsRaycastsAdjustment
 {
-	// [Header("Forwards-Raycasts Adjustment")]
 	public float rayFwdMod1 	= 0.025f;
 	public float rayFwdModDown1 = 0.1f;
 	public float rayFwdMod2 	= 0.05f;
@@ -36,7 +33,6 @@ public class ForwardsRaycastsAdjustment
 [System.Serializable]
 public class BackwardsRaycastsAdjustment
 {
-	// [Header("Backwards-Raycasts Adjustment")]
 	public float rayBwdMod1		= 0.025f;
 	public float rayBwdModDown1	= 0.1f;
 	public float rayBwdMod2		= 0.05f;
@@ -54,7 +50,6 @@ public class BackwardsRaycastsAdjustment
 [System.Serializable]
 public class RaycastGeneralSettings
 {
-	// [Header("Raycast General Settings")]
 	public float raycastReach = 0.05f;
 	public float increasedRaycastReach = 0.1f;
 	public float defaultRaycastReach = 0.05f;
@@ -70,7 +65,6 @@ public class RaycastGeneralSettings
 [System.Serializable]
 public class PlayerSettings
 {
-	// [Header("Player Settings")]
 	public float normalPlayerSpeed = 0.2f;
 	public float normalSlowPlayerSpeed = 0.1f;
 	public float defaultNormalPlayerSpeed = 0.2f;
@@ -89,7 +83,6 @@ public class PlayerSettings
 [System.Serializable]
 public class DebugSettings
 {
-	// [Header("Debug")]
 	public EricAlert[] ericAlerts;
 	public GameObject[] erics;
 	public List<Vector3> averageNormalDirections = new List<Vector3>();
@@ -109,6 +102,7 @@ public class DebugSettings
 	public bool allowUnlimitedStamina = false;
 	public bool isEricHidden = false;
 	public float forwardRotationSpeed = 1f;
+	public float animationSpeedMod = 10f;
 }
 
 public class SpiderMovement : MonoBehaviour
@@ -550,15 +544,34 @@ public class SpiderMovement : MonoBehaviour
 
 		// This is for a smoother Movement, and it checks for input from Gamepad and applies the smooth if the gamepad is used. GetAxis for Gamepad, GetAxisRaw for keyboard.
 			Vector3 gamepadInput = new Vector3(Input.GetAxis("LeftStickX"), 0f, Input.GetAxis("LeftStickY"));
-			if (gamepadInput.sqrMagnitude > 0f)
+			Vector3 keyboardInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+			if (gamepadInput.sqrMagnitude > 0.0005f)
 			{
+				print (gamepadInput.sqrMagnitude);
+				if (gamepadInput.sqrMagnitude < 0.1f)
+				{
+					spiderAnimator.speed = gamepadInput.sqrMagnitude * debugSettings.animationSpeedMod;
+				}
+				else if (gamepadInput.sqrMagnitude < 1f && gamepadInput.sqrMagnitude >= 0.5f)
+				{
+					spiderAnimator.speed = gamepadInput.sqrMagnitude * (debugSettings.animationSpeedMod / debugSettings.animationSpeedMod);
+				}
+				
+				spiderAnimator.speed = Mathf.Clamp(spiderAnimator.speed, 0f, 1f);
+				// print (spiderAnimator.speed);
+
 				parentObject.transform.Translate((lookAtTarget.parent.forward * vertical) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
 				parentObject.transform.Translate((lookAtTarget.parent.right * horizontal) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
 			}
-			else
+			else if (keyboardInput.sqrMagnitude > 0f)
 			{
 				parentObject.transform.Translate((lookAtTarget.parent.forward * verticalRaw) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
 				parentObject.transform.Translate((lookAtTarget.parent.right * horizontalRaw) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+				spiderAnimator.speed = 1f;
+			}
+			else
+			{
+				spiderAnimator.speed = 1f; // For some reason the animation speed is at 1f when I am moving the joystick a tiny bit..
 			}
 		}
 	}
@@ -631,7 +644,7 @@ public class SpiderMovement : MonoBehaviour
 			&& Input.GetButton("Sprint") == false && IsUsingWeb() == false)
 		{
 			sprintMulti = 0f;
-			spiderAnimator.speed = 1f;
+			// spiderAnimator.speed = 1f;
 		}
 	}
 
