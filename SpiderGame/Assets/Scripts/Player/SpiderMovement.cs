@@ -619,7 +619,8 @@ public class SpiderMovement : MonoBehaviour
 	{
 		Vector3 movementInput = new Vector3(horizontalRaw, 0f, verticalRaw);
 		// Jump Straight Up
-		if (movementInput.sqrMagnitude <= 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f && PauseMenu.isPaused == false)
+		if (movementInput.sqrMagnitude <= 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f 
+			&& PauseMenu.isPaused == false && debugSettings.isFpsEnabled == false)
 		{
 			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce(transform.up * playerSettings.jumpUpStrength);
@@ -631,7 +632,8 @@ public class SpiderMovement : MonoBehaviour
 			}
 		}
 		// Jump Forwards
-		else if (movementInput.sqrMagnitude > 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f && PauseMenu.isPaused == false)
+		else if (movementInput.sqrMagnitude > 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f 
+			&& PauseMenu.isPaused == false && debugSettings.isFpsEnabled == false)
 		{
 			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce((transform.up + transform.forward) * playerSettings.jumpFwdStrength);
@@ -648,7 +650,7 @@ public class SpiderMovement : MonoBehaviour
 	{
 		Vector3 movementInput = new Vector3(horizontalRaw, 0f, verticalRaw);
 		if ((Input.GetButton("Sprint") && movementInput.sqrMagnitude > 0f || Input.GetAxis("Sprint") < 0f) && StaminaBar.staminaBarInstance.currentStamina >= 0.0035f 
-			&& PauseMenu.isPaused == false && IsUsingWeb() == false)
+			&& PauseMenu.isPaused == false && IsUsingWeb() == false && debugSettings.isFpsEnabled == false)
 		{
 			spiderAnimator.speed = 3f;
 			if (debugSettings.isPlayerBeingVacuumed == true)
