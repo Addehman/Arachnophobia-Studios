@@ -1,12 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class PauseMenu : MonoBehaviour
 {
 	public GameObject pauseMenu;
 	public GameObject howToPlay;
+	public GameObject resumeBtn;
 	public static bool isPaused;
 
 	void Start()
@@ -32,6 +32,8 @@ public class PauseMenu : MonoBehaviour
 				Cursor.visible = true;
 				Cursor.lockState = CursorLockMode.Confined;
 				AudioListener.volume = 0f;
+				EventSystem.current.SetSelectedGameObject(null);
+				EventSystem.current.SetSelectedGameObject(resumeBtn);
 			}
 		}
 	}

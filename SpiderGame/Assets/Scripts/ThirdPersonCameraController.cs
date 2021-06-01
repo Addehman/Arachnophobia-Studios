@@ -8,7 +8,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 	[SerializeField] private Transform cameraTarget;
 	[SerializeField] private Transform targetToRotate;
 	[SerializeField] private float mouseRotationSpeed = 10f;
-	[SerializeField] private float defaultMouseRotationSpeed = 7.5f;
+	[SerializeField] private float defaultMouseRotationSpeed = 10f;
 	[SerializeField] private float gamepadRotationSpeed = 15f;
 	[SerializeField] private float defaultGamepadRotationSpeed = 15f;
 	[SerializeField] private float smoothTime = 10f;
