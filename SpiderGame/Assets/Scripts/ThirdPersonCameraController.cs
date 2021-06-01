@@ -1,15 +1,25 @@
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class ThirdPersonCameraController : MonoBehaviour
 {
 	[SerializeField] private Transform cameraTarget;
 	[SerializeField] private Transform targetToRotate;
-	[SerializeField] private float mouseRotationSpeed = 2f;
-	[SerializeField] private float gamepadRotationSpeed = 7f;
+	[SerializeField] private float mouseRotationSpeed = 10f;
+	[SerializeField] private float defaultMouseRotationSpeed = 7.5f;
+	[SerializeField] private float gamepadRotationSpeed = 15f;
+	[SerializeField] private float defaultGamepadRotationSpeed = 15f;
 	[SerializeField] private float smoothTime = 10f;
 	[SerializeField] private float minZoom = 0.1f;
 	[SerializeField] private float maxZoom = 0.5f;
+	// [SerializeField] private TMP_InputField mosueSensiInputField;
+	// [SerializeField] private TMP_InputField gamepadSensiInputField;
+	[SerializeField] private Slider mouseSensiSlider;
+	[SerializeField] private Slider gamepadSensiSlider;
+	[SerializeField] private TMP_Text mouseInputValueText;
+	[SerializeField] private TMP_Text gamepadInputValueText;
 	
 	private CinemachineVirtualCamera aimCamera;
 	private CinemachineVirtualCamera cameraToZoom;
@@ -24,7 +34,11 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private float cameraInputX;
 	private float cameraInputY;
 	private float lerpSpeed = 10f;
+	private float mouseSensiMod;
+	private float gamepadSensiMod;
 	private bool doLockCameraInput = false;
+	private string mouseSensitivityModValue;
+	private string gamepadSensitivityModValue;
 
 
 	private void Awake()
@@ -44,6 +58,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 	
 	private void Start()
 	{
+		InitializeSensitivitySettings();
+
 		cameraToZoom = GetComponent<CinemachineVirtualCamera>();
 		aimCamera = GameObject.Find("cmAimCamera").GetComponent<CinemachineVirtualCamera>();
 
@@ -54,6 +70,16 @@ public class ThirdPersonCameraController : MonoBehaviour
 		}
 
 		aimCameraComponentBase = aimCamera.GetCinemachineComponent(CinemachineCore.Stage.Aim);
+	}
+
+	private void InitializeSensitivitySettings()
+	{
+		mouseSensiMod = PlayerPrefs.GetFloat(mouseSensitivityModValue, 0f);
+		gamepadSensiMod = PlayerPrefs.GetFloat(gamepadSensitivityModValue, 0f);
+		mouseInputValueText.text = mouseSensiMod.ToString();
+		gamepadInputValueText.text = gamepadSensiMod.ToString();
+		mouseSensiSlider.value = mouseSensiMod;
+		gamepadSensiSlider.value = gamepadSensiMod;
 	}
 	
 	private void Update()
@@ -76,8 +102,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 			Vector3 gamepadInput = new Vector3(Input.GetAxis("RightStickX"), 0f, Input.GetAxis("RightStickY"));
 			if (gamepadInput.sqrMagnitude > 0f)
 			{
-				cameraInputX += Input.GetAxis("CameraInputX") * gamepadRotationSpeed * Time.deltaTime;
-				cameraInputY += Input.GetAxis("CameraInputY") * gamepadRotationSpeed * Time.deltaTime;
+				cameraInputX += Input.GetAxis("CameraInputX") * (gamepadRotationSpeed + gamepadSensiMod) * 10f * Time.deltaTime;
+				cameraInputY += Input.GetAxis("CameraInputY") * (gamepadRotationSpeed + gamepadSensiMod) * 10f * Time.deltaTime;
 				if (aimCameraComponentBase is CinemachinePOV)
 				{
 					(aimCameraComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = false;
@@ -85,8 +111,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 			}
 			else
 			{
-				cameraInputX += Input.GetAxisRaw("CameraInputX") * mouseRotationSpeed * Time.deltaTime;
-				cameraInputY -= Input.GetAxisRaw("CameraInputY") * mouseRotationSpeed * Time.deltaTime;
+				cameraInputX += Input.GetAxisRaw("CameraInputX") * (mouseRotationSpeed + mouseSensiMod) * 10f * Time.deltaTime;
+				cameraInputY -= Input.GetAxisRaw("CameraInputY") * (mouseRotationSpeed + mouseSensiMod) * 10f * Time.deltaTime;
 				if (aimCameraComponentBase is CinemachinePOV)
 				{
 					(aimCameraComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = true;
@@ -130,23 +156,61 @@ public class ThirdPersonCameraController : MonoBehaviour
 		// transform.rotation = Quaternion.identity;
 	}
 
-	//private void BeginClimbRotation()
-	//{
-	//	cameraInputX = 0f;
-	//	cameraInputY = climbWeb.transform.position.y + 45f;
-	//}
-
-	// private void FollowMimicCamera(bool isActive)
+	// public void MouseSensiInputFieldOnValueChanged()
 	// {
-	// 	if (isActive == false)
-	// 	{
-	// 		// cameraParent.localRotation = cameraToZoom.transform.rotation;
-	// 		transform.localRotation = cameraToZoom.transform.rotation;
-	// 	}
+	// 	mouseSensiMod = float.Parse(mosueSensiInputField.text);
+	// 	mouseSensiSlider.value = mouseSensiMod;
+	// 	gamepadRotationSpeed = defaultMouseRotationSpeed + mouseSensiMod;
+	// 	SetFloatPlayerPrefs(mouseSensitivityModValue, mouseSensiMod);
 	// }
+
+	public void MouseSensiSliderOnValueChanged()
+	{
+		mouseSensiMod = mouseSensiSlider.value;
+		mouseInputValueText.text = mouseSensiSlider.value.ToString();
+		gamepadRotationSpeed = defaultMouseRotationSpeed + mouseSensiMod;
+		SetFloatPlayerPrefs(mouseSensitivityModValue, mouseSensiMod);
+	}
+
+	// public void GamepadSensiInputFieldOnValueChanged()
+	// {
+	// 	gamepadSensiMod = float.Parse(gamepadSensiInputField.text);
+	// 	gamepadSensiSlider.value = gamepadSensiMod;
+	// 	gamepadRotationSpeed = defaultGamepadRotationSpeed + gamepadSensiMod;
+	// 	SetFloatPlayerPrefs(gamepadSensitivityModValue, gamepadSensiMod);
+	// }
+
+	public void GamepadSensiSliderOnValueChanged()
+	{
+		gamepadSensiMod = gamepadSensiSlider.value;
+		gamepadInputValueText.text = gamepadSensiSlider.value.ToString();
+		gamepadRotationSpeed = defaultGamepadRotationSpeed + gamepadSensiMod;
+		SetFloatPlayerPrefs(gamepadSensitivityModValue, gamepadSensiMod);
+	}
+
+	public void MouseResetSensiToDefault()
+	{
+		mouseSensiMod = 0f;
+		mouseSensiSlider.value = 0f;
+		SetFloatPlayerPrefs(mouseSensitivityModValue, mouseSensiMod);
+	}
+
+	public void GamepadResetSensiToDefault()
+	{
+		gamepadSensiMod = 0f;
+		gamepadSensiSlider.value = 0f;
+		SetFloatPlayerPrefs(gamepadSensitivityModValue, gamepadSensiMod);
+	}
+
+	private void SetFloatPlayerPrefs(string keyname, float value)
+	{
+		PlayerPrefs.SetFloat(keyname, value);
+	}
 
 	private void OnDestroy()
 	{
+		PlayerPrefs.SetFloat(mouseSensitivityModValue, mouseSensiMod);
+		PlayerPrefs.SetFloat(gamepadSensitivityModValue, gamepadSensiMod);
 		//hookWeb.LockTPCameraRotation -= LockCameraInput;
 		//climbWeb.CameraStartRotation -= BeginClimbRotation;
 		//climbWeb.RecenterCamera -= RecenterCamera;

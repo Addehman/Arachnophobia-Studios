@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -7,7 +6,6 @@ using UnityEngine.Animations;
 [System.Serializable]
 public class MainRaycastsAdjustment
 {
-	// [Header("Main Raycasts Adjustment")]
 	public float rayFwdMod	= 1f;
 	public float rayBwdMod	= 1f;
 	public float raysBackOriginOffset = 0f;
@@ -18,7 +16,6 @@ public class MainRaycastsAdjustment
 [System.Serializable]
 public class ForwardsRaycastsAdjustment
 {
-	// [Header("Forwards-Raycasts Adjustment")]
 	public float rayFwdMod1 	= 0.025f;
 	public float rayFwdModDown1 = 0.1f;
 	public float rayFwdMod2 	= 0.05f;
@@ -36,7 +33,6 @@ public class ForwardsRaycastsAdjustment
 [System.Serializable]
 public class BackwardsRaycastsAdjustment
 {
-	// [Header("Backwards-Raycasts Adjustment")]
 	public float rayBwdMod1		= 0.025f;
 	public float rayBwdModDown1	= 0.1f;
 	public float rayBwdMod2		= 0.05f;
@@ -54,7 +50,6 @@ public class BackwardsRaycastsAdjustment
 [System.Serializable]
 public class RaycastGeneralSettings
 {
-	// [Header("Raycast General Settings")]
 	public float raycastReach = 0.05f;
 	public float increasedRaycastReach = 0.1f;
 	public float defaultRaycastReach = 0.05f;
@@ -70,7 +65,6 @@ public class RaycastGeneralSettings
 [System.Serializable]
 public class PlayerSettings
 {
-	// [Header("Player Settings")]
 	public float normalPlayerSpeed = 0.2f;
 	public float normalSlowPlayerSpeed = 0.1f;
 	public float defaultNormalPlayerSpeed = 0.2f;
@@ -89,7 +83,6 @@ public class PlayerSettings
 [System.Serializable]
 public class DebugSettings
 {
-	// [Header("Debug")]
 	public EricAlert[] ericAlerts;
 	public GameObject[] erics;
 	public List<Vector3> averageNormalDirections = new List<Vector3>();
@@ -109,6 +102,7 @@ public class DebugSettings
 	public bool allowUnlimitedStamina = false;
 	public bool isEricHidden = false;
 	public float forwardRotationSpeed = 1f;
+	public float animationSpeedMod = 5f;
 }
 
 public class SpiderMovement : MonoBehaviour
@@ -147,8 +141,8 @@ public class SpiderMovement : MonoBehaviour
 	//private ClimbWeb climbWeb;
 	private RotationConstraint cameraRotationConstraint;
 	private Vector3 myNormal;
-	private float vertical;
-	private float horizontal;
+	private float verticalRaw;
+	private float horizontalRaw;
 	private float turnSmoothVelocity;
 	private float sprintMulti;
 	private float randomIdleTimer = 0f;
@@ -241,10 +235,11 @@ public class SpiderMovement : MonoBehaviour
 
 		currentPosition = transform.position;
 
-		vertical = Input.GetAxisRaw("Vertical");
-		horizontal = Input.GetAxisRaw("Horizontal");
+		verticalRaw = Input.GetAxisRaw("Vertical");
+		horizontalRaw = Input.GetAxisRaw("Horizontal");
 
 		RaycastsToCast();
+		// TranslateMovement();
 		Sprint();
 		SpiderJump();
 		SpiderAnimation();
@@ -541,16 +536,75 @@ public class SpiderMovement : MonoBehaviour
 
 	private void TranslateMovement()
 	{
-		Vector3 movement = new Vector3(vertical, 0f, horizontal);
+		float horizontal = Input.GetAxis("Horizontal");
+		float vertical = Input.GetAxis("Vertical");
+		Vector3 movement = new Vector3(verticalRaw, 0f, horizontalRaw);
 		if (movement.sqrMagnitude > 0f && debugSettings.isFpsEnabled == false)
 		{
-			parentObject.transform.Translate(transform.forward * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
-		}	
+			// parentObject.transform.Translate(transform.forward * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+
+		// This is for a smoother Movement, and it checks for input from Gamepad and applies the smooth if the gamepad is used. GetAxis for Gamepad, GetAxisRaw for keyboard.
+			Vector3 gamepadInput = new Vector3(Input.GetAxis("LeftStickX"), 0f, Input.GetAxis("LeftStickY"));
+			Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("KeyboardInputX"), 0f, Input.GetAxisRaw("KeyboardInputY"));
+			print ($"gamepad input: {gamepadInput.sqrMagnitude}");
+			if (gamepadInput.sqrMagnitude > 0f)
+			{
+				// if (gamepadInput.sqrMagnitude < 0.1f)
+				// {
+				// 	spiderAnimator.speed = gamepadInput.sqrMagnitude * debugSettings.animationSpeedMod;
+				// }
+				// // else if (gamepadInput.sqrMagnitude < 1f && gamepadInput.sqrMagnitude >= 0.5f)
+				// // {
+				// // 	spiderAnimator.speed = gamepadInput.sqrMagnitude * (debugSettings.animationSpeedMod / debugSettings.animationSpeedMod);
+				// // }
+				// else
+				// {
+				// 	// spiderAnimator.speed = 1f;
+				// 	spiderAnimator.speed = gamepadInput.sqrMagnitude;
+				// }
+				if (gamepadInput.sqrMagnitude < 0.9f) // This didn't work, same as before, the thing is that it is multiplied with 10, so it reaches the highest speed too early...
+				{
+					spiderAnimator.speed = gamepadInput.sqrMagnitude * debugSettings.animationSpeedMod; // with this I want to make the multiplier to go lower as the input goes up.
+				}
+				else 
+				{
+					spiderAnimator.speed = gamepadInput.sqrMagnitude;
+				}
+
+				spiderAnimator.speed = Mathf.Clamp(spiderAnimator.speed, 0f, 1f);
+				// print (spiderAnimator.speed);
+
+				parentObject.transform.Translate((lookAtTarget.parent.forward * vertical) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+				parentObject.transform.Translate((lookAtTarget.parent.right * horizontal) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+
+				spiderAnimator.SetBool("Walk", true);
+			}
+			else /* if (keyboardInput.sqrMagnitude > 0f)*/
+			{
+				parentObject.transform.Translate((lookAtTarget.parent.forward * verticalRaw) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+				parentObject.transform.Translate((lookAtTarget.parent.right * horizontalRaw) * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
+				spiderAnimator.speed = 1f;
+
+				spiderAnimator.SetBool("Walk", true);
+			}
+			// else
+			// {
+			// 	spiderAnimator.speed = 1f;
+
+			// 	spiderAnimator.SetBool("Walk", false);
+			// }
+		}
+		else
+		{
+			spiderAnimator.speed = 1f;
+
+			spiderAnimator.SetBool("Walk", false);
+		}
 	}
 
 	private void VacuumPullingMovement() // The Rigidbody-based movement used only for when the player is in range of being pulled with rb.AddForce towards the Robot Vacuum Cleaner - becomes most smooth this way.
 	{
-		rb.velocity = (transform.forward * vertical) * (playerSettings.velocityPlayerSpeed + sprintMulti) * Time.deltaTime;
+		rb.velocity = (transform.forward * verticalRaw) * (playerSettings.velocityPlayerSpeed + sprintMulti) * Time.deltaTime;
 	}
 
 	private void SetLookDirection()
@@ -563,7 +617,7 @@ public class SpiderMovement : MonoBehaviour
 
 	private void SpiderJump()
 	{
-		Vector3 movementInput = new Vector3(horizontal, 0f, vertical);
+		Vector3 movementInput = new Vector3(horizontalRaw, 0f, verticalRaw);
 		// Jump Straight Up
 		if (movementInput.sqrMagnitude <= 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f && PauseMenu.isPaused == false)
 		{
@@ -592,7 +646,7 @@ public class SpiderMovement : MonoBehaviour
 	// Binds key for player to use to increase move speed.
 	private void Sprint()
 	{
-		Vector3 movementInput = new Vector3(horizontal, 0f, vertical);
+		Vector3 movementInput = new Vector3(horizontalRaw, 0f, verticalRaw);
 		if ((Input.GetButton("Sprint") && movementInput.sqrMagnitude > 0f || Input.GetAxis("Sprint") < 0f) && StaminaBar.staminaBarInstance.currentStamina >= 0.0035f 
 			&& PauseMenu.isPaused == false && IsUsingWeb() == false)
 		{
@@ -616,7 +670,7 @@ public class SpiderMovement : MonoBehaviour
 			&& Input.GetButton("Sprint") == false && IsUsingWeb() == false)
 		{
 			sprintMulti = 0f;
-			spiderAnimator.speed = 1f;
+			// spiderAnimator.speed = 1f;
 		}
 	}
 
@@ -631,18 +685,18 @@ public class SpiderMovement : MonoBehaviour
 			spiderAnimator.SetBool("Web", false);
 		}
 
-		Vector3 movementInput = new Vector3(horizontal, 0f, vertical);
-		if (movementInput.sqrMagnitude != 0f && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true)
-		{
-			spiderAnimator.SetBool("Walk", true);
-		}
-		else if (movementInput.sqrMagnitude == 0f && spiderAnimator.GetBool("Walk") == true)
-		{
-			spiderAnimator.SetBool("Walk", false);
-		}
+		// Vector3 movementInput = new Vector3(horizontalRaw, 0f, verticalRaw);
+		// if (movementInput.sqrMagnitude != 0f && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true)
+		// {
+		// 	spiderAnimator.SetBool("Walk", true);
+		// }
+		// else if (movementInput.sqrMagnitude == 0f && spiderAnimator.GetBool("Walk") == true)
+		// {
+		// 	spiderAnimator.SetBool("Walk", false);
+		// }
 
 		// if(Input.GetKey(KeyCode.A) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true || Input.GetKey(KeyCode.D) && spiderAnimator.GetBool("Walk") == false && debugSettings.isGrounded == true)
-        // {
+		// {
 		// 	spiderAnimator.SetBool("Walk", true);
 		// }
 		// else if(movementInput.sqrMagnitude <= 0.01f && spiderAnimator.GetBool("Walk") == true)

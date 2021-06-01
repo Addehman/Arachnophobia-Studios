@@ -4,11 +4,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 
 public class MainMenu : MonoBehaviour
 {
-	public GameObject fadeIn;
+	public EventSystem eventSystem;
+	public GameObject mainMenu;
+	public GameObject playButton;
 	public GameObject howToPlay;
+	public GameObject options;
 	public GameObject credits;
 	public AudioMixer audioMixer;
 
@@ -24,6 +28,14 @@ public class MainMenu : MonoBehaviour
 
 		Time.timeScale = 1f;
         AudioListener.volume = 1f;
+	}
+
+	private void Update()
+	{
+		if (Input.GetButtonDown("Back"))
+		{
+			Back();
+		}
 	}
 
 	public void PlayButton()
@@ -55,6 +67,10 @@ public class MainMenu : MonoBehaviour
 		ClickingSound.clickSound();
 		credits.SetActive(false);
 		howToPlay.SetActive(false);
+		options.SetActive(false);
+		mainMenu.SetActive(true);
+
+		eventSystem.SetSelectedGameObject(playButton);
 	}
 
 	public void GenericClickButton()
