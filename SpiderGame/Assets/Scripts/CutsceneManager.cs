@@ -22,7 +22,7 @@ public class CutsceneManager : MonoBehaviour
             SceneManager.LoadScene("GameScene");
         }
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetButtonDown("Jump") || Input.GetButtonDown("Back"))
         {
             SceneManager.LoadScene("GameScene");
         }
