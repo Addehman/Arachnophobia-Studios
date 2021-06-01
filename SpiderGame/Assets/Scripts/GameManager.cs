@@ -16,12 +16,9 @@ public class GameManager : MonoBehaviour
 			return gameManager;
 		}
 	}
-	// private void Awake()
-	// {
-	// 	DontDestroyOnLoad(this);
-	// }
 
 	public GameObject fadeScreen;
+	
 	private Image fadeScreenImage;
 
 

@@ -14,7 +14,9 @@ public class MainMenu : MonoBehaviour
 	public GameObject howToPlay;
 	public GameObject options;
 	public GameObject credits;
+	public Animator fadeOut;
 	public AudioMixer audioMixer;
+
 
 	private void Start()
 	{
@@ -23,11 +25,11 @@ public class MainMenu : MonoBehaviour
 		Cursor.lockState = CursorLockMode.Confined;
 
 		float volume = PlayerPrefs.GetFloat("MusicVolume", 1f);
-        volume = Mathf.Log10(volume) * 20;
-        audioMixer.SetFloat("Master", volume);
+		volume = Mathf.Log10(volume) * 20;
+		audioMixer.SetFloat("Master", volume);
 
 		Time.timeScale = 1f;
-        AudioListener.volume = 1f;
+		AudioListener.volume = 1f;
 	}
 
 	private void Update()
@@ -36,12 +38,18 @@ public class MainMenu : MonoBehaviour
 		{
 			Back();
 		}
+
+		if (fadeOut.GetCurrentAnimatorStateInfo(0).IsName("FastFadeOut") && fadeOut.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
+		{
+			FadeToPlay();
+		}
 	}
 
 	public void PlayButton()
 	{
 		ClickingSound.clickSound();
-		SceneManager.LoadScene("Cutscene");
+		fadeOut.Play("FastFadeOut");
+		// SceneManager.LoadScene("Cutscene");
 	}
 
 	public void HowToPlayButton()
@@ -76,5 +84,10 @@ public class MainMenu : MonoBehaviour
 	public void GenericClickButton()
 	{
 		ClickingSound.clickSound();
+	}
+
+	public void FadeToPlay()
+	{
+		SceneManager.LoadScene("Cutscene");
 	}
 }
