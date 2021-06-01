@@ -102,7 +102,7 @@ public class DebugSettings
 	public bool allowUnlimitedStamina = false;
 	public bool isEricHidden = false;
 	public float forwardRotationSpeed = 1f;
-	public float animationSpeedMod = 10f;
+	public float animationSpeedMod = 5f;
 }
 
 public class SpiderMovement : MonoBehaviour
@@ -564,9 +564,7 @@ public class SpiderMovement : MonoBehaviour
 				// }
 				if (gamepadInput.sqrMagnitude < 0.9f) // This didn't work, same as before, the thing is that it is multiplied with 10, so it reaches the highest speed too early...
 				{
-					float animSpeedMulti = debugSettings.animationSpeedMod - (gamepadInput.sqrMagnitude * debugSettings.animationSpeedMod);
-					print ($"anim. speed: {animSpeedMulti}");
-					spiderAnimator.speed = gamepadInput.sqrMagnitude * 5f; // with this I want to make the multiplier to go lower as the input goes up.
+					spiderAnimator.speed = gamepadInput.sqrMagnitude * debugSettings.animationSpeedMod; // with this I want to make the multiplier to go lower as the input goes up.
 				}
 				else 
 				{
