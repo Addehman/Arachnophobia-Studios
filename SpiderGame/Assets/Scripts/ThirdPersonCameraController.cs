@@ -1,15 +1,23 @@
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class ThirdPersonCameraController : MonoBehaviour
 {
 	[SerializeField] private Transform cameraTarget;
 	[SerializeField] private Transform targetToRotate;
-	[SerializeField] private float mouseRotationSpeed = 2f;
-	[SerializeField] private float gamepadRotationSpeed = 7f;
+	[SerializeField] private float mouseRotationSpeed = 10f;
+	[SerializeField] private float defaultMouseRotationSpeed = 7.5f;
+	[SerializeField] private float gamepadRotationSpeed = 15f;
+	[SerializeField] private float defaultGamepadRotationSpeed = 15f;
 	[SerializeField] private float smoothTime = 10f;
 	[SerializeField] private float minZoom = 0.1f;
 	[SerializeField] private float maxZoom = 0.5f;
+	[SerializeField] private TMP_InputField mosueSensiInputField;
+	[SerializeField] private TMP_InputField gamepadSensiInputField;
+	[SerializeField] private Slider mouseSensiSlider;
+	[SerializeField] private Slider gamepadSensiSlider;
 	
 	private CinemachineVirtualCamera aimCamera;
 	private CinemachineVirtualCamera cameraToZoom;
@@ -24,6 +32,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private float cameraInputX;
 	private float cameraInputY;
 	private float lerpSpeed = 10f;
+	private float mouseSensiMod;
+	private float gamepadSensiMod;
 	private bool doLockCameraInput = false;
 
 
@@ -76,8 +86,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 			Vector3 gamepadInput = new Vector3(Input.GetAxis("RightStickX"), 0f, Input.GetAxis("RightStickY"));
 			if (gamepadInput.sqrMagnitude > 0f)
 			{
-				cameraInputX += Input.GetAxis("CameraInputX") * gamepadRotationSpeed * Time.deltaTime;
-				cameraInputY += Input.GetAxis("CameraInputY") * gamepadRotationSpeed * Time.deltaTime;
+				cameraInputX += Input.GetAxis("CameraInputX") * (gamepadRotationSpeed + gamepadSensiMod) * 10f * Time.deltaTime;
+				cameraInputY += Input.GetAxis("CameraInputY") * (gamepadRotationSpeed + gamepadSensiMod) * 10f * Time.deltaTime;
 				if (aimCameraComponentBase is CinemachinePOV)
 				{
 					(aimCameraComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = false;
@@ -85,8 +95,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 			}
 			else
 			{
-				cameraInputX += Input.GetAxisRaw("CameraInputX") * mouseRotationSpeed * Time.deltaTime;
-				cameraInputY -= Input.GetAxisRaw("CameraInputY") * mouseRotationSpeed * Time.deltaTime;
+				cameraInputX += Input.GetAxisRaw("CameraInputX") * (mouseRotationSpeed + mouseSensiMod) * 10f * Time.deltaTime;
+				cameraInputY -= Input.GetAxisRaw("CameraInputY") * (mouseRotationSpeed + mouseSensiMod) * 10f * Time.deltaTime;
 				if (aimCameraComponentBase is CinemachinePOV)
 				{
 					(aimCameraComponentBase as CinemachinePOV).m_VerticalAxis.m_InvertInput = true;
@@ -128,6 +138,40 @@ public class ThirdPersonCameraController : MonoBehaviour
 		cameraInputY = 0f;
 
 		// transform.rotation = Quaternion.identity;
+	}
+
+	public void MouseSensiInputFieldOnValueChanged()
+	{
+		mouseSensiMod = float.Parse(mosueSensiInputField.text);
+		mouseSensiSlider.value = mouseSensiMod;
+		gamepadRotationSpeed = defaultMouseRotationSpeed + mouseSensiMod;
+	}
+
+	public void MouseSensiSliderOnValueChanged()
+	{
+		mouseSensiMod = mouseSensiSlider.value;
+		mosueSensiInputField.text = mouseSensiSlider.value.ToString();
+		gamepadRotationSpeed = defaultMouseRotationSpeed + mouseSensiMod;
+	}
+
+	public void GamepadSensiInputFieldOnValueChanged()
+	{
+		gamepadSensiMod = float.Parse(gamepadSensiInputField.text);
+		gamepadSensiSlider.value = gamepadSensiMod;
+		gamepadRotationSpeed = defaultGamepadRotationSpeed + gamepadSensiMod;
+	}
+
+	public void GamepadSensiSliderOnValueChanged()
+	{
+		gamepadSensiMod = gamepadSensiSlider.value;
+		gamepadSensiInputField.text = gamepadSensiSlider.value.ToString();
+		gamepadRotationSpeed = defaultGamepadRotationSpeed + gamepadSensiMod;
+	}
+
+	public void ResetSensiToDefault()
+	{
+		mouseSensiMod = gamepadSensiMod = 0f;
+		mouseSensiSlider.value = gamepadSensiSlider.value = 0f;
 	}
 
 	//private void BeginClimbRotation()
