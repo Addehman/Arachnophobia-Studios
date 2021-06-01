@@ -546,7 +546,7 @@ public class SpiderMovement : MonoBehaviour
 		// This is for a smoother Movement, and it checks for input from Gamepad and applies the smooth if the gamepad is used. GetAxis for Gamepad, GetAxisRaw for keyboard.
 			Vector3 gamepadInput = new Vector3(Input.GetAxis("LeftStickX"), 0f, Input.GetAxis("LeftStickY"));
 			Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("KeyboardInputX"), 0f, Input.GetAxisRaw("KeyboardInputY"));
-			print (gamepadInput.sqrMagnitude);
+			print ($"gamepad input: {gamepadInput.sqrMagnitude}");
 			if (gamepadInput.sqrMagnitude > 0f)
 			{
 				// if (gamepadInput.sqrMagnitude < 0.1f)
@@ -564,7 +564,9 @@ public class SpiderMovement : MonoBehaviour
 				// }
 				if (gamepadInput.sqrMagnitude < 0.9f) // This didn't work, same as before, the thing is that it is multiplied with 10, so it reaches the highest speed too early...
 				{
-					spiderAnimator.speed = gamepadInput.sqrMagnitude * (debugSettings.animationSpeedMod - gamepadInput.sqrMagnitude * 10f); // with this I want to make the multiplier to go lower as the input goes up.
+					float animSpeedMulti = debugSettings.animationSpeedMod - (gamepadInput.sqrMagnitude * debugSettings.animationSpeedMod);
+					print ($"anim. speed: {animSpeedMulti}");
+					spiderAnimator.speed = gamepadInput.sqrMagnitude * 5f; // with this I want to make the multiplier to go lower as the input goes up.
 				}
 				else 
 				{
