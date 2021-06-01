@@ -14,10 +14,12 @@ public class ThirdPersonCameraController : MonoBehaviour
 	[SerializeField] private float smoothTime = 10f;
 	[SerializeField] private float minZoom = 0.1f;
 	[SerializeField] private float maxZoom = 0.5f;
-	[SerializeField] private TMP_InputField mosueSensiInputField;
-	[SerializeField] private TMP_InputField gamepadSensiInputField;
+	// [SerializeField] private TMP_InputField mosueSensiInputField;
+	// [SerializeField] private TMP_InputField gamepadSensiInputField;
 	[SerializeField] private Slider mouseSensiSlider;
 	[SerializeField] private Slider gamepadSensiSlider;
+	[SerializeField] private TMP_Text mouseInputValueText;
+	[SerializeField] private TMP_Text gamepadInputValueText;
 	
 	private CinemachineVirtualCamera aimCamera;
 	private CinemachineVirtualCamera cameraToZoom;
@@ -74,8 +76,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 	{
 		mouseSensiMod = PlayerPrefs.GetFloat(mouseSensitivityModValue, 0f);
 		gamepadSensiMod = PlayerPrefs.GetFloat(gamepadSensitivityModValue, 0f);
-		mosueSensiInputField.text = mouseSensiMod.ToString();
-		gamepadSensiInputField.text = gamepadSensiMod.ToString();
+		mouseInputValueText.text = mouseSensiMod.ToString();
+		gamepadInputValueText.text = gamepadSensiMod.ToString();
 		mouseSensiSlider.value = mouseSensiMod;
 		gamepadSensiSlider.value = gamepadSensiMod;
 	}
@@ -154,45 +156,50 @@ public class ThirdPersonCameraController : MonoBehaviour
 		// transform.rotation = Quaternion.identity;
 	}
 
-	public void MouseSensiInputFieldOnValueChanged()
-	{
-		mouseSensiMod = float.Parse(mosueSensiInputField.text);
-		mouseSensiSlider.value = mouseSensiMod;
-		gamepadRotationSpeed = defaultMouseRotationSpeed + mouseSensiMod;
-		SetFloatPlayerPrefs(mouseSensitivityModValue, mouseSensiMod);
-	}
+	// public void MouseSensiInputFieldOnValueChanged()
+	// {
+	// 	mouseSensiMod = float.Parse(mosueSensiInputField.text);
+	// 	mouseSensiSlider.value = mouseSensiMod;
+	// 	gamepadRotationSpeed = defaultMouseRotationSpeed + mouseSensiMod;
+	// 	SetFloatPlayerPrefs(mouseSensitivityModValue, mouseSensiMod);
+	// }
 
 	public void MouseSensiSliderOnValueChanged()
 	{
 		mouseSensiMod = mouseSensiSlider.value;
-		mosueSensiInputField.text = mouseSensiSlider.value.ToString();
+		mouseInputValueText.text = mouseSensiSlider.value.ToString();
 		gamepadRotationSpeed = defaultMouseRotationSpeed + mouseSensiMod;
 		SetFloatPlayerPrefs(mouseSensitivityModValue, mouseSensiMod);
 	}
 
-	public void GamepadSensiInputFieldOnValueChanged()
-	{
-		gamepadSensiMod = float.Parse(gamepadSensiInputField.text);
-		gamepadSensiSlider.value = gamepadSensiMod;
-		gamepadRotationSpeed = defaultGamepadRotationSpeed + gamepadSensiMod;
-		SetFloatPlayerPrefs(gamepadSensitivityModValue, gamepadSensiMod);
-	}
+	// public void GamepadSensiInputFieldOnValueChanged()
+	// {
+	// 	gamepadSensiMod = float.Parse(gamepadSensiInputField.text);
+	// 	gamepadSensiSlider.value = gamepadSensiMod;
+	// 	gamepadRotationSpeed = defaultGamepadRotationSpeed + gamepadSensiMod;
+	// 	SetFloatPlayerPrefs(gamepadSensitivityModValue, gamepadSensiMod);
+	// }
 
 	public void GamepadSensiSliderOnValueChanged()
 	{
 		gamepadSensiMod = gamepadSensiSlider.value;
-		gamepadSensiInputField.text = gamepadSensiSlider.value.ToString();
+		gamepadInputValueText.text = gamepadSensiSlider.value.ToString();
 		gamepadRotationSpeed = defaultGamepadRotationSpeed + gamepadSensiMod;
 		SetFloatPlayerPrefs(gamepadSensitivityModValue, gamepadSensiMod);
 	}
 
-	public void ResetSensiToDefault()
+	public void MouseResetSensiToDefault()
 	{
-		mouseSensiMod = gamepadSensiMod = 0f;
-		mouseSensiSlider.value = gamepadSensiSlider.value = 0f;
+		mouseSensiMod = 0f;
+		mouseSensiSlider.value = 0f;
 		SetFloatPlayerPrefs(mouseSensitivityModValue, mouseSensiMod);
-		SetFloatPlayerPrefs(gamepadSensitivityModValue, gamepadSensiMod);
+	}
 
+	public void GamepadResetSensiToDefault()
+	{
+		gamepadSensiMod = 0f;
+		gamepadSensiSlider.value = 0f;
+		SetFloatPlayerPrefs(gamepadSensitivityModValue, gamepadSensiMod);
 	}
 
 	private void SetFloatPlayerPrefs(string keyname, float value)

@@ -409,7 +409,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 5428001899535643412, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
     m_PressedSprite: {fileID: 5428001899535643412, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 5428001899535643412, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -1579,7 +1579,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 1, g: 0, b: 0, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -2590,7 +2590,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 2670004056361653847, guid: 92841862bda87134bad7fd212dbc6523, type: 3}
     m_PressedSprite: {fileID: 2670004056361653847, guid: 92841862bda87134bad7fd212dbc6523, type: 3}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 2670004056361653847, guid: 92841862bda87134bad7fd212dbc6523, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -2634,6 +2634,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1729051612}
+        m_TargetAssemblyTypeName: UnityEngine.EventSystems.EventSystem, UnityEngine.UI
+        m_MethodName: SetSelectedGameObject
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1121824967}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4321,7 +4333,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: -6119869029614149752, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
     m_PressedSprite: {fileID: -6119869029614149752, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: -6119869029614149752, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -4365,6 +4377,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1729051612}
+        m_TargetAssemblyTypeName: UnityEngine.EventSystems.EventSystem, UnityEngine.UI
+        m_MethodName: SetSelectedGameObject
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1263510898}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4939,8 +4963,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e18f2424c159714d84ad3b9de584858, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeIn: {fileID: 0}
+  eventSystem: {fileID: 1729051612}
+  mainMenu: {fileID: 1598233}
+  playButton: {fileID: 2004639288}
   howToPlay: {fileID: 455759072}
+  options: {fileID: 2031990573}
   credits: {fileID: 1137859435}
   audioMixer: {fileID: 24100000, guid: b48ce44a31e13ed4fbbd6a4b24ef5860, type: 2}
 --- !u!114 &1250466200
@@ -5169,7 +5196,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.990566, g: 0.4251958, b: 0.4251958, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -5536,7 +5563,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: -4618611918095872336, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
     m_PressedSprite: {fileID: -4618611918095872336, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: -4618611918095872336, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -6400,7 +6427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 2004639288}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &1729051613
@@ -6790,7 +6817,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 7046544128198121272, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
     m_PressedSprite: {fileID: 7046544128198121272, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 7046544128198121272, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -6934,7 +6961,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 1, g: 0, b: 0, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -7176,7 +7203,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 1, g: 0, b: 0, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -7405,7 +7432,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: -8802867951985768199, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
     m_PressedSprite: {fileID: -8802867951985768199, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: -8802867951985768199, guid: 2cb8544b94c920c409db48d80a322917, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -9481,9 +9508,41 @@ PrefabInstance:
       value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 4556259767230126228, guid: 24a1ec5b22502804e9b0e732873aa1ca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4556259767230126228, guid: 24a1ec5b22502804e9b0e732873aa1ca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4556259767230126228, guid: 24a1ec5b22502804e9b0e732873aa1ca, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1250466199}
+    - target: {fileID: 4556259767230126228, guid: 24a1ec5b22502804e9b0e732873aa1ca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1729051612}
+    - target: {fileID: 4556259767230126228, guid: 24a1ec5b22502804e9b0e732873aa1ca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4556259767230126228, guid: 24a1ec5b22502804e9b0e732873aa1ca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: SetSelectedGameObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 4556259767230126228, guid: 24a1ec5b22502804e9b0e732873aa1ca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: UnityEngine.EventSystems.EventSystem, UnityEngine.UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 4556259767230126228, guid: 24a1ec5b22502804e9b0e732873aa1ca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 1362983205}
+    - target: {fileID: 4556259767230126228, guid: 24a1ec5b22502804e9b0e732873aa1ca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4556259767230126229, guid: 24a1ec5b22502804e9b0e732873aa1ca, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 873
