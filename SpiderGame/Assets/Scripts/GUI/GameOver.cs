@@ -35,11 +35,11 @@ public class GameOver : MonoBehaviour
 		{
 			gameOverTimer += Time.deltaTime;
 			if(gameOverTimer >= 1.5f && diedByVacuum == false)
-            {
+			{
 				gameOverScreen.SetActive(true);
 			}
 			else if (diedByVacuum == true)
-            {
+			{
 				gameOverScreen.SetActive(true);
 			}
 

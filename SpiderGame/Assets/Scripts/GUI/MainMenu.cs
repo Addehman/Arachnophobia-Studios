@@ -24,7 +24,8 @@ public class MainMenu : MonoBehaviour
 		Cursor.visible = true;
 		Cursor.lockState = CursorLockMode.Confined;
 
-		float volume = PlayerPrefs.GetFloat("MusicVolume", 1f);
+		float volume = PlayerPrefs.GetFloat("MasterVolume", 1f); // should be "MasterVolume" right? at least that is what is set through the SetVolume.cs ?
+		// float volume = PlayerPrefs.GetFloat("MusicVolume", 1f);
 		volume = Mathf.Log10(volume) * 20;
 		audioMixer.SetFloat("Master", volume);
 

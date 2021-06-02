@@ -7,6 +7,9 @@ public class PauseMenu : MonoBehaviour
 	public GameObject pauseMenu;
 	public GameObject howToPlay;
 	public GameObject resumeBtn;
+	public GameObject pauseMenuMain;
+	public GameObject settingsMenu;
+	public GameObject settingsBtn;
 	public static bool isPaused;
 
 	void Start()
@@ -35,6 +38,14 @@ public class PauseMenu : MonoBehaviour
 				EventSystem.current.SetSelectedGameObject(null);
 				EventSystem.current.SetSelectedGameObject(resumeBtn);
 			}
+		}
+
+		if (Input.GetButtonDown("Back"))
+		{
+			settingsMenu.SetActive(false);
+			pauseMenuMain.SetActive(true);
+			EventSystem.current.SetSelectedGameObject(null);
+			EventSystem.current.SetSelectedGameObject(settingsBtn);
 		}
 	}
 

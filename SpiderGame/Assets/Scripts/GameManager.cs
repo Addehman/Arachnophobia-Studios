@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,6 +33,14 @@ public class GameManager : MonoBehaviour
 			fadeScreen = GameObject.Find("FadeOut");
 			fadeScreenImage = fadeScreen.GetComponent<Image>();
 			fadeScreenImage.color = Color.black;
+		}
+	}
+
+	private void Update()
+	{
+		if (Debug.isDebugBuild == true && Input.GetKeyDown(KeyCode.Backspace))
+		{
+			SceneManager.LoadScene("VictoryScene");
 		}
 	}
 }
