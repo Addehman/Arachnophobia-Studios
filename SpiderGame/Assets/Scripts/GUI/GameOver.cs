@@ -1,7 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class GameOver : MonoBehaviour
@@ -12,6 +11,7 @@ public class GameOver : MonoBehaviour
 	public GameObject gameOverScreen;
 	public GameObject restartButton;
 	public GameObject spider;
+	public GameObject firstSelected;
 	public Animator spiderAnimator;
 	public bool diedByEric = false;
 	
@@ -19,7 +19,9 @@ public class GameOver : MonoBehaviour
 	private float gameOverTimer = 0f;
 	private float soundFadeOutTimer = 0f;
 	private bool itIsGameOver = false;
+	private bool hasBeenActivated = false;
 	bool diedByVacuum = false;
+
 
 	private void Start()
 	{
@@ -27,6 +29,7 @@ public class GameOver : MonoBehaviour
 		Time.timeScale = 1f;
 		AudioListener.volume = 1f;
 		Winstate.isVictory = false;
+		hasBeenActivated = false;
 	}
 
 	private void Update()
@@ -41,6 +44,12 @@ public class GameOver : MonoBehaviour
 			else if (diedByVacuum == true)
 			{
 				gameOverScreen.SetActive(true);
+			}
+
+			if (hasBeenActivated == false)
+			{
+				SetFirstSelected();
+				hasBeenActivated = true;
 			}
 
 			StartCoroutine(soundFadeOut(0.005f));
@@ -99,5 +108,11 @@ public class GameOver : MonoBehaviour
 	{
 		ClickingSound.clickSound();
 		Application.Quit();
+	}
+
+	private void SetFirstSelected()
+	{
+		EventSystem.current.SetSelectedGameObject(null);
+		EventSystem.current.SetSelectedGameObject(firstSelected);
 	}
 }

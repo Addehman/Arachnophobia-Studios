@@ -546,7 +546,7 @@ public class SpiderMovement : MonoBehaviour
 		// This is for a smoother Movement, and it checks for input from Gamepad and applies the smooth if the gamepad is used. GetAxis for Gamepad, GetAxisRaw for keyboard.
 			Vector3 gamepadInput = new Vector3(Input.GetAxis("LeftStickX"), 0f, Input.GetAxis("LeftStickY"));
 			Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("KeyboardInputX"), 0f, Input.GetAxisRaw("KeyboardInputY"));
-			print ($"gamepad input: {gamepadInput.sqrMagnitude}");
+			// print ($"gamepad input: {gamepadInput.sqrMagnitude}");
 			if (gamepadInput.sqrMagnitude > 0f)
 			{
 				// if (gamepadInput.sqrMagnitude < 0.1f)
