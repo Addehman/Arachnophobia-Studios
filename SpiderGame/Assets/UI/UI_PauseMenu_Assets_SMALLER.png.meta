@@ -90,7 +90,7 @@ TextureImporter:
       213: 6217553402570671305
     second: stickynote
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -111,6 +111,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -119,12 +120,12 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
-    aniso: -1
-    mipBias: -100
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: -1
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -149,6 +150,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -164,6 +166,30 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -712,6 +738,32 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      home1: -4323353647634341914
+      pen: -531702636898115887
+      exi: -8020440257557110028
+      stickynote: 6217553402570671305
+      BG: -1567378510038013967
+      Play: 7075350161398057249
+      opt: -7653420630887494994
+      Pla: 3025277092794952611
+      mute: -204610935793371809
+      opetionBig: 5439682480489386190
+      2: 5297201186996374803
+      credit: 817059950190513317
+      volum: 5010266899438843456
+      UI_PauseMenu_Assets_SMALLER_13: 3798414917091465249
+      pause: 124391284309352074
+      exit: 6206817441486275449
+      Power: 6921567540257713033
+      volume: 2340838489094535173
+      UI_PauseMenu_Assets_SMALLER_4: 7628016304863940152
+      UI_PauseMenu_Assets_SMALLER_28: 9167874314160696483
+      home: -5273372863440119660
+      credits: 1373512407145740654
+      Option: -5280270920043668106
+      Powe: 50359590088862397
+      mut: -1567098993260308276
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
