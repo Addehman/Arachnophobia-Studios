@@ -35,20 +35,18 @@ public class ToggleCameras : MonoBehaviour
 
 	private void Update()
 	{
-		if (aimCamera != null)
+		if (aimCamera && !Input.GetButton("UseWeb") && Input.GetButtonDown("Aim"))
 		{
-			if (Input.GetButtonDown("Aim"))
+			if (!boosted)
 			{
-				if (!boosted)
-				{
-					EnableFPSCamera();
-				}
-				else if (boosted)
-				{
-					DisableFPCamera();
-				}
+				EnableFPSCamera();
+			}
+			else if (boosted)
+			{
+				DisableFPCamera();
 			}
 		}
+		
 		if (crosshair != null)
 		{
 			crosshair.SetActive(boosted);

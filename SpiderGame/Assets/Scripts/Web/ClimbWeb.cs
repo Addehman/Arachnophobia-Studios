@@ -79,7 +79,7 @@ public class ClimbWeb : MonoBehaviour
 
 	private void InitiateClimbWeb()
 	{
-		if ((Input.GetButtonDown("UseWeb") || Input.GetAxis("UseWeb") > 0f && hasPressed == false) && spiderMovement.debugSettings.isGrounded == true)
+		if ((Input.GetButtonDown("UseWeb") || Input.GetAxis("UseWeb") > 0f) && hasPressed == false && spiderMovement.debugSettings.isGrounded == true)
 		{
 			if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit raycastHit))
 			{

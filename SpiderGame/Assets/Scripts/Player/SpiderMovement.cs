@@ -6,45 +6,45 @@ using UnityEngine.Animations;
 [System.Serializable]
 public class MainRaycastsAdjustment
 {
-	public float rayFwdMod	= 1f;
-	public float rayBwdMod	= 1f;
+	public float rayFwdMod = 1f;
+	public float rayBwdMod = 1f;
 	public float raysBackOriginOffset = 0f;
-	public float rayDownMod	= 1f;
+	public float rayDownMod = 1f;
 	public float rayDownOriginOffset = 0f;
 }
 
 [System.Serializable]
 public class ForwardsRaycastsAdjustment
 {
-	public float rayFwdMod1 	= 0.025f;
+	public float rayFwdMod1 = 0.025f;
 	public float rayFwdModDown1 = 0.1f;
-	public float rayFwdMod2 	= 0.05f;
-	public float rayFwdModDown2	= 0.1f;
-	public float rayFwdMod3		= 0.075f;
-	public float rayFwdModDown3	= 0.1f;
-	public float rayFwdMod4		= 0.11f;
-	public float rayFwdModDown4	= 0.1f;
-	public float rayFwdMod5		= 0.1f;
-	public float rayFwdModDown5	= 0.063f;
-	public float rayFwdMod6		= 0.1f;
-	public float rayFwdModDown6	= 0.038f;
+	public float rayFwdMod2 = 0.05f;
+	public float rayFwdModDown2 = 0.1f;
+	public float rayFwdMod3 = 0.075f;
+	public float rayFwdModDown3 = 0.1f;
+	public float rayFwdMod4 = 0.11f;
+	public float rayFwdModDown4 = 0.1f;
+	public float rayFwdMod5 = 0.1f;
+	public float rayFwdModDown5 = 0.063f;
+	public float rayFwdMod6 = 0.1f;
+	public float rayFwdModDown6 = 0.038f;
 }
 
 [System.Serializable]
 public class BackwardsRaycastsAdjustment
 {
-	public float rayBwdMod1		= 0.025f;
-	public float rayBwdModDown1	= 0.1f;
-	public float rayBwdMod2		= 0.05f;
-	public float rayBwdModDown2	= 0.1f;
-	public float rayBwdMod3		= 0.075f;
-	public float rayBwdModDown3	= 0.1f;
-	public float rayBwdMod4		= 0.11f;
-	public float rayBwdModDown4	= 0.1f;
-	public float rayBwdMod5		= 0.1f;
-	public float rayBwdModDown5	= 0.063f;
-	public float rayBwdMod6		= 0.1f;
-	public float rayBwdModDown6	= 0.038f;
+	public float rayBwdMod1 = 0.025f;
+	public float rayBwdModDown1 = 0.1f;
+	public float rayBwdMod2 = 0.05f;
+	public float rayBwdModDown2 = 0.1f;
+	public float rayBwdMod3 = 0.075f;
+	public float rayBwdModDown3 = 0.1f;
+	public float rayBwdMod4 = 0.11f;
+	public float rayBwdModDown4 = 0.1f;
+	public float rayBwdMod5 = 0.1f;
+	public float rayBwdModDown5 = 0.063f;
+	public float rayBwdMod6 = 0.1f;
+	public float rayBwdModDown6 = 0.038f;
 }
 
 [System.Serializable]
@@ -126,7 +126,7 @@ public class SpiderMovement : MonoBehaviour
 	public PlayerSettings playerSettings;
 	public DebugSettings debugSettings;
 
-	private enum RaycastTypes {MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any, ForwardsEdgeCheck, ForwardsEdgeCheck2}
+	private enum RaycastTypes { MainForwards, MainBackwards, MainDown, Forwards, Backwards, Downwards, Any, ForwardsEdgeCheck, ForwardsEdgeCheck2 }
 	private RaycastTypes raycastType;
 	private GameObject parentObject;
 	private GameObject[] modelChildren;
@@ -178,7 +178,7 @@ public class SpiderMovement : MonoBehaviour
 		int amountOfModelParts = 0;
 		foreach (Transform item in transform)
 		{
-			amountOfModelParts ++;
+			amountOfModelParts++;
 		}
 		modelChildren = new GameObject[amountOfModelParts - 2];
 		for (int i = 0; i < modelChildren.Length; i++)
@@ -219,8 +219,8 @@ public class SpiderMovement : MonoBehaviour
 	private void activateOnKeypress_ActivationFPSCam(bool isActive)
 	{
 		debugSettings.isFpsEnabled = isActive;
-		bool visibilityActivation = !isActive;
-		SetVisibilityOfModel(visibilityActivation);
+		// bool visibilityActivation = !isActive;
+		SetVisibilityOfModel(/* visibilityActivation */ !isActive);
 	}
 
 	private void vacuumBlackhole_PullingPlayer(bool isPlayerPulled)
@@ -266,7 +266,7 @@ public class SpiderMovement : MonoBehaviour
 		else
 		{
 			// SwingRaysToCheckDirectionToLandOn();
-			
+
 			SetLookDirection();
 			SetPlayerUpDirection();
 			TranslateMovement();
@@ -301,7 +301,7 @@ public class SpiderMovement : MonoBehaviour
 
 		RaycastHelper(transform.TransformDirection(Vector3.right) + transform.TransformDirection(Vector3.down), 0f, RaycastTypes.Any);
 		RaycastHelper(transform.TransformDirection(Vector3.left) + transform.TransformDirection(Vector3.down), 0f, RaycastTypes.Any);
-		
+
 		// Edge Raycasts:
 		Vector3 movementInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f);
 		if (debugSettings.fwdRayCheckNoHit == true && movementInput.sqrMagnitude > 0f)
@@ -315,7 +315,7 @@ public class SpiderMovement : MonoBehaviour
 			playerSettings.normalPlayerSpeed = playerSettings.normalSlowPlayerSpeed;
 			raycastGeneralSettings.raycastReach = raycastGeneralSettings.increasedRaycastReach;
 		}
-		else 
+		else
 		{
 			playerSettings.normalPlayerSpeed = playerSettings.defaultNormalPlayerSpeed;
 			raycastGeneralSettings.raycastReach = raycastGeneralSettings.defaultRaycastReach;
@@ -358,7 +358,7 @@ public class SpiderMovement : MonoBehaviour
 	{
 		Vector3 originOffset = transform.TransformDirection(Vector3.back) * originOffsetValue;
 		RaycastHit hit;
-		
+
 		switch (inRaycastType)
 		{
 			case RaycastTypes.MainForwards:
@@ -373,7 +373,7 @@ public class SpiderMovement : MonoBehaviour
 					// it seems that when adding more of the same on the same raycast will give it more weight, thus we might be able to remove some of the raycasts! 
 					//Specifically those forward might be possible to cut away.
 					RaycastWeightMulti(debugSettings.averageNormalDirections, raycastGeneralSettings.fwdRaycastWeightMultiplier, hit.normal);
-				
+
 					debugSettings.fwdRayHitNormalDebug = hit.normal;
 				}
 				break;
@@ -495,7 +495,7 @@ public class SpiderMovement : MonoBehaviour
 			{
 				debugSettings.averageNormalDirection += debugSettings.averageNormalDirections[i];
 			}
-			
+
 			debugSettings.averageNormalDirection /= debugSettings.averageNormalDirections.Count;
 
 			if (debugSettings.averageNormalDirections.Count == 0)
@@ -503,7 +503,7 @@ public class SpiderMovement : MonoBehaviour
 				debugSettings.averageNormalDirection = Vector3.up;
 			}
 
-		// These two could probably be added into the calculation above instead of having this separated assignment, I mean if the newTransform from the web-abilities is added even when it's 0, then it wont contribute anyway!
+			// These two could probably be added into the calculation above instead of having this separated assignment, I mean if the newTransform from the web-abilities is added even when it's 0, then it wont contribute anyway!
 			//if (UseHookWebNormal)
 			//{
 			//	debugSettings.averageNormalDirection = hookWeb.newTransformUp;
@@ -519,7 +519,7 @@ public class SpiderMovement : MonoBehaviour
 
 			float lerpSpeed = 10f;
 
-		// Here the rotation of the MoveAndCamParent is being calculated and set by the average normal that the Raycasts find.
+			// Here the rotation of the MoveAndCamParent is being calculated and set by the average normal that the Raycasts find.
 			myNormal = Vector3.Slerp(myNormal, debugSettings.averageNormalDirection, lerpSpeed * Time.deltaTime);
 			// find forward direction with new myNormal:
 			Vector3 myForward = Vector3.Cross(movementParent.transform.right, myNormal);
@@ -527,7 +527,7 @@ public class SpiderMovement : MonoBehaviour
 			Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
 			movementParent.transform.rotation = Quaternion.Slerp(movementParent.transform.rotation, targetRot, lerpSpeed * Time.deltaTime);
 
-		// Here the rotation of the spiderModel is calculated and set according to the average normals that the raycasts find, thus this also decides the direction of the Raycasts.
+			// Here the rotation of the spiderModel is calculated and set according to the average normals that the raycasts find, thus this also decides the direction of the Raycasts.
 			Vector3 modelForward = Vector3.Cross(transform.right, myNormal);
 			Quaternion modelRot = Quaternion.LookRotation(modelForward, myNormal);
 			transform.rotation = Quaternion.Slerp(transform.rotation, modelRot, lerpSpeed * Time.deltaTime);
@@ -543,7 +543,7 @@ public class SpiderMovement : MonoBehaviour
 		{
 			// parentObject.transform.Translate(transform.forward * (playerSettings.normalPlayerSpeed + sprintMulti) * Time.deltaTime);
 
-		// This is for a smoother Movement, and it checks for input from Gamepad and applies the smooth if the gamepad is used. GetAxis for Gamepad, GetAxisRaw for keyboard.
+			// This is for a smoother Movement, and it checks for input from Gamepad and applies the smooth if the gamepad is used. GetAxis for Gamepad, GetAxisRaw for keyboard.
 			Vector3 gamepadInput = new Vector3(Input.GetAxis("LeftStickX"), 0f, Input.GetAxis("LeftStickY"));
 			Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("KeyboardInputX"), 0f, Input.GetAxisRaw("KeyboardInputY"));
 			// print ($"gamepad input: {gamepadInput.sqrMagnitude}");
@@ -566,7 +566,7 @@ public class SpiderMovement : MonoBehaviour
 				{
 					spiderAnimator.speed = gamepadInput.sqrMagnitude * debugSettings.animationSpeedMod; // with this I want to make the multiplier to go lower as the input goes up.
 				}
-				else 
+				else
 				{
 					spiderAnimator.speed = gamepadInput.sqrMagnitude;
 				}
@@ -619,20 +619,20 @@ public class SpiderMovement : MonoBehaviour
 	{
 		Vector3 movementInput = new Vector3(horizontalRaw, 0f, verticalRaw);
 		// Jump Straight Up
-		if (movementInput.sqrMagnitude <= 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f 
+		if (movementInput.sqrMagnitude <= 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f
 			&& PauseMenu.isPaused == false && debugSettings.isFpsEnabled == false)
 		{
 			spiderAnimator.SetBool("Jump", true);
 			rb.AddForce(transform.up * playerSettings.jumpUpStrength);
 			debugSettings.isGrounded = false;
-			
+
 			if (debugSettings.allowUnlimitedStamina == false)
 			{
 				StaminaBar.staminaBarInstance.UseStamina(0.1f);
 			}
 		}
 		// Jump Forwards
-		else if (movementInput.sqrMagnitude > 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f 
+		else if (movementInput.sqrMagnitude > 0f && Input.GetButtonDown("Jump") && debugSettings.isGrounded == true && StaminaBar.staminaBarInstance.currentStamina >= 0.1f
 			&& PauseMenu.isPaused == false && debugSettings.isFpsEnabled == false)
 		{
 			spiderAnimator.SetBool("Jump", true);
@@ -649,7 +649,7 @@ public class SpiderMovement : MonoBehaviour
 	private void Sprint()
 	{
 		Vector3 movementInput = new Vector3(horizontalRaw, 0f, verticalRaw);
-		if ((Input.GetButton("Sprint") && movementInput.sqrMagnitude > 0f || Input.GetAxis("Sprint") < 0f) && StaminaBar.staminaBarInstance.currentStamina >= 0.0035f 
+		if ((Input.GetButton("Sprint") && movementInput.sqrMagnitude > 0f || Input.GetAxis("Sprint") < 0f) && StaminaBar.staminaBarInstance.currentStamina >= 0.0035f
 			&& PauseMenu.isPaused == false && IsUsingWeb() == false && debugSettings.isFpsEnabled == false)
 		{
 			spiderAnimator.speed = 3f;
@@ -668,7 +668,7 @@ public class SpiderMovement : MonoBehaviour
 			}
 		}
 
-		if (Input.GetButtonUp("Sprint") || movementInput.sqrMagnitude <= 0f || StaminaBar.staminaBarInstance.currentStamina < 0.0050f || Input.GetAxis("Sprint") >= 0f 
+		if (Input.GetButtonUp("Sprint") || movementInput.sqrMagnitude <= 0f || StaminaBar.staminaBarInstance.currentStamina < 0.0050f || Input.GetAxis("Sprint") >= 0f
 			&& Input.GetButton("Sprint") == false && IsUsingWeb() == false)
 		{
 			sprintMulti = 0f;
@@ -759,7 +759,7 @@ public class SpiderMovement : MonoBehaviour
 		//climbWeb.ActivationClimbRotation -= ActivationOfRaycasts;
 	}
 
-#region Debugs
+	#region Debugs
 
 	public void Cheats()
 	{
@@ -797,5 +797,5 @@ public class SpiderMovement : MonoBehaviour
 		Gizmos.color = Color.green;
 		Gizmos.DrawRay(transform.position, debugSettings.averageNormalDirection * 1f);
 	}
-#endregion
+	#endregion
 }
